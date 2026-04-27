@@ -19,7 +19,7 @@ services:
     image: cur10usx-api
     working_dir: /app
     ports:
-      - "4200:4200"
+      - "4200:4200" 
     volumes:
       - ./api:/app
       - /app/node_modules 
