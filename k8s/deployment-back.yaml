@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cur10usx-api
+  labels:
+    app: cur10usx-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cur10usx-api
+  template:
+    metadata:
+      labels:
+        app: cur10usx-api
+    spec:
+      containers:
+        - name: api
+          image: albertoih/cur10usx-api:latest
+          ports:
+            - containerPort: 4200
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 4200
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 4200
+            initialDelaySeconds: 15
+            periodSeconds: 20
