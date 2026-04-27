@@ -1,18 +1,19 @@
-FROM node:20-alpine AS base
+FROM node:20-alpine
+
+RUN addgroup -S app && adduser -S app -G app
 
 WORKDIR /app
 
-# Install deps separately for caching
-COPY package.json package-lock.json* ./
-RUN npm run dev
+COPY package*.json ./
+
+RUN npm install
 
 COPY . .
 
+RUN chown -R node:node /app
+
 USER node
 
-# Run as non-root
-EXPOSE 3000
+EXPOSE 4000
 
-ENV NODE_ENV=production
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
