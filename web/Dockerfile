@@ -1,19 +1,26 @@
-FROM node:20-alpine
-
-RUN addgroup -S app && adduser -S app -G app
-
-WORKDIR .
-
+# Estágio 1: Dependências
+FROM node:20-alpine AS deps
+WORKDIR /app
 COPY package*.json ./
+RUN npm ci
 
-RUN npm install
-
+# Estágio 2: Build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN npm run build
 
-RUN mkdir -p .next && chown -R node:node /app
+# Estágio 3: Runner (Imagem Final)
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV production
 
-USER node
+# Copiamos apenas o build final e o necessário para o Next.js rodar
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3000
-
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
