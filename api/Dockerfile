@@ -1,12 +1,18 @@
-FROM node:18-alpine
+FROM node:20-alpine AS base
 
 WORKDIR /app
 
+# Install deps separately for caching
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm run dev
 
 COPY . .
 
+USER node
+
+# Run as non-root
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+ENV NODE_ENV=production
+
+CMD ["npm", "start"]
