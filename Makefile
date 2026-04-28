@@ -1,57 +1,88 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ahamuyel <ahamuyel@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/04/27 18:26:56 by ahamuyel          #+#    #+#              #
+#    Updated: 2026/04/28 10:58:29 by ahamuyel         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 # Nome do projeto
 NAME = transcendence
 
-# Cores para o terminal (opcional, mas ajuda muito no log)
+# Cores
 GREEN = \033[0;32m
-RED = \033[0;31m
+CYAN  = \033[0;36m
+RED   = \033[0;31m
 RESET = \033[0m
 
-# Comandos principais
+# Comandos
 DOCKER_COMPOSE = docker compose
-FILES = docker-compose.yaml
+KUBECTL = kubectl
 
+# --- DOCKER COMPOSE (Development) ---
+ 
 all: build up
 
-# Constrói as imagens (equivalente ao make)
 build:
 	@echo "$(GREEN)Construindo as imagens do $(NAME)...$(RESET)"
-	$(DOCKER_COMPOSE) build
+	UID=$$(id -u) GID=$$(id -g) $(DOCKER_COMPOSE) build
 
-# Sobe os containers
 up:
 	@echo "$(GREEN)Subindo os containers...$(RESET)"
-	$(DOCKER_COMPOSE) up
+	UID=$$(id -u) GID=$$(id -g) $(DOCKER_COMPOSE) up
 
-# Para os containers sem apagar nada
-stop:
-	@echo "$(RED)Parando os containers...$(RESET)"
-	$(DOCKER_COMPOSE) stop
-
-# Para os containers e remove os mesmos
 down:
-	@echo "$(RED)Removendo os containers...$(RESET)"
+	@echo "$(RED)Removendo containers...$(RESET)"
 	$(DOCKER_COMPOSE) down
 
-# Limpeza total: remove containers, redes e o volume do node_modules (muito útil para o erro EACCES)
 clean:
 	@echo "$(RED)Limpando containers e volumes...$(RESET)"
 	$(DOCKER_COMPOSE) down -v
-	sudo rm -rf .next
+	sudo rm -rf web/.next web/node_modules api/node_modules
 
-# Remove TUDO (imagens, containers, volumes e cache do docker)
+# --- KUBERNETES (Orchestration) ---
+
+# Inicia o minikube com as configurações que funcionaram
+k8s-start:
+	@echo "$(CYAN)Iniciando Minikube...$(RESET)"
+	minikube start --driver=docker --memory=4096 --cpus=2
+
+# Aplica todos os manifestos .yaml (Deployment e Services)
+k8s-apply:
+	@echo "$(GREEN)Aplicando manifestos Kubernetes...$(RESET)"
+	$(KUBECTL) apply -f k8s/
+
+# Remove tudo do cluster
+k8s-delete:
+	@echo "$(RED)Removendo recursos do Kubernetes...$(RESET)"
+	$(KUBECTL) delete -f k8s/
+
+# Atalho para ver os pods em tempo real
+k8s-status:
+	$(KUBECTL) get all
+	$(KUBECTL) get pods -w
+
+# Expõe o serviço web automaticamente
+k8s-web:
+	@echo "$(CYAN)Abrindo serviço web no browser...$(RESET)"
+	minikube service cur10usx-web-service
+
+# Cria o túnel necessário para LoadBalancer no Linux
+k8s-tunnel:
+	@echo "$(CYAN)Iniciando Minikube Tunnel (mantenha este terminal aberto)...$(RESET)"
+	minikube tunnel
+
+# --- GLOBAL ---
+
 fclean: clean
-	@echo "$(RED)Removendo imagens e cache do Docker...$(RESET)"
+	@echo "$(RED)Removendo tudo (Docker & K8s)...$(RESET)"
 	docker system prune -a -f
+	# Opcional: minikube delete --all --purge (cuidado, demora a reconstruir)
 
-# Reinicia do zero (o famoso make re)
 re: fclean all
 
-# Ver os logs em tempo real
-logs:
-	$(DOCKER_COMPOSE) logs -f
-
-# Atalho para entrar no shell do container frontend (para debugar)
-shell:
-	docker exec -it transcendence-web-1 sh
-
-.PHONY: all build up stop down clean fclean re logs shell
+.PHONY: all build up down clean fclean re logs shell k8s-start k8s-apply k8s-delete k8s-status k8s-web k8s-tunnel

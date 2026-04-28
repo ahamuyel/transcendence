@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    service-api.yaml                                   :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ahamuyel <ahamuyel@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/04/27 18:28:22 by ahamuyel          #+#    #+#              #
+#    Updated: 2026/04/28 11:54:27 by ahamuyel         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 apiVersion: v1
 kind: Service 
 metadata:
@@ -6,7 +18,7 @@ metadata:
     app: cur10usx-api-service
 spec:
   selector:
-    app: cur10usx-api-service
+    app: cur10usx-api
   ports:
     - protocol: TCP
       port: 4200
