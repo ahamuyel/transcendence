@@ -1,20 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-    const session = await auth.api.getSession({
-        headers: await headers()
-    })
-    
-    if(!session) {
-        return NextResponse.redirect(new URL("/sign-in", request.url));
-    }
+export function middleware(req: NextRequest) {
+  const session = req.cookies.get("better-auth.session");
 
-    return NextResponse.next();
+  const isDashboard = req.nextUrl.pathname.startsWith("/dashboard");
+
+  if (isDashboard && !session) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  runtime: "nodejs", // Required for auth.api calls
-  matcher: ["/dashboard"], // Specify the routes the middleware applies to
+  matcher: ["/dashboard/:path*"],
 };

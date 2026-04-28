@@ -1,0 +1,8 @@
+{
+	"dependencies": {
+		"better-auth": "^1.6.9"
+	},
+	"devDependencies": {
+		"drizzle-kit": "^0.31.10"
+	}
+}
