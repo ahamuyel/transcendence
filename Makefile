@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 # Nome do projeto
-NAME = transcendence
+NAME = cur10usx
 
 # Cores
 GREEN = \033[0;32m
@@ -42,7 +42,7 @@ down:
 clean:
 	@echo "$(RED)Limpando containers e volumes...$(RESET)"
 	$(DOCKER_COMPOSE) down -v
-	sudo rm -rf web/.next web/node_modules api/node_modules
+	sudo rm -rf cur10us/.next cur10us/node_modules
 
 # --- KUBERNETES (Orchestration) ---
 
@@ -81,6 +81,7 @@ k8s-tunnel:
 fclean: clean
 	@echo "$(RED)Removendo tudo (Docker & K8s)...$(RESET)"
 	docker system prune -a -f
+	docker builder prune -a -f
 	# Opcional: minikube delete --all --purge (cuidado, demora a reconstruir)
 
 re: fclean all

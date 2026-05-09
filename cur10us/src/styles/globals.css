@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* Estilos globais adicionais */
+html, body {
+  transition: background-color 0.3s, color 0.3s; /* transição suave entre temas */
+  font-family: 'Inter', sans-serif; /* sua fonte padrão */
+}
+
+@theme {
+  /* Configuração das Fontes */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Suas Cores Customizadas */
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  
+  --color-primary: #6366f1;
+  --color-primary-dark: #4338ca;
+  --color-accent: #6366f1;
+  --color-cyan: #06B6D4;
+  --color-amber: #F59E0B;
+  --color-emerald: #10B981;
+  --color-rose: #f43f5e;
+}
+
+/* Configuração de Dark Mode por Classe */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-background: #ffffff;
+  --color-foreground: #09090b;
+  --school-primary: #6366f1;
+  --school-primary-light: #eef2ff;
+  --school-primary-dark: #312e81;
+}
+
+.dark {
+  --color-background: #000000;
+  --color-foreground: #fafafa;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Safe area for mobile bottom nav */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Calendar */
+.react-calendar__month-view__weekdays {
+  border-bottom: none !important;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
+}
+
+/* Prevent horizontal overflow on mobile */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Styled scrollbar — thin, themed */
+.styled-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.styled-scroll:hover {
+  scrollbar-color: var(--scroll-thumb, rgba(0,0,0,0.15)) transparent;
+}
+.dark .styled-scroll:hover {
+  scrollbar-color: rgba(255,255,255,0.12) transparent;
+}
+.styled-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.styled-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.styled-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+}
+.styled-scroll:hover::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+}
+.dark .styled-scroll:hover::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.12);
+}

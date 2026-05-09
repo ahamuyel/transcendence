@@ -1,0 +1,5 @@
+{
+  "installCommand": "yum install -y libatomic 2>/dev/null || apt-get install -y libatomic1 2>/dev/null || true && npm install",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next"
+}
