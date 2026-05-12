@@ -1,20 +1,39 @@
 "use client"
 
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { Eye, EyeOff, KeyRound, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react"
 import { useState, Suspense } from "react"
 import { csrfPost } from "@/lib/csrf-client"
+import { resetPasswordSchema } from "@/lib/validations/auth"
+
+const inputClass =
+  "w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition pr-10"
+
+function PasswordInput({ value, onChange, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
+  const [show, setShow] = useState(false)
+  return (
+    <div className="relative">
+      <input {...props} type={show ? "text" : "password"} className={inputClass} value={value} onChange={onChange} />
+      <button
+        type="button"
+        onClick={() => setShow(!show)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+      >
+        {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+      </button>
+    </div>
+  )
+}
 
 function ResetPasswordForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get("token")
 
   const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [success, setSuccess] = useState(false)
 
   if (!token) {
@@ -59,14 +78,30 @@ function ResetPasswordForm() {
     )
   }
 
+  function validate() {
+    const e: Record<string, string> = {}
+
+    if (password !== confirmPassword) {
+      e.confirmPassword = "As palavras-passe não coincidem"
+    }
+
+    const parsed = resetPasswordSchema.safeParse({ token, password })
+    if (!parsed.success) {
+      parsed.error.issues.forEach((i) => {
+        const field = i.path[0] as string
+        if (field === "password") e.password = i.message
+      })
+    }
+
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError("")
+    setErrors({})
 
-    if (password.length < 8) {
-      setError("Palavra-passe deve ter pelo menos 8 caracteres")
-      return
-    }
+    if (!validate()) return
 
     setLoading(true)
     try {
@@ -74,13 +109,13 @@ function ResetPasswordForm() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error || "Erro ao redefinir palavra-passe")
+        setErrors({ general: data.error || "Erro ao redefinir palavra-passe" })
         return
       }
 
       setSuccess(true)
     } catch {
-      setError("Erro de conexão. Tente novamente.")
+      setErrors({ general: "Erro de conexão. Tente novamente." })
     } finally {
       setLoading(false)
     }
@@ -100,41 +135,39 @@ function ResetPasswordForm() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
+          {errors.general && (
             <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
-              {error}
+              {errors.general}
             </div>
           )}
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300"
-            >
+            <label className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
               Nova palavra-passe
             </label>
-            <div className="relative">
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Mínimo 8 caracteres"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition pr-10"
-                disabled={loading}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-              >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
-              </button>
-            </div>
+            <PasswordInput
+              id="password"
+              placeholder="Mín. 8 caracteres, 1 maiúscula, 1 minúscula, 1 número"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+              required
+            />
+            {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
+              Confirmar nova palavra-passe
+            </label>
+            <PasswordInput
+              placeholder="Repita a palavra-passe"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={loading}
+              required
+            />
+            {errors.confirmPassword && <p className="text-xs text-red-500 mt-1">{errors.confirmPassword}</p>}
           </div>
 
           <button

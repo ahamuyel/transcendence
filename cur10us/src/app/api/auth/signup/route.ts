@@ -45,21 +45,24 @@ async function handleSignup(req: Request) {
     }
 
     const { name, email, password } = parsed.data
-
-    const existing = await prisma.user.findUnique({ where: { email } })
-    if (existing) {
-      return NextResponse.json(
-        { error: "Este e-mail já está cadastrado" },
-        { status: 409 }
-      )
-    }
-
     const hashedPassword = await hashPassword(password)
 
     // Create user with emailVerified = false
-    const user = await prisma.user.create({
-      data: { name, email, hashedPassword, provider: "credentials", isActive: false, emailVerified: false },
-    })
+    // Unique constraint on email handles race conditions
+    let user
+    try {
+      user = await prisma.user.create({
+        data: { name, email, hashedPassword, provider: "credentials", isActive: false, emailVerified: false },
+      })
+    } catch (createError: unknown) {
+      if (createError && typeof createError === "object" && "code" in createError && (createError as { code: string }).code === "P2002") {
+        return NextResponse.json(
+          { error: "Este e-mail já está cadastrado" },
+          { status: 409 }
+        )
+      }
+      throw createError
+    }
 
     // Create email verification token
     const token = randomUUID()

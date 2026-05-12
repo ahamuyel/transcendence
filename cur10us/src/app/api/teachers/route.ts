@@ -112,7 +112,11 @@ export async function POST(req: Request) {
 
     const teacher = await prisma.teacher.create({
       data: {
-        ...teacherData,
+        name: teacherData.name,
+        email: teacherData.email,
+        phone: teacherData.phone || null,
+        address: teacherData.address || null,
+        foto: teacherData.foto || null,
         schoolId,
         ...(userId && { userId }),
         teacherSubjects: subjectIds?.length
@@ -131,7 +135,11 @@ export async function POST(req: Request) {
 
     logAudit({ ...auditUser(session!), action: "CREATE", entity: "Teacher", entityId: teacher.id, schoolId, description: `Professor ${teacherData.name} criado` })
 
-    return NextResponse.json(teacher, { status: 201 })
+    const responseData: Record<string, unknown> = { ...teacher }
+    if (createAccount && tempPassword) {
+      responseData.tempPassword = tempPassword
+    }
+    return NextResponse.json(responseData, { status: 201 })
   } catch (error) {
     console.error(`[API Error] ${error}`)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })

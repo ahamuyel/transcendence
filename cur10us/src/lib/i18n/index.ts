@@ -1,7 +1,9 @@
 import pt from "./pt"
 import en from "./en"
+import fr from "./fr"
+import es from "./es"
 
-const translations: Record<string, typeof pt> = { pt, en }
+const translations: Record<string, typeof pt> = { pt, en, fr, es }
 
 type NestedKeyOf<T> = T extends object
   ? { [K in keyof T & string]: T[K] extends object ? `${K}.${NestedKeyOf<T[K]>}` : K }[keyof T & string]

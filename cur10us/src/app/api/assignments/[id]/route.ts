@@ -84,7 +84,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { error: authError, session } = await requirePermission(["school_admin"], "canManageAssignments", { requireSchool: true })
+    const { error: authError, session } = await requirePermission(["school_admin", "teacher"], "canManageAssignments", { requireSchool: true })
     if (authError) return authError
 
     const schoolId = getSchoolId(session!)
@@ -93,6 +93,14 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
     const existing = await prisma.assignment.findUnique({ where: { id } })
     if (!existing || existing.schoolId !== schoolId) {
       return NextResponse.json({ error: "Tarefa não encontrada" }, { status: 404 })
+    }
+
+    // Teacher scope: only delete own assignments
+    if (session!.user.role === "teacher") {
+      const teacher = await prisma.teacher.findFirst({ where: { userId: session!.user.id, schoolId }, select: { id: true } })
+      if (!teacher || teacher.id !== existing.teacherId) {
+        return NextResponse.json({ error: "Sem permissão para eliminar esta tarefa" }, { status: 403 })
+      }
     }
 
     await prisma.assignment.delete({ where: { id } })

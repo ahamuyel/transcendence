@@ -96,6 +96,7 @@ export default function StudentDashboard({ studentId }: Props) {
           value={data.pendingSubmissions}
           icon={ClipboardList}
           color={data.pendingSubmissions > 0 ? "amber" : "emerald"}
+          href="/list/assignments"
         />
       </section>
 

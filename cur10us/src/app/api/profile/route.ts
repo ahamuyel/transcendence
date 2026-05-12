@@ -43,6 +43,7 @@ export async function GET() {
       return NextResponse.json({
         user,
         teacher: teacher ? {
+          id: teacher.id,
           phone: teacher.phone,
           address: teacher.address,
           foto: teacher.foto,

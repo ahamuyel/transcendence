@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-const authPages = ["/signin", "/signup", "/forgot-password", "/registar-escola", "/verify-email"]
+const authPages = ["/signin", "/signup", "/forgot-password", "/registar-escola"]
 // Pages that should be accessible by both authenticated and unauthenticated users
-const alwaysAccessible = ["/reset-password"]
+const alwaysAccessible = ["/reset-password", "/verify-email"]
 const publicPaths = ["/", "/aplicacao", "/aplicacao/status", "/maintenance"]
 
 export async function middleware(req: NextRequest) {

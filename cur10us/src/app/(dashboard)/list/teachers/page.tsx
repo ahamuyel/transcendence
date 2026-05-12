@@ -49,22 +49,32 @@ const TeacherListPage = () => {
   const [editItem, setEditItem] = useState<Teacher | null>(null)
   const [deleteItem, setDeleteItem] = useState<Teacher | null>(null)
   const [deactivateItem, setDeactivateItem] = useState<Teacher | null>(null)
+  const [deactivateError, setDeactivateError] = useState("")
+  const [deleteError, setDeleteError] = useState("")
 
   const handleDeactivate = async () => {
     if (!deactivateItem) return
+    setDeactivateError("")
     const res = await fetch(`/api/teachers/${deactivateItem.id}/deactivate`, { method: "POST" })
+    const data = await res.json().catch(() => ({}))
     if (res.ok) {
       setDeactivateItem(null)
       refetch()
+    } else {
+      setDeactivateError(data.error || "Erro ao desactivar conta")
     }
   }
 
   const handleDelete = async () => {
     if (!deleteItem) return
+    setDeleteError("")
     const res = await fetch(`/api/teachers/${deleteItem.id}`, { method: "DELETE" })
+    const data = await res.json().catch(() => ({}))
     if (res.ok) {
       setDeleteItem(null)
       refetch()
+    } else {
+      setDeleteError(data.error || "Erro ao eliminar professor")
     }
   }
 
@@ -103,7 +113,7 @@ const TeacherListPage = () => {
         </div>
       </td>
       <td className="hidden lg:table-cell text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm">
-        {item.classes?.join(", ")}
+        {item.classes?.length ? item.classes.join(", ") : "-"}
       </td>
       <td className="hidden xl:table-cell text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm">
         {item.phone}
@@ -195,16 +205,17 @@ const TeacherListPage = () => {
         )}
       </FormModal>
 
-      <DeleteConfirmModal open={!!deleteItem} onClose={() => setDeleteItem(null)} onConfirm={handleDelete} itemName={deleteItem?.name || ""} />
+      <DeleteConfirmModal open={!!deleteItem} onClose={() => { setDeleteItem(null); setDeleteError("") }} onConfirm={handleDelete} itemName={deleteItem?.name || ""} error={deleteError} />
 
       <DeleteConfirmModal
         open={!!deactivateItem}
-        onClose={() => setDeactivateItem(null)}
+        onClose={() => { setDeactivateItem(null); setDeactivateError("") }}
         onConfirm={handleDeactivate}
         itemName={deactivateItem?.name || ""}
         title="Desactivar conta"
         message={`Tem a certeza que deseja desactivar a conta de "${deactivateItem?.name}"? O utilizador não conseguirá aceder à plataforma.`}
         confirmLabel="Desactivar"
+        error={deactivateError}
       />
     </div>
   )

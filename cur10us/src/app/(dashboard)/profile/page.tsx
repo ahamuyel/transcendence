@@ -21,6 +21,7 @@ const ProfilePage = () => {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [photoError, setPhotoError] = useState("")
+  const [saveError, setSaveError] = useState("")
   const [editForm, setEditForm] = useState({ name: "", phone: "", address: "", gender: "", dateOfBirth: "" })
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -44,6 +45,7 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     setSaving(true)
+    setSaveError("")
     try {
       const res = await fetch("/api/profile", {
         method: "PUT",
@@ -58,15 +60,17 @@ const ProfilePage = () => {
       })
       if (res.ok) {
         setEditing(false)
-        // Re-fetch profile
-        const data = await fetch("/api/profile").then((r) => r.json())
-        setProfile(data)
         // Update session name
         if (editForm.name && editForm.name !== session?.user?.name) {
           await updateSession({ name: editForm.name })
         }
+      } else {
+        const errData = await res.json().catch(() => ({ error: "Erro ao salvar perfil" }))
+        setSaveError(errData.error || "Erro ao salvar perfil")
       }
-    } catch { /* ignore */ }
+    } catch {
+      setSaveError("Erro de conexão")
+    }
     setSaving(false)
   }
 
@@ -193,6 +197,11 @@ const ProfilePage = () => {
       {/* Edit Form */}
       {editing && (
         <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm">
+          {saveError && (
+            <div className="mb-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 text-sm text-rose-600 dark:text-rose-400">
+              {saveError}
+            </div>
+          )}
           <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-4 uppercase tracking-wider">Editar Perfil</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>

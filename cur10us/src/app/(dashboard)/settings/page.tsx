@@ -165,6 +165,24 @@ const SettingsPage = () => {
             Alterar
           </Link>
         </div>
+        <div className="flex items-center justify-between py-3 border-b border-zinc-100 dark:border-zinc-800">
+          <div>
+            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Autenticação de dois fatores</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">Adicione uma camada extra de segurança</p>
+          </div>
+          <Link href="/settings/2fa" className="px-4 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
+            Configurar
+          </Link>
+        </div>
+        <div className="flex items-center justify-between py-3 border-b border-zinc-100 dark:border-zinc-800">
+          <div>
+            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Privacidade e dados</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">Exportar ou eliminar meus dados (RGPD)</p>
+          </div>
+          <Link href="/settings/gdpr" className="px-4 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
+            Gerir
+          </Link>
+        </div>
         <div className="flex items-center justify-between py-3">
           <div>
             <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Sessões ativas</p>

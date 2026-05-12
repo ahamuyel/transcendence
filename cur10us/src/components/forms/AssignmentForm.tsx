@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import FormField from "@/components/ui/FormField"
 import { createAssignmentSchema } from "@/lib/validations/academic"
 
@@ -26,6 +27,8 @@ type Option = { id: string; name: string }
 const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition"
 
 const AssignmentForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
+  const { data: session } = useSession()
+  const role = session?.user?.role
   const [form, setForm] = useState({
     title: initialData?.title || "",
     description: initialData?.description || "",
@@ -45,8 +48,15 @@ const AssignmentForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
   useEffect(() => {
     fetch("/api/subjects?limit=100").then(r => r.json()).then(d => setSubjectOptions(d.data || []))
     fetch("/api/classes?limit=100").then(r => r.json()).then(d => setClassOptions(d.data || []))
-    fetch("/api/teachers?limit=100").then(r => r.json()).then(d => setTeacherOptions(d.data || []))
-  }, [])
+    if (role === "teacher" && mode === "create") {
+      fetch("/api/profile").then(r => r.json()).then(d => {
+        const teacherId = d.teacher?.id
+        if (teacherId) setForm((f) => ({ ...f, teacherId }))
+      })
+    } else if (role !== "teacher") {
+      fetch("/api/teachers?limit=100").then(r => r.json()).then(d => setTeacherOptions(d.data || []))
+    }
+  }, [role, mode])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -136,12 +146,16 @@ const AssignmentForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
           </select>
         </FormField>
         <FormField label="Professor" error={errors.teacherId}>
-          <select className={inputClass} value={form.teacherId} onChange={(e) => setForm((f) => ({ ...f, teacherId: e.target.value }))}>
-            <option value="">Selecionar professor...</option>
-            {teacherOptions.map((o) => (
-              <option key={o.id} value={o.id}>{o.name}</option>
-            ))}
-          </select>
+          {role === "teacher" ? (
+            <input className={inputClass} value={form.teacherId} disabled />
+          ) : (
+            <select className={inputClass} value={form.teacherId} onChange={(e) => setForm((f) => ({ ...f, teacherId: e.target.value }))}>
+              <option value="">Selecionar professor...</option>
+              {teacherOptions.map((o) => (
+                <option key={o.id} value={o.id}>{o.name}</option>
+              ))}
+            </select>
+          )}
         </FormField>
       </div>
 

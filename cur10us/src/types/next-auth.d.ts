@@ -17,8 +17,10 @@ declare module "next-auth" {
       adminLevel?: string | null
       permissions?: string[]
       schoolFeatures?: Record<string, boolean> | null
-    }
+    hasPassword?: boolean
+    sessionVersion?: number
   }
+}
 
   interface User {
     role: string
@@ -31,6 +33,7 @@ declare module "next-auth" {
     adminLevel?: string | null
     permissions?: string[]
     schoolFeatures?: Record<string, boolean> | null
+    hasPassword?: boolean
   }
 }
 
@@ -49,5 +52,6 @@ declare module "next-auth/jwt" {
     schoolFeatures?: Record<string, boolean> | null
     userImage?: string | null
     sessionVersion?: number
+    hasPassword?: boolean
   }
 }
