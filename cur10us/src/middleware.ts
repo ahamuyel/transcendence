@@ -48,7 +48,7 @@ export async function middleware(req: NextRequest) {
     if (hasSessionCookie) {
       // Check if there's a stored callback URL from OAuth flow (priority over default redirect)
       const storedCallbackUrl = req.cookies.get("next-auth-callback-url")?.value
-      if (storedCallbackUrl && storedCallbackUrl.startsWith("/")) {
+      if (storedCallbackUrl && isValidRedirect(storedCallbackUrl)) {
         const response = NextResponse.redirect(new URL(storedCallbackUrl, req.url))
         // Clear the cookie after using it
         response.cookies.set("next-auth-callback-url", "", { maxAge: 0, path: "/" })
@@ -69,6 +69,15 @@ export async function middleware(req: NextRequest) {
   // For authenticated users, let server-side handling take over
   // (session validation happens in API routes and page components)
   return NextResponse.next()
+}
+
+// Safe redirect validation — prevents open redirect vulnerabilities
+function isValidRedirect(url: string): boolean {
+  if (!url.startsWith("/")) return false
+  if (url.startsWith("//")) return false
+  if (url.includes("@")) return false
+  if (url.includes("..")) return false
+  return true
 }
 
 // Update matcher to ensure middleware doesn't interfere with Next.js internals

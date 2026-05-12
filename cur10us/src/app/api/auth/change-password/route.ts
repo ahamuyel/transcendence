@@ -73,7 +73,7 @@ async function handleChangePassword(req: Request) {
 
     await prisma.user.update({
       where: { id: user.id },
-      data: { hashedPassword, mustChangePassword: false },
+      data: { hashedPassword, mustChangePassword: false, sessionVersion: { increment: 1 } },
     })
 
     return NextResponse.json({ success: true })

@@ -8,11 +8,27 @@ import { signIn as nextAuthSignIn, getSession } from "next-auth/react";
 import { signInSchema } from "@/lib/validations/auth";
 import { getDashboardPath } from "@/lib/routes";
 
+function isValidRedirect(url: string): boolean {
+  if (!url.startsWith("/")) return false
+  if (url.startsWith("//")) return false
+  if (url.includes("@")) return false
+  if (url.includes("..")) return false
+  return true
+}
+
+const OAUTH_ERROR_MESSAGES: Record<string, string> = {
+  OAuthAccountNotLinked: "Este e-mail já está associado a outro método de autenticação.",
+  OAuthSignin: "Erro ao iniciar sessão com Google. Tente novamente.",
+  OAuthCallback: "Erro ao processar o login com Google. Tente novamente.",
+  default: "Ocorreu um erro ao autenticar. Tente novamente.",
+}
+
 export default function SignInClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const reason = searchParams.get("reason");
+  const errorParam = searchParams.get("error");
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -38,7 +54,7 @@ export default function SignInClient() {
 
         const callbackUrl = getCookieValue("next-auth-callback-url");
 
-        if (callbackUrl && callbackUrl.startsWith("/")) {
+        if (callbackUrl && isValidRedirect(callbackUrl)) {
           document.cookie = "next-auth-callback-url=; max-age=0; path=/";
           router.push(callbackUrl);
           return;
@@ -46,7 +62,7 @@ export default function SignInClient() {
 
         const urlCallbackUrl = searchParams.get("callbackUrl");
 
-        if (urlCallbackUrl && urlCallbackUrl.startsWith("/")) {
+        if (urlCallbackUrl && isValidRedirect(urlCallbackUrl)) {
           router.push(urlCallbackUrl);
         } else {
           router.push("/minha-area");
@@ -105,7 +121,7 @@ export default function SignInClient() {
 
       const callbackUrl = searchParams.get("callbackUrl");
 
-      if (callbackUrl && callbackUrl.startsWith("/")) {
+      if (callbackUrl && isValidRedirect(callbackUrl)) {
         router.push(callbackUrl);
       } else if (isSuperAdmin) {
         router.push("/admin");
@@ -142,6 +158,12 @@ export default function SignInClient() {
                 <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-sm text-amber-600 dark:text-amber-400">
                   A sua sessão foi terminada porque iniciou sessão noutro
                   dispositivo.
+                </div>
+              )}
+
+              {errorParam && (
+                <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
+                  {OAUTH_ERROR_MESSAGES[errorParam] || OAUTH_ERROR_MESSAGES.default}
                 </div>
               )}
 
@@ -208,6 +230,17 @@ export default function SignInClient() {
                 )}
               </button>
             </form>
+
+            {/* Forgot password */}
+            <div className="text-right -mt-3">
+              <Link
+                href="/forgot-password"
+                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+              >
+                Esqueceu-se da senha?
+              </Link>
+            </div>
+
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

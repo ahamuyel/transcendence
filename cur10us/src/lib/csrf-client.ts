@@ -29,13 +29,13 @@ export function resetCsrfToken() {
 }
 
 /**
- * Helper to make a CSRF-protected POST request
+ * Helper to make a CSRF-protected request
  */
-export async function csrfPost(url: string, body: Record<string, unknown>) {
+export async function csrfPost(url: string, body: Record<string, unknown>, method: string = "POST") {
   const csrfToken = await getCsrfToken()
 
   const res = await fetch(url, {
-    method: "POST",
+    method,
     headers: {
       "Content-Type": "application/json",
       "x-csrf-token": csrfToken,

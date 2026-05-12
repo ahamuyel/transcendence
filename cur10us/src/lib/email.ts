@@ -9,18 +9,41 @@ function escapeHtml(str: string): string {
     .replace(/'/g, "&#39;")
 }
 
+const isDev = process.env.NODE_ENV === "development" || process.env.EMAIL_LOGGING === "true"
+const from = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"
+const baseUrl = process.env.AUTH_URL || "http://localhost:3000"
+
 let _resend: Resend | null = null
 function getResend() {
+  if (isDev) return null as unknown as Resend
   if (!_resend) {
     if (!process.env.RESEND_API_KEY) {
-      throw new Error("RESEND_API_KEY environment variable is not set")
+      console.warn("[EMAIL] RESEND_API_KEY not set — emails will be logged to console")
+      return null as unknown as Resend
     }
     _resend = new Resend(process.env.RESEND_API_KEY)
   }
   return _resend
 }
-const from = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev"
-const baseUrl = process.env.AUTH_URL || "http://localhost:3000"
+
+async function sendEmail(params: { to: string; subject: string; html: string }) {
+  if (isDev) {
+    console.log(`\n[EMAIL LOG] To: ${params.to}`)
+    console.log(`[EMAIL LOG] Subject: ${params.subject}`)
+    console.log(`[EMAIL LOG] Body:\n${params.html}\n`)
+    return
+  }
+  try {
+    const resend = getResend()
+    if (!resend) {
+      console.warn(`[EMAIL] Cannot send to ${params.to} — Resend not configured. Set EMAIL_LOGGING=true to log instead.`)
+      return
+    }
+    await resend.emails.send({ from, ...params })
+  } catch (err) {
+    console.error("[EMAIL] Failed to send:", err)
+  }
+}
 
 function wrap(title: string, body: string) {
   return `
@@ -35,8 +58,7 @@ function wrap(title: string, body: string) {
 
 export async function sendApplicationConfirmation(to: string, name: string, trackingToken: string) {
   const statusUrl = `${baseUrl}/aplicacao/status?token=${trackingToken}`
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Solicitação recebida — Cur10usX",
     html: wrap(
@@ -50,8 +72,7 @@ export async function sendApplicationConfirmation(to: string, name: string, trac
 }
 
 export async function sendApplicationApproved(to: string, name: string, schoolName: string) {
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Solicitação aprovada — Cur10usX",
     html: wrap(
@@ -64,8 +85,7 @@ export async function sendApplicationApproved(to: string, name: string, schoolNa
 }
 
 export async function sendApplicationRejected(to: string, name: string, reason: string) {
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Solicitação não aprovada — Cur10usX",
     html: wrap(
@@ -80,8 +100,7 @@ export async function sendApplicationRejected(to: string, name: string, reason: 
 
 export async function sendEnrollmentComplete(to: string, name: string, schoolName: string) {
   const loginUrl = `${baseUrl}/signin`
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Matrícula confirmada — Cur10usX",
     html: wrap(
@@ -96,8 +115,7 @@ export async function sendEnrollmentComplete(to: string, name: string, schoolNam
 }
 
 export async function sendSchoolApproved(to: string, schoolName: string) {
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Escola aprovada — Cur10usX",
     html: wrap(
@@ -110,8 +128,7 @@ export async function sendSchoolApproved(to: string, schoolName: string) {
 
 export async function sendSchoolActivated(to: string, schoolName: string, tempPassword: string) {
   const loginUrl = `${baseUrl}/signin`
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Escola activada — Cur10usX",
     html: wrap(
@@ -127,8 +144,7 @@ export async function sendSchoolActivated(to: string, schoolName: string, tempPa
 
 export async function sendSchoolActivatedExistingAdmin(to: string, schoolName: string) {
   const loginUrl = `${baseUrl}/signin`
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Escola activada — Cur10usX",
     html: wrap(
@@ -142,8 +158,7 @@ export async function sendSchoolActivatedExistingAdmin(to: string, schoolName: s
 
 export async function sendTempCredentials(to: string, name: string, schoolName: string, tempPassword: string) {
   const loginUrl = `${baseUrl}/signin`
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Conta criada — Cur10usX",
     html: wrap(
@@ -159,8 +174,7 @@ export async function sendTempCredentials(to: string, name: string, schoolName: 
 }
 
 export async function sendSchoolRejected(to: string, schoolName: string, reason: string) {
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Escola não aprovada — Cur10usX",
     html: wrap(
@@ -173,8 +187,7 @@ export async function sendSchoolRejected(to: string, schoolName: string, reason:
 }
 
 export async function sendVerificationEmail(to: string, name: string, verifyUrl: string) {
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Verifique o seu e-mail — Cur10usX",
     html: wrap(
@@ -189,8 +202,7 @@ export async function sendVerificationEmail(to: string, name: string, verifyUrl:
 }
 
 export async function sendPasswordResetEmail(to: string, name: string, resetUrl: string) {
-  await getResend().emails.send({
-    from,
+  await sendEmail({
     to,
     subject: "Redefinir palavra-passe — Cur10usX",
     html: wrap(

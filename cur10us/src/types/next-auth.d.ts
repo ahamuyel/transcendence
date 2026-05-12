@@ -48,5 +48,6 @@ declare module "next-auth/jwt" {
     permissions?: string[]
     schoolFeatures?: Record<string, boolean> | null
     userImage?: string | null
+    sessionVersion?: number
   }
 }

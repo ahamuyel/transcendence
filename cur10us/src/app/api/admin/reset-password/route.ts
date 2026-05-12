@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, name: true, email: true, hashedPassword: true },
+      select: { id: true, name: true, email: true, hashedPassword: true, schoolId: true },
     })
 
     if (!user) {
@@ -34,12 +34,13 @@ export async function POST(req: Request) {
 
     await prisma.user.update({
       where: { id: userId },
-      data: { hashedPassword, mustChangePassword: true },
+      data: { hashedPassword, mustChangePassword: true, sessionVersion: { increment: 1 } },
     })
 
     // Send temp password via email instead of exposing in response
     const { sendTempCredentials } = await import("@/lib/email")
-    sendTempCredentials(user.email, user.name || "", "", tempPassword).catch((e) => console.error("[Email Error]", e))
+    const school = user.schoolId ? await prisma.school.findUnique({ where: { id: user.schoolId }, select: { name: true } }) : null
+    sendTempCredentials(user.email, user.name || "", school?.name || "", tempPassword).catch((e) => console.error("[Email Error]", e))
 
     return NextResponse.json({
       success: true,
