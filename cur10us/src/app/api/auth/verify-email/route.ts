@@ -60,7 +60,7 @@ async function handleVerifyEmail(req: Request) {
     await prisma.$transaction([
       prisma.user.update({
         where: { id: verificationToken.userId },
-        data: { emailVerified: true },
+        data: { emailVerified: true, isActive: true },
       }),
       prisma.emailVerificationToken.delete({
         where: { id: verificationToken.id },

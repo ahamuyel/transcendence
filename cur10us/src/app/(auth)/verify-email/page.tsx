@@ -54,7 +54,7 @@ function VerifyEmailContent() {
   async function handleResend() {
     setResending(true);
     try {
-      const res = await csrfPost("/api/auth/verify-email", { email });
+      const res = await csrfPost("/api/auth/verify-email", { email }, "PATCH");
 
       if (!res.ok) {
         const data = await res.json();

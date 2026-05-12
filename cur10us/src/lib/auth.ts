@@ -97,6 +97,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const isValid = await comparePassword(password, user.hashedPassword);
           if (!isValid) return null;
 
+          if (!user.isActive) return null;
+          if (!user.emailVerified) return null;
+
           return {
             id: user.id,
             name: user.name,
@@ -191,6 +194,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           : null;
         const img = (user as { image?: string | null }).image;
         token.userImage = img && !img.startsWith("data:") ? img : null;
+        token.sessionVersion = (user as { sessionVersion?: number }).sessionVersion ?? 0;
         // Busca dados completos só no primeiro login
         token.needsDbRefresh = true;
       }
@@ -208,6 +212,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             mustChangePassword: true,
             profileComplete: true,
             emailVerified: true,
+            sessionVersion: true,
             school: { select: { slug: true, features: true } },
             adminPermission: {
               select: {
@@ -219,6 +224,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
 
         if (dbUser) {
+          // Session invalidation — if sessionVersion changed (password reset, etc.), discard token
+          if (dbUser.sessionVersion !== (token.sessionVersion as number)) {
+            return {} as typeof token
+          }
+
           token.id = dbUser.id;
           token.role = dbUser.role;
           token.schoolId = dbUser.schoolId ?? null;
@@ -235,6 +245,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             (dbUser.school?.features as Record<string, boolean>) ?? null;
           const img = dbUser.image;
           token.userImage = img && !img.startsWith("data:") ? img : null;
+          token.sessionVersion = dbUser.sessionVersion;
         }
 
         token.needsDbRefresh = false;

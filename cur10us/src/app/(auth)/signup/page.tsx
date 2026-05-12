@@ -62,11 +62,17 @@ export default function SignUpPage() {
           </div>
           <h1 className="text-xl font-bold mb-2 sm:text-2xl">Conta criada com sucesso!</h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed">
-            Verifique o seu e-mail para activar a conta. Depois, na sua Área pessoal, poderá solicitar vinculação a uma escola.
+            Enviámos um e-mail de verificação. Clique no link para activar a sua conta antes de fazer login.
           </p>
           <Link href="/signin" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition">
             Ir para o login
           </Link>
+          <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-4">
+            Não recebeu o e-mail?{" "}
+            <Link href="/verify-email" className="text-indigo-500 hover:underline">
+              Reenviar verificação
+            </Link>
+          </p>
         </div>
       </div>
     )

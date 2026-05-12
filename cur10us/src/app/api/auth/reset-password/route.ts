@@ -60,7 +60,7 @@ async function handleResetPassword(req: Request) {
 
     await prisma.user.update({
       where: { id: resetToken.userId },
-      data: { hashedPassword, mustChangePassword: false },
+      data: { hashedPassword, mustChangePassword: false, sessionVersion: { increment: 1 } },
     })
 
     await prisma.passwordResetToken.delete({
