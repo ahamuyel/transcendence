@@ -9,8 +9,19 @@ type NotificationData = {
   schoolId: string
 }
 
+async function wsNotify(userId: string, title: string, message: string, link?: string) {
+  try {
+    const { broadcastToUser } = await import("@/lib/ws-broadcast")
+    broadcastToUser(userId, "notification", { title, message, link })
+  } catch {
+    // WS not available
+  }
+}
+
 export async function createNotification(data: NotificationData) {
-  return prisma.notification.create({ data })
+  const notif = await prisma.notification.create({ data })
+  wsNotify(data.userId, data.title, data.message, data.link)
+  return notif
 }
 
 export async function notifySchoolUsers(schoolId: string, title: string, message: string, type: string, link?: string) {
@@ -22,6 +33,7 @@ export async function notifySchoolUsers(schoolId: string, title: string, message
   await prisma.notification.createMany({
     data: users.map((u) => ({ userId: u.id, title, message, type, link, schoolId })),
   })
+  users.forEach((u) => wsNotify(u.id, title, message, link))
 }
 
 export async function notifyClassStudents(classId: string, schoolId: string, title: string, message: string, type: string, link?: string) {

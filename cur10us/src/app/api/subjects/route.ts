@@ -5,7 +5,7 @@ import { createSubjectSchema } from "@/lib/validations/academic"
 
 export async function GET(req: Request) {
   try {
-    const { error: authError, session } = await requirePermission(["school_admin"], "canManageSubjects", { requireSchool: true })
+    const { error: authError, session } = await requirePermission(["school_admin", "teacher"], "canManageSubjects", { requireSchool: true })
     if (authError) return authError
 
     const schoolId = getSchoolId(session!)
@@ -14,8 +14,26 @@ export async function GET(req: Request) {
     const limit = parseInt(searchParams.get("limit") || "10")
     const search = searchParams.get("search") || ""
 
+    let teacherFilter = {}
+    if (session!.user.role === "teacher") {
+      const teacher = await prisma.teacher.findFirst({
+        where: { userId: session!.user.id, schoolId },
+        select: { id: true },
+      })
+      if (teacher) {
+        const teacherSubjectIds = await prisma.teacherSubject.findMany({
+          where: { teacherId: teacher.id },
+          select: { subjectId: true },
+        })
+        teacherFilter = {
+          id: { in: teacherSubjectIds.map((ts) => ts.subjectId) },
+        }
+      }
+    }
+
     const where = {
       schoolId,
+      ...teacherFilter,
       ...(search
         ? { name: { contains: search, mode: "insensitive" as const } }
         : {}),

@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { FileText, ClipboardList, Calendar } from "lucide-react"
 
 type Exam = { id: string; title: string; subjectName: string; date: string }
@@ -24,6 +25,7 @@ function formatDate(date: string) {
 }
 
 export default function StudentUpcoming({ exams, assignments }: Props) {
+  const router = useRouter()
   const items = [
     ...exams.map((e) => ({ ...e, kind: "exam" as const, dueDate: e.date })),
     ...assignments.map((a) => ({ ...a, kind: "assignment" as const })),
@@ -43,7 +45,13 @@ export default function StudentUpcoming({ exams, assignments }: Props) {
           {items.slice(0, 6).map((item) => {
             const date = formatDate(item.dueDate)
             return (
-              <div key={`${item.kind}-${item.id}`} className="flex items-center gap-3 py-2.5 px-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/50">
+              <div
+                key={`${item.kind}-${item.id}`}
+                onClick={() => { if (item.kind === "assignment") router.push("/list/assignments") }}
+                className={`flex items-center gap-3 py-2.5 px-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 ${
+                  item.kind === "assignment" ? "cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors" : ""
+                }`}
+              >
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                   item.kind === "exam"
                     ? "bg-rose-100 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"

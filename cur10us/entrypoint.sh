@@ -22,5 +22,9 @@ load_secret RESEND_API_KEY       resend_api_key
 echo "🌐 Verificando conexão com o banco..."
 npx prisma migrate deploy
 
+echo "🔌 Iniciando WebSocket server..."
+node ws-server.js &
+WS_PID=$!
+
 echo "🚀 Subindo Cur10usX..."
 exec npx next start

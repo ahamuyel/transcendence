@@ -105,16 +105,11 @@ export default function SignInClient() {
       });
 
       if (res?.error) {
-        setErrors({ general: "E-mail ou senha incorretos" });
+        setErrors({ general: "E-mail ou senha incorretos. Se acabou de se registar, verifique o seu e-mail." });
         return;
       }
 
       const session = await getSession();
-
-      if (!session?.user?.emailVerified) {
-        router.push("/verify-email");
-        return;
-      }
 
       const dashboard = getDashboardPath(session?.user?.id);
       const isSuperAdmin = session?.user?.role === "super_admin";
@@ -158,6 +153,12 @@ export default function SignInClient() {
                 <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-sm text-amber-600 dark:text-amber-400">
                   A sua sessão foi terminada porque iniciou sessão noutro
                   dispositivo.
+                </div>
+              )}
+
+              {reason === "password_changed" && (
+                <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-sm text-emerald-600 dark:text-emerald-400">
+                  Palavra-passe alterada com sucesso. Faça login novamente.
                 </div>
               )}
 

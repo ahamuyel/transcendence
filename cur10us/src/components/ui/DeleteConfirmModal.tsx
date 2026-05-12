@@ -10,9 +10,10 @@ type DeleteConfirmModalProps = {
   title?: string
   message?: string
   confirmLabel?: string
+  error?: string
 }
 
-const DeleteConfirmModal = ({ open, onClose, onConfirm, itemName, title, message, confirmLabel }: DeleteConfirmModalProps) => {
+const DeleteConfirmModal = ({ open, onClose, onConfirm, itemName, title, message, confirmLabel, error }: DeleteConfirmModalProps) => {
   const overlayRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(false)
 
@@ -61,6 +62,11 @@ const DeleteConfirmModal = ({ open, onClose, onConfirm, itemName, title, message
           <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
             {message || (<>Tem certeza que deseja excluir <strong className="text-zinc-900 dark:text-zinc-100">{itemName}</strong>? Esta ação não pode ser desfeita.</>)}
           </p>
+          {error && (
+            <div className="mb-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 text-sm text-rose-600 dark:text-rose-400">
+              {error}
+            </div>
+          )}
           <div className="flex items-center gap-3 justify-end">
             <button
               onClick={onClose}

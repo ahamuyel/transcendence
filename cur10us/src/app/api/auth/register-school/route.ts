@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server"
+import { randomUUID } from "crypto"
 import { hashPassword } from "@/lib/password"
 import { prisma } from "@/lib/prisma"
 import { registerSchoolSchema } from "@/lib/validations/register-school"
+import { sendVerificationEmail } from "@/lib/email"
 import { withCsrf } from "@/lib/csrf"
 import { rateLimit } from "@/lib/rate-limit"
 
@@ -106,7 +108,6 @@ async function handleRegisterSchool(req: Request) {
       })
 
       // Create email verification token
-      const { randomUUID } = await import("crypto")
       const token = randomUUID()
       await tx.emailVerificationToken.create({
         data: {
@@ -117,7 +118,6 @@ async function handleRegisterSchool(req: Request) {
       })
 
       // Send verification email (non-blocking)
-      const { sendVerificationEmail } = await import("@/lib/email")
       const verifyUrl = `${process.env.AUTH_URL || "http://localhost:3000"}/verify-email?token=${token}`
       sendVerificationEmail(adminEmail, adminName, verifyUrl).catch((e) => console.error("[Email Error]", e))
     })

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requirePermission, getSchoolId } from "@/lib/api-auth"
 import { updateTeacherSchema } from "@/lib/validations/entities"
+import { logAudit, auditUser } from "@/lib/audit"
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -62,10 +63,21 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
     const { subjectIds, classIds, ...teacherData } = parsed.data
 
+    if (teacherData.email && teacherData.email !== existing.email) {
+      const emailExists = await prisma.teacher.findUnique({ where: { email: teacherData.email } })
+      if (emailExists) {
+        return NextResponse.json({ error: "Este e-mail já está cadastrado" }, { status: 409 })
+      }
+    }
+
     const teacher = await prisma.teacher.update({
       where: { id },
       data: {
-        ...teacherData,
+        ...(teacherData.name !== undefined ? { name: teacherData.name } : {}),
+        ...(teacherData.email !== undefined ? { email: teacherData.email } : {}),
+        ...(teacherData.phone !== undefined ? { phone: teacherData.phone || null } : {}),
+        ...(teacherData.address !== undefined ? { address: teacherData.address || null } : {}),
+        ...(teacherData.foto !== undefined ? { foto: teacherData.foto || null } : {}),
         ...(subjectIds !== undefined
           ? {
               teacherSubjects: {
@@ -84,6 +96,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
           : {}),
       },
     })
+
+    logAudit({ ...auditUser(session!), action: "UPDATE", entity: "Teacher", entityId: id, schoolId, description: `Professor ${existing.name} actualizado` })
+
     return NextResponse.json(teacher)
   } catch (error) {
     console.error(`[API Error] ${error}`)
@@ -105,6 +120,9 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
     }
 
     await prisma.teacher.delete({ where: { id } })
+
+    logAudit({ ...auditUser(session!), action: "DELETE", entity: "Teacher", entityId: id, schoolId, description: `Professor ${existing.name} eliminado` })
+
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error(`[API Error] ${error}`)

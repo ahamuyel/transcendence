@@ -13,7 +13,10 @@ export const registerSchoolSchema = z.object({
   adminPassword: z
     .string()
     .min(8, "Palavra-passe deve ter pelo menos 8 caracteres")
-    .max(100, "Palavra-passe muito longa"),
+    .max(100, "Palavra-passe muito longa")
+    .regex(/[A-Z]/, "Palavra-passe deve conter pelo menos uma letra maiúscula")
+    .regex(/[a-z]/, "Palavra-passe deve conter pelo menos uma letra minúscula")
+    .regex(/[0-9]/, "Palavra-passe deve conter pelo menos um número"),
 
   // School fields
   schoolName: z

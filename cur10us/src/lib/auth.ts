@@ -112,6 +112,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             mustChangePassword: user.mustChangePassword,
             profileComplete: user.profileComplete,
             emailVerified: user.emailVerified ? new Date() : null,
+            hasPassword: !!user.hashedPassword,
+            sessionVersion: user.sessionVersion,
           };
         } catch (error) {
           console.error("Authorize error:", error);
@@ -195,6 +197,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const img = (user as { image?: string | null }).image;
         token.userImage = img && !img.startsWith("data:") ? img : null;
         token.sessionVersion = (user as { sessionVersion?: number }).sessionVersion ?? 0;
+        token.hasPassword = (user as { hasPassword?: boolean }).hasPassword ?? false;
         // Busca dados completos só no primeiro login
         token.needsDbRefresh = true;
       }
@@ -213,6 +216,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             profileComplete: true,
             emailVerified: true,
             sessionVersion: true,
+            hashedPassword: true,
             school: { select: { slug: true, features: true } },
             adminPermission: {
               select: {
@@ -226,7 +230,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (dbUser) {
           // Session invalidation — if sessionVersion changed (password reset, etc.), discard token
           if (dbUser.sessionVersion !== (token.sessionVersion as number)) {
-            return {} as typeof token
+            return null as unknown as typeof token
           }
 
           token.id = dbUser.id;
@@ -246,6 +250,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const img = dbUser.image;
           token.userImage = img && !img.startsWith("data:") ? img : null;
           token.sessionVersion = dbUser.sessionVersion;
+          token.hasPassword = !!dbUser.hashedPassword;
         }
 
         token.needsDbRefresh = false;
@@ -255,6 +260,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     async session({ session, token }) {
+      if (!token?.id) return session
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
@@ -271,6 +277,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.schoolFeatures =
           (token.schoolFeatures as Record<string, boolean>) ?? null;
         session.user.image = (token.userImage as string) ?? null;
+        session.user.hasPassword = (token.hasPassword as boolean) ?? false;
       }
       return session;
     },

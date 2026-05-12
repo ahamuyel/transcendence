@@ -216,6 +216,8 @@ model User {
   profileComplete    Boolean  @default(true)
   sessionVersion     Int      @default(0)
   emailVerified      Boolean  @default(false)
+  twoFactorSecret    String?
+  twoFactorEnabled   Boolean  @default(false)
   schoolId           String?
   school             School?  @relation(fields: [schoolId], references: [id], onDelete: SetNull)
   createdAt          DateTime @default(now())
@@ -239,6 +241,8 @@ model User {
   supportTickets        SupportTicket[]        @relation("UserTickets")
   supportMessages       SupportTicketMessage[] @relation("UserTicketMessages")
   importJobs            ImportJob[]            @relation("UserImports")
+  friends               Friend[]               @relation("UserFriends")
+  friendOf              Friend[]               @relation("FriendOf")
 }
 
 model PasswordResetToken {
@@ -961,6 +965,21 @@ model CycleCertificate {
 }
 
 // ─── Audit Log ───────────────────────────────────────────────────
+
+model Friend {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
+  friendId  String
+  friend    User     @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
+  status    String   @default("pending") // pending, accepted, blocked
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
+}
 
 model AuditLog {
   id          String   @id @default(cuid())

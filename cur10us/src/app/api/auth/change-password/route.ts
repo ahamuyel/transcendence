@@ -54,13 +54,32 @@ async function handleChangePassword(req: Request) {
       where: { id: session.user.id },
     })
 
-    if (!user || !user.hashedPassword) {
+    if (!user) {
+      return NextResponse.json({ error: "Utilizador não encontrado" }, { status: 404 })
+    }
+
+    // Social user without password — set initial password (currentPassword not required)
+    if (!user.hashedPassword) {
+      const hashedPassword = await hashPassword(newPassword)
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          hashedPassword,
+          provider: user.provider === "google" ? "both" : user.provider || "credentials",
+          mustChangePassword: false,
+          sessionVersion: { increment: 1 },
+        },
+      })
+      return NextResponse.json({ success: true, isNewAccount: true })
+    }
+
+    // Existing password user — verify current password
+    if (!currentPassword) {
       return NextResponse.json(
-        { error: "Conta sem palavra-passe definida" },
+        { error: "Palavra-passe actual é obrigatória" },
         { status: 400 }
       )
     }
-
     const isValid = await comparePassword(currentPassword, user.hashedPassword)
     if (!isValid) {
       return NextResponse.json(
