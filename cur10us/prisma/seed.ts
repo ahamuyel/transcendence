@@ -10,11 +10,11 @@ async function main() {
   const hashedPassword = await hash("cur10usx", 12)
 
   await prisma.user.upsert({
-    where: { email: "super@cur10usx.com" },
+    where: { email: "cur10usxcompany@gmail.com" },
     update: { hashedPassword, role: "super_admin", isActive: true, emailVerified: true, provider: "credentials" },
     create: {
       name: "Super Admin",
-      email: "super@cur10usx.com",
+      email: "cur10usxcompany@gmail.com",
       hashedPassword,
       role: "super_admin",
       isActive: true,
@@ -22,7 +22,7 @@ async function main() {
       provider: "credentials",
     },
   })
-  console.log("✓ Super Admin: super@cur10usx.com / cur10usx")
+  console.log("✓ Super Admin: cur10usxcompany@gmail.com / cur10usx")
 
   // ─── 2. Platform Config ────────────────────────────────────────
   await prisma.platformConfig.upsert({

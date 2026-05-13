@@ -6,6 +6,7 @@ import crypto from "crypto"
 import { sendSchoolActivated, sendSchoolActivatedExistingAdmin } from "@/lib/email"
 import { getDefaultFeatures } from "@/lib/features"
 import { revalidateSchoolData } from "@/lib/revalidate"
+import { broadcastToUser } from "@/lib/ws-broadcast"
 
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -96,6 +97,15 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     } catch (error) {
     console.error(`[API Error] ${error}`)
       // Email delivery failure shouldn't block activation
+    }
+
+    // Notify the admin's session to refresh immediately (for existing self-registered admins)
+    if (admin && existingAdmin) {
+      try {
+        broadcastToUser(admin.id, "session-update", {})
+      } catch {
+        // WebSocket server may not be available
+      }
     }
 
     // Revalidate school data

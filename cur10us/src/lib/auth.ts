@@ -173,7 +173,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
 
-    async jwt({ token, user, trigger }) {
+    async jwt({ token, user }) {
       delete token.picture;
 
       // Primeiro login — dados vêm do objecto user
@@ -198,12 +198,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.userImage = img && !img.startsWith("data:") ? img : null;
         token.sessionVersion = (user as { sessionVersion?: number }).sessionVersion ?? 0;
         token.hasPassword = (user as { hasPassword?: boolean }).hasPassword ?? false;
-        // Busca dados completos só no primeiro login
-        token.needsDbRefresh = true;
       }
 
-      // Refresca da DB apenas no primeiro login ou quando update() é chamado
-      if (token.id && (token.needsDbRefresh || trigger === "update")) {
+      // Refresh from DB on every request to keep token in sync with latest user data
+      // (approvals, role changes, school associations, etc.)
+      if (token.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
           select: {
@@ -252,8 +251,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.sessionVersion = dbUser.sessionVersion;
           token.hasPassword = !!dbUser.hashedPassword;
         }
-
-        token.needsDbRefresh = false;
       }
 
       return token;

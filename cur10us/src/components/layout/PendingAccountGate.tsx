@@ -2,11 +2,12 @@
 
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { Clock } from "lucide-react"
+import { on } from "@/hooks/useWebSocket"
 
 export default function PendingAccountGate({ children }: { children: React.ReactNode }) {
-  const { data: session } = useSession()
+  const { data: session, update } = useSession()
   const router = useRouter()
 
   const user = session?.user
@@ -26,6 +27,23 @@ export default function PendingAccountGate({ children }: { children: React.React
       router.replace("/minha-area")
     }
   }, [shouldRedirect, router])
+
+  // Poll session every 15s while in pending state to detect approval immediately
+  const pollingRef = useRef<ReturnType<typeof setInterval>>(undefined)
+  useEffect(() => {
+    if (shouldRedirect) {
+      pollingRef.current = setInterval(() => { update() }, 15000)
+    }
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current)
+    }
+  }, [shouldRedirect, update])
+
+  // Listen for WebSocket "session-update" events to refresh immediately
+  useEffect(() => {
+    const unsub = on("session-update", () => { update() })
+    return unsub
+  }, [update])
 
   if (shouldRedirect) {
     return null
