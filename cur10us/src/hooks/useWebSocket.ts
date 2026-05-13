@@ -2,7 +2,7 @@
 import { useEffect, useRef, useCallback } from "react"
 import { useSession } from "next-auth/react"
 
-type WSEvent = "notification" | "message" | "friend_request" | "friend_accepted" | "online_status" | "session-update"
+type WSEvent = "notification" | "message" | "friend_request" | "friend_accepted" | "online_status" | "session-update" | "chat_message"
 
 type WSCallback = (payload: unknown) => void
 
