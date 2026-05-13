@@ -39,9 +39,17 @@ async function sendEmail(params: { to: string; subject: string; html: string }) 
       console.warn(`[EMAIL] Cannot send to ${params.to} — Resend not configured. Set EMAIL_LOGGING=true to log instead.`)
       return
     }
-    await resend.emails.send({ from, ...params })
+    const { error: resendError, data } = await resend.emails.send({ from, ...params })
+    if (resendError) {
+      console.error("[EMAIL] Resend API error:", JSON.stringify(resendError))
+      return
+    }
+    console.log(`[EMAIL] Sent to ${params.to} — id: ${data?.id}`)
   } catch (err) {
-    console.error("[EMAIL] Failed to send:", err)
+    console.error("[EMAIL] Failed to send:", err instanceof Error ? err.message : err)
+    if (err instanceof Error && err.stack) {
+      console.error("[EMAIL] Stack:", err.stack)
+    }
   }
 }
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requirePermission } from "@/lib/api-auth"
 import { sendEnrollmentComplete } from "@/lib/email"
+import { broadcastToUser } from "@/lib/ws-broadcast"
 
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -147,6 +148,15 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
       await sendEnrollmentComplete(application.email, application.name, application.school.name)
     } catch (e) {
       console.error("Email error:", e)
+    }
+
+    // Notify the user's session to refresh immediately
+    if (user) {
+      try {
+        broadcastToUser(user.id, "session-update", {})
+      } catch {
+        // WebSocket server may not be available
+      }
     }
 
     return NextResponse.json({ success: true })

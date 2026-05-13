@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import { Shield, ShieldOff, Loader2, Copy, CheckCircle, Smartphone } from "lucide-react"
+import { csrfPost } from "@/lib/csrf-client"
 
 export default function TwoFactorPage() {
   const [enabled, setEnabled] = useState(false)
@@ -26,7 +27,7 @@ export default function TwoFactorPage() {
   const handleSetup = async () => {
     setError("")
     try {
-      const res = await fetch("/api/auth/2fa/setup", { method: "POST" })
+      const res = await csrfPost("/api/auth/2fa/setup", {})
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       setSecret(data.secret)
@@ -42,11 +43,7 @@ export default function TwoFactorPage() {
     setVerifying(true)
     setError("")
     try {
-      const res = await fetch("/api/auth/2fa/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      })
+      const res = await csrfPost("/api/auth/2fa/verify", { token })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       setEnabled(true)
@@ -65,7 +62,7 @@ export default function TwoFactorPage() {
     setDisabling(true)
     setError("")
     try {
-      const res = await fetch("/api/auth/2fa/disable", { method: "POST" })
+      const res = await csrfPost("/api/auth/2fa/disable", {})
       if (!res.ok) throw new Error("Erro ao desativar")
       setEnabled(false)
       setSuccessMsg("2FA desativado com sucesso!")

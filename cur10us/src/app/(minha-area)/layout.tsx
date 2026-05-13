@@ -1,34 +1,55 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { signOut, useSession } from "next-auth/react"
 import { useRouter, usePathname } from "next/navigation"
 import { LogOut, Loader2 } from "lucide-react"
 import ThemeToggle from "@/components/ui/ThemeToggle"
+import { on } from "@/hooks/useWebSocket"
 
 export default function MinhaAreaLayout({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession()
+  const { data: session, status, update } = useSession()
   const router = useRouter()
   const pathname = usePathname()
 
+  const user = session?.user
+  const isActive = user?.isActive && !!user?.schoolId
+
   // Super admin: redirect to /admin
   // School admin who is enrolled: redirect to dashboard
+  // Any other active user with school association: redirect to dashboard
   // Exception: allow change-password page to render
   useEffect(() => {
-    if (status !== "authenticated" || !session?.user) return
-
+    if (status !== "authenticated" || !user) return
     if (pathname === "/change-password") return
 
-    if (session.user.role === "super_admin") {
+    if (user.role === "super_admin") {
       router.replace("/admin")
       return
     }
 
-    if (session.user.role === "school_admin" && session.user.isActive && session.user.schoolId) {
-      router.replace(`/dashboard/${session.user.id}`)
+    if (isActive) {
+      router.replace(`/dashboard/${user.id}`)
       return
     }
-  }, [status, session, router, pathname])
+  }, [status, user, isActive, router, pathname])
+
+  // Poll session every 15s while in pending state to detect approval immediately
+  const pollingRef = useRef<ReturnType<typeof setInterval>>(undefined)
+  useEffect(() => {
+    if (status === "authenticated" && user && !isActive) {
+      pollingRef.current = setInterval(() => { update() }, 15000)
+    }
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current)
+    }
+  }, [status, user, isActive, update])
+
+  // Listen for WebSocket "session-update" events to refresh immediately
+  useEffect(() => {
+    const unsub = on("session-update", () => { update() })
+    return unsub
+  }, [update])
 
   if (status === "loading") {
     return (
@@ -42,7 +63,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   // But allow change-password to render
   if (status === "authenticated" && pathname !== "/change-password" && (
     session?.user?.role === "super_admin" ||
-    (session?.user?.role === "school_admin" && session?.user?.isActive && session?.user?.schoolId)
+    (session?.user?.isActive && session?.user?.schoolId)
   )) {
     return (
       <div className="flex items-center justify-center min-h-screen">
