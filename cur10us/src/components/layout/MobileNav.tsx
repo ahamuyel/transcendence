@@ -80,6 +80,7 @@ const allMenuItems: { title: string; items: NavItem[] }[] = [
     items: [
       { icon: Home, label: "Minha Área", href: "/minha-area", visible: ["school_admin", "teacher", "student", "parent"] },
       { icon: Users, label: "Amigos", href: "/list/friends", visible: ["school_admin", "teacher", "student", "parent"] },
+      { icon: MessageSquare, label: "Chat", href: "/list/chat", visible: ["school_admin", "teacher", "student", "parent"] },
       { icon: CircleUser, label: "Perfil", href: "/profile", visible: ["school_admin", "teacher", "student", "parent"] },
       { icon: Settings, label: "Configurações", href: "/settings", visible: ["school_admin", "teacher", "student", "parent"] },
       { icon: HelpCircle, label: "Ajuda", href: "/help", visible: ["school_admin", "teacher", "student", "parent"] },
