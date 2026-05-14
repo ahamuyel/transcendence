@@ -130,6 +130,11 @@ model User {
   teacher                Teacher?
   school                 School?                 @relation(fields: [schoolId], references: [id])
   userPreference         UserPreference?
+  gameMatchesAsP1        GameMatch[]             @relation("GamePlayer1")
+  gameMatchesAsP2        GameMatch[]             @relation("GamePlayer2")
+  gameStats              GameStats?
+  createdTournaments     Tournament[]
+  tournamentPlayers      TournamentPlayer[]
 }
 
 model PasswordResetToken {
@@ -867,6 +872,73 @@ model AuditLog {
   @@index([schoolId])
   @@index([entity, entityId])
   @@index([createdAt])
+}
+
+model GameMatch {
+  id          String         @id @default(cuid())
+  gameType    String         @default("wordstack")
+  status      MatchStatus    @default(waiting)
+  player1Id   String?
+  player2Id   String?
+  player1     User?          @relation("GamePlayer1", fields: [player1Id], references: [id])
+  player2     User?          @relation("GamePlayer2", fields: [player2Id], references: [id])
+  winnerId    String?
+  loserId     String?
+  state       Json?
+  tournamentId String?
+  tournament  Tournament?    @relation(fields: [tournamentId], references: [id])
+  createdAt   DateTime       @default(now())
+  finishedAt  DateTime?
+}
+
+model GameStats {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gamesPlayed Int      @default(0)
+  gamesWon    Int      @default(0)
+  totalScore  Int      @default(0)
+  rating      Int      @default(1000)
+  updatedAt   DateTime @updatedAt
+}
+
+model Tournament {
+  id          String             @id @default(cuid())
+  name        String
+  gameType    String             @default("wordstack")
+  status      TournamentStatus   @default(registration)
+  maxPlayers  Int                @default(8)
+  createdById String
+  createdBy   User               @relation(fields: [createdById], references: [id])
+  matches     GameMatch[]
+  players     TournamentPlayer[]
+  createdAt   DateTime           @default(now())
+  startedAt   DateTime?
+  finishedAt  DateTime?
+}
+
+model TournamentPlayer {
+  id            String     @id @default(cuid())
+  tournamentId  String
+  tournament    Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seed          Int
+  eliminatedAt  DateTime?
+  createdAt     DateTime   @default(now())
+}
+
+enum MatchStatus {
+  waiting
+  in_progress
+  finished
+  cancelled
+}
+
+enum TournamentStatus {
+  registration
+  in_progress
+  finished
 }
 
 enum Role {
