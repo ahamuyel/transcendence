@@ -1,89 +1,128 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ahamuyel <ahamuyel@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/04/27 18:26:56 by ahamuyel          #+#    #+#              #
-#    Updated: 2026/04/28 10:58:29 by ahamuyel         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-# Nome do projeto
 NAME = cur10usx
 
-# Cores
-GREEN = \033[0;32m
-CYAN  = \033[0;36m
-RED   = \033[0;31m
-RESET = \033[0m
+GREEN  = \033[0;32m
+CYAN   = \033[0;36m
+YELLOW = \033[1;33m
+RED    = \033[0;31m
+BOLD   = \033[1m
+RESET  = \033[0m
 
-# Comandos
-DOCKER_COMPOSE = docker compose
-KUBECTL = kubectl
+DC   = docker compose
+DCP  = docker compose -f docker-compose.yml -f docker-compose.prod.yml
 
-# --- DOCKER COMPOSE (Development) ---
- 
+# ─── Development ───────────────────────────────────────────────────
+
 all: build up
 
 build:
-	@echo "$(GREEN)Construindo as imagens do $(NAME)...$(RESET)"
-	UID=$$(id -u) GID=$$(id -g) $(DOCKER_COMPOSE) build
+	@echo "$(GREEN)Building development images...$(RESET)"
+	$(DC) build
 
 up:
-	@echo "$(GREEN)Subindo os containers...$(RESET)"
-	UID=$$(id -u) GID=$$(id -g) $(DOCKER_COMPOSE) up
+	@echo "$(GREEN)Starting development environment...$(RESET)"
+	$(DC) up -d
+	@echo "$(CYAN)App:  http://localhost$(RESET)"
+	@echo "$(CYAN)Logs: make logs$(RESET)"
 
 down:
-	@echo "$(RED)Removendo containers...$(RESET)"
-	$(DOCKER_COMPOSE) down
+	@echo "$(RED)Stopping containers...$(RESET)"
+	$(DC) down
+
+logs:
+	$(DC) logs -f
+
+restart:
+	$(DC) restart
+
+ps:
+	$(DC) ps
 
 clean:
-	@echo "$(RED)Limpando containers e volumes...$(RESET)"
-	$(DOCKER_COMPOSE) down -v
-	sudo rm -rf cur10us/.next cur10us/node_modules
-
-# --- KUBERNETES (Orchestration) ---
-
-# Inicia o minikube com as configurações que funcionaram
-k8s-start:
-	@echo "$(CYAN)Iniciando Minikube...$(RESET)"
-	minikube start --driver=docker --memory=4096 --cpus=2
-
-# Aplica todos os manifestos .yaml (Deployment e Services)
-k8s-apply:
-	@echo "$(GREEN)Aplicando manifestos Kubernetes...$(RESET)"
-	$(KUBECTL) apply -f k8s/
-
-# Remove tudo do cluster
-k8s-delete:
-	@echo "$(RED)Removendo recursos do Kubernetes...$(RESET)"
-	$(KUBECTL) delete -f k8s/
-
-# Atalho para ver os pods em tempo real
-k8s-status:
-	$(KUBECTL) get all
-	$(KUBECTL) get pods -w
-
-# Expõe o serviço web automaticamente
-k8s-web:
-	@echo "$(CYAN)Abrindo serviço web no browser...$(RESET)"
-	minikube service cur10usx-web-service
-
-# Cria o túnel necessário para LoadBalancer no Linux
-k8s-tunnel:
-	@echo "$(CYAN)Iniciando Minikube Tunnel (mantenha este terminal aberto)...$(RESET)"
-	minikube tunnel
-
-# --- GLOBAL ---
+	@echo "$(RED)Removing containers and volumes...$(RESET)"
+	$(DC) down -v
 
 fclean: clean
-	@echo "$(RED)Removendo tudo (Docker & K8s)...$(RESET)"
-	docker system prune -a -f
-	docker builder prune -a -f
-	# Opcional: minikube delete --all --purge (cuidado, demora a reconstruir)
+	@echo "$(RED)Cleaning Docker system...$(RESET)"
+	docker system prune -af --volumes
 
 re: fclean all
 
-.PHONY: all build up down clean fclean re logs shell k8s-start k8s-apply k8s-delete k8s-status k8s-web k8s-tunnel
+# ─── Production ────────────────────────────────────────────────────
+
+prod-build:
+	@echo "$(GREEN)Building production images...$(RESET)"
+	$(DCP) build
+
+prod-up:
+	@echo "$(GREEN)Starting production environment...$(RESET)"
+	$(DCP) up -d
+
+prod-down:
+	@echo "$(RED)Stopping production environment...$(RESET)"
+	$(DCP) down
+
+prod-logs:
+	$(DCP) logs -f
+
+prod-restart:
+	$(DCP) restart
+
+# ─── Database ───────────────────────────────────────────────────────
+
+db-migrate:
+	$(DC) exec nextjs npx prisma migrate deploy
+
+db-studio:
+	$(DC) exec nextjs npx prisma studio
+
+db-seed:
+	$(DC) exec nextjs npx prisma db seed
+
+# ─── Utilities ─────────────────────────────────────────────────────
+
+shell-nextjs:
+	$(DC) exec nextjs sh
+
+shell-ws:
+	$(DC) exec ws-server sh
+
+shell-redis:
+	$(DC) exec redis redis-cli
+
+setup-secrets:
+	@echo "$(YELLOW)Creating secret files (fill them in)...$(RESET)"
+	@mkdir -p secrets
+	for secret in auth_secret google_client_id google_client_secret resend_api_key; do \
+		[ ! -f "./secrets/$${secret}.txt" ] && touch "./secrets/$${secret}.txt" && echo "  created: secrets/$${secret}.txt" || echo "  exists: secrets/$${secret}.txt"; \
+	done
+	@echo "$(GREEN)Done. Fill each file with the corresponding secret value.$(RESET)"
+
+env:
+	@[ ! -f .env ] && cp .env.example .env && echo "$(GREEN)Created .env from .env.example$(RESET)" || echo "$(YELLOW}.env already exists$(RESET)"
+
+# ─── Health ─────────────────────────────────────────────────────────
+
+health:
+	@echo "$(CYAN)Checking containers health...$(RESET)"
+	@$(DC) ps --format "table {{.Name}}\t{{.Status}}\t{{.Health}}"
+
+# ─── Kubernetes ────────────────────────────────────────────────────
+
+k8s-start:
+	minikube start --driver=docker --memory=4096 --cpus=2
+
+k8s-apply:
+	kubectl apply -f k8s/
+
+k8s-delete:
+	kubectl delete -f k8s/
+
+k8s-status:
+	kubectl get all
+
+.PHONY: all build up down logs restart ps clean fclean re \
+        prod-build prod-up prod-down prod-logs prod-restart \
+        db-migrate db-studio db-seed \
+        shell-nextjs shell-ws shell-redis \
+        setup-secrets env health \
+        k8s-start k8s-apply k8s-delete k8s-status

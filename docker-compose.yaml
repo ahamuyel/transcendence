@@ -6,11 +6,11 @@ services:
     image: cur10us-app
     ports:
       - "3000:3000"
-      - "3001:3001"
     env_file:
       - .env
     environment:
       NODE_ENV: production
+      WS_SERVER_URL: ws://ws-server:3001
     secrets:
       - auth_secret
       - google_client_id
@@ -20,12 +20,27 @@ services:
       - app_uploads:/app/public/uploads
       - app_logs:/app/logs
     restart: unless-stopped
+    depends_on:
+      ws-server:
+        condition: service_started
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  ws-server:
+    build:
+      context: ./ws-server
+      dockerfile: Dockerfile
+    image: cur10us-ws-server
+    ports:
+      - "3001:3001"
+    environment:
+      WS_PORT: 3001
+      WS_HOST: 0.0.0.0
+    restart: unless-stopped
 
 secrets:
   auth_secret:

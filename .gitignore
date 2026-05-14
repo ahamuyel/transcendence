@@ -6,3 +6,14 @@ node_modules/
 .env.local
 .env*.local
 secret/
+secrets/
+
+# Docker
+.docker/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
