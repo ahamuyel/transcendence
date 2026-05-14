@@ -48,7 +48,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   // Listen for WebSocket "session-update" events to refresh immediately
   useEffect(() => {
     const unsub = on("session-update", () => { update() })
-    return unsub
+    return () => { unsub() }
   }, [update])
 
   if (status === "loading") {

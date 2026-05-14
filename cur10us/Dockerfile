@@ -1,39 +1,42 @@
-# --- ESTÁGIO 1: Dependências ---
 FROM node:20-alpine AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# --- ESTÁGIO 2: Build ---
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
-# URL fictícia apenas para o build passar sem conectar ao banco real
 ENV DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres"
 
 RUN npx prisma generate
-RUN npx next build
+RUN npm run build
 
-# --- ESTÁGIO 3: Runner ---
 FROM node:20-alpine AS runner
 WORKDIR /app
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Criar usuário para não rodar como root (Segurança)
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN apk add --no-cache libc6-compat openssl
 
-# Copiar arquivos garantindo que o usuário 'nextjs' seja o dono
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app ./
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/entrypoint.sh ./entrypoint.sh
 
-# Dar permissão de execução ao script
-RUN chmod +x entrypoint.sh
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs && \
+    chown -R nextjs:nodejs /app && \
+    chmod +x entrypoint.sh
 
 USER nextjs
 

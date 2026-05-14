@@ -113,6 +113,9 @@ model User {
   application            Application?
   dashboardPreference    DashboardPreference?
   emailVerificationToken EmailVerificationToken?
+  conversations1         Conversation[]          @relation("ConversationParticipant1")
+  conversations2         Conversation[]          @relation("ConversationParticipant2")
+  sentChatMessages       ChatMessage[]           @relation("SentChatMessages")
   friendOf               Friend[]                @relation("FriendOf")
   friends                Friend[]                @relation("UserFriends")
   importJobs             ImportJob[]             @relation("UserImports")
@@ -814,6 +817,35 @@ model Friend {
   @@unique([userId, friendId])
   @@index([userId])
   @@index([friendId])
+}
+
+model Conversation {
+  id             String        @id @default(cuid())
+  participant1Id String
+  participant2Id String
+  lastMessageAt  DateTime?
+  createdAt      DateTime      @default(now())
+  participant1   User          @relation("ConversationParticipant1", fields: [participant1Id], references: [id], onDelete: Cascade)
+  participant2   User          @relation("ConversationParticipant2", fields: [participant2Id], references: [id], onDelete: Cascade)
+  messages       ChatMessage[]
+
+  @@unique([participant1Id, participant2Id])
+  @@index([participant1Id])
+  @@index([participant2Id])
+}
+
+model ChatMessage {
+  id             String       @id @default(cuid())
+  conversationId String
+  senderId       String
+  text           String
+  createdAt      DateTime     @default(now())
+  readAt         DateTime?
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation("SentChatMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([senderId])
 }
 
 model AuditLog {

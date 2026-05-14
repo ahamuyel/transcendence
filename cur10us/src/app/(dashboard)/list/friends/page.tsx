@@ -1,7 +1,9 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useSession } from "next-auth/react"
-import { Loader2, UserPlus, UserCheck, Trash2, Clock, UserX } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Loader2, UserPlus, UserCheck, Trash2, Clock, UserX, MessageCircle, Wifi, WifiOff } from "lucide-react"
+import { on } from "@/hooks/useWebSocket"
 
 type Friend = {
   id: string
@@ -18,32 +20,63 @@ type FriendRequest = {
 
 export default function FriendsPage() {
   const { data: session } = useSession()
+  const router = useRouter()
   const [friends, setFriends] = useState<Friend[]>([])
   const [requests, setRequests] = useState<FriendRequest[]>([])
+  const [online, setOnline] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [addEmail, setAddEmail] = useState("")
   const [addLoading, setAddLoading] = useState(false)
   const [tab, setTab] = useState<"friends" | "requests" | "add">("friends")
 
-  const fetchFriends = async () => {
+  const fetchFriends = useCallback(async () => {
     const res = await fetch("/api/friends?status=accepted")
     if (res.ok) {
       const json = await res.json()
       setFriends(json.data)
     }
-  }
+  }, [])
 
-  const fetchRequests = async () => {
+  const fetchRequests = useCallback(async () => {
     const res = await fetch("/api/friends/requests")
     if (res.ok) {
       const json = await res.json()
       setRequests(json.data)
     }
-  }
+  }, [])
 
   useEffect(() => {
     Promise.all([fetchFriends(), fetchRequests()]).finally(() => setLoading(false))
-  }, [])
+  }, [fetchFriends, fetchRequests])
+
+  useEffect(() => {
+    const unsubs = [
+      on("friend_request", () => { fetchRequests() }),
+      on("friend_accepted", () => { fetchFriends(); fetchRequests() }),
+      on("online_status", (payload: unknown) => {
+        const { userId, status } = payload as { userId: string; status: "online" | "offline" }
+        setOnline((prev) => {
+          const next = new Set(prev)
+          if (status === "online") next.add(userId)
+          else next.delete(userId)
+          return next
+        })
+      }),
+    ]
+    return () => unsubs.forEach((u) => { u() })
+  }, [fetchFriends, fetchRequests])
+
+  const handleChat = async (friendId: string) => {
+    const res = await fetch("/api/chat/conversations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ participantId: friendId }),
+    })
+    if (res.ok) {
+      const json = await res.json()
+      router.push(`/list/chat/${json.data.id}`)
+    }
+  }
 
   const handleAddFriend = async () => {
     if (!addEmail.trim()) return
@@ -145,30 +178,52 @@ export default function FriendsPage() {
             {friends.length === 0 ? (
               <p className="text-sm text-zinc-400 text-center py-8">Nenhum amigo adicionado</p>
             ) : (
-              friends.map((f) => (
-                <div key={f.id} className="flex items-center justify-between p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center text-sm font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden">
-                      {f.friend.image ? (
-                        <img src={f.friend.image} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        f.friend.name?.charAt(0).toUpperCase()
-                      )}
+              friends.map((f) => {
+                const isOnline = online.has(f.friend.id)
+                return (
+                  <div key={f.id} className="flex items-center justify-between p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center text-sm font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden">
+                        {f.friend.image ? (
+                          <img src={f.friend.image} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          f.friend.name?.charAt(0).toUpperCase()
+                        )}
+                        {isOnline && (
+                          <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-zinc-900 rounded-full" />
+                        )}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{f.friend.name}</p>
+                          {isOnline ? (
+                            <Wifi size={12} className="text-emerald-500" />
+                          ) : (
+                            <WifiOff size={12} className="text-zinc-300 dark:text-zinc-600" />
+                          )}
+                        </div>
+                        <p className="text-xs text-zinc-400">{roleLabel(f.friend.role)}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{f.friend.name}</p>
-                      <p className="text-xs text-zinc-400">{roleLabel(f.friend.role)}</p>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => handleChat(f.friend.id)}
+                        className="p-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950/30 text-zinc-400 hover:text-indigo-500 transition"
+                        title="Enviar mensagem"
+                      >
+                        <MessageCircle size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleRemoveFriend(f.friend.id)}
+                        className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-zinc-400 hover:text-red-500 transition"
+                        title="Remover amigo"
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleRemoveFriend(f.friend.id)}
-                    className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-zinc-400 hover:text-red-500 transition"
-                    title="Remover amigo"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              ))
+                )
+              })
             )}
           </div>
         )}

@@ -78,6 +78,7 @@ const menuItems: { title: string; items: MenuItem[] }[] = [
       { icon: SlidersHorizontal, label: "Config. Avaliação", href: "/settings/grading", visible: ["school_admin"], feature: "evaluationEngine" },
       { icon: Upload, label: "Importar", href: "/import", visible: ["school_admin"] },
       { icon: Users, label: "Amigos", href: "/list/friends", visible: ["school_admin", "teacher", "student", "parent"] },
+      { icon: MessageSquare, label: "Chat", href: "/list/chat", visible: ["school_admin", "teacher", "student", "parent"] },
       { icon: CircleUser, label: "Perfil", href: "/profile", visible: ["school_admin", "teacher", "student", "parent"] },
       { icon: Settings, label: "Configurações", href: "/settings", visible: ["school_admin", "teacher", "student", "parent"] },
       { icon: LifeBuoy, label: "Suporte", href: "/support", visible: ["school_admin", "teacher", "student", "parent"] },

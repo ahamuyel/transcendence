@@ -25,9 +25,11 @@ export function useWebSocket() {
   const connectRef = useRef<() => void>(() => {})
 
   const connect = useCallback(() => {
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
-    const host = window.location.hostname
-    const url = `${protocol}//${host}:3001`
+    const url = process.env.NEXT_PUBLIC_WS_URL || (() => {
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
+      const host = window.location.hostname
+      return `${protocol}//${host}:3001`
+    })()
 
     const ws = new WebSocket(url)
 
