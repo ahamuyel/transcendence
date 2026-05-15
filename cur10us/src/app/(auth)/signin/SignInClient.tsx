@@ -111,6 +111,12 @@ export default function SignInClient() {
 
       const session = await getSession();
 
+      // 2FA verification required before granting access
+      if (session?.user?.twoFactorEnabled && !session?.user?.twoFactorVerifiedAt) {
+        router.push(`/signin/verify-2fa?email=${encodeURIComponent(email)}`);
+        return;
+      }
+
       const dashboard = getDashboardPath(session?.user?.id);
       const isSuperAdmin = session?.user?.role === "super_admin";
 

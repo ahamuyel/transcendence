@@ -88,7 +88,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           const user = await prisma.user.findUnique({
             where: { email },
-            include: { school: { select: { slug: true } } },
+          include: { school: { select: { slug: true, status: true } } },
           });
           if (!user) return null;
 
@@ -108,6 +108,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             image: user.image,
             schoolId: user.schoolId,
             schoolSlug: user.school?.slug ?? null,
+            schoolStatus: user.school?.status ?? null,
             isActive: user.isActive,
             mustChangePassword: user.mustChangePassword,
             profileComplete: user.profileComplete,
@@ -185,6 +186,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           (user as { schoolId?: string | null }).schoolId ?? null;
         token.schoolSlug =
           (user as { schoolSlug?: string | null }).schoolSlug ?? null;
+        token.schoolStatus =
+          (user as { schoolStatus?: string | null }).schoolStatus ?? null;
         token.isActive = (user as { isActive: boolean }).isActive;
         token.mustChangePassword =
           (user as { mustChangePassword?: boolean }).mustChangePassword ??
@@ -200,6 +203,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.sessionVersion = (user as { sessionVersion?: number }).sessionVersion ?? 0;
         token.hasPassword = (user as { hasPassword?: boolean }).hasPassword ?? false;
         token.twoFactorEnabled = (user as { twoFactorEnabled?: boolean }).twoFactorEnabled ?? false;
+        token.twoFactorVerifiedAt = null;
       }
 
       // Refresh from DB on every request to keep token in sync with latest user data
@@ -219,7 +223,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             sessionVersion: true,
             hashedPassword: true,
             twoFactorEnabled: true,
-            school: { select: { slug: true, features: true } },
+            twoFactorVerifiedAt: true,
+            school: { select: { slug: true, features: true, status: true } },
             adminPermission: {
               select: {
                 level: true,
@@ -239,6 +244,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.role = dbUser.role;
           token.schoolId = dbUser.schoolId ?? null;
           token.schoolSlug = dbUser.school?.slug ?? null;
+          token.schoolStatus = dbUser.school?.status ?? null;
           token.isActive = dbUser.isActive;
           token.mustChangePassword = dbUser.mustChangePassword;
           token.profileComplete = dbUser.profileComplete;
@@ -254,6 +260,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.sessionVersion = dbUser.sessionVersion;
           token.hasPassword = !!dbUser.hashedPassword;
           token.twoFactorEnabled = dbUser.twoFactorEnabled;
+          // Only read twoFactorVerifiedAt from DB on subsequent refreshes,
+          // NOT on initial sign-in (to ensure 2FA is always required on new login)
+          if (!user) {
+            token.twoFactorVerifiedAt = dbUser.twoFactorVerifiedAt?.toISOString() ?? null;
+          }
         }
       }
 
@@ -267,6 +278,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.role = token.role as string;
         session.user.schoolId = (token.schoolId as string) ?? null;
         session.user.schoolSlug = (token.schoolSlug as string) ?? null;
+        session.user.schoolStatus = (token.schoolStatus as string) ?? null;
         session.user.isActive = token.isActive as boolean;
         session.user.mustChangePassword =
           (token.mustChangePassword as boolean) ?? false;
@@ -280,6 +292,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.image = (token.userImage as string) ?? null;
         session.user.hasPassword = (token.hasPassword as boolean) ?? false;
         session.user.twoFactorEnabled = (token.twoFactorEnabled as boolean) ?? false;
+        session.user.twoFactorVerifiedAt = (token.twoFactorVerifiedAt as string) ?? null;
       }
       return session;
     },

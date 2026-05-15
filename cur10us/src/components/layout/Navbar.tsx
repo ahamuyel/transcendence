@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react"
 import {
   Search,
   MessageCircle,
+  MessageCircleMore,
   X,
   Users,
   UserRound,
@@ -14,6 +15,7 @@ import {
 import Link from "next/link"
 import ThemeToggle from "@/components/ui/ThemeToggle"
 import NotificationDropdown from "@/components/ui/NotificationDropdown"
+import { on } from "@/hooks/useWebSocket"
 
 const roleLabels: Record<string, string> = {
   super_admin: "Super Admin",
@@ -42,9 +44,35 @@ const NavBar = () => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const [unreadCount, setUnreadCount] = useState(0)
   const userName = session?.user?.name || "Usuário"
   const userRole = session?.user?.role || ""
   const userImage = session?.user?.image || "/avatar.png"
+
+  const fetchUnread = useCallback(async () => {
+    try {
+      const res = await fetch("/api/chat/unread")
+      if (res.ok) {
+        const json = await res.json()
+        setUnreadCount(json.total)
+      }
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 30000)
+    return () => clearInterval(interval)
+  }, [fetchUnread])
+
+  useEffect(() => {
+    const unsub = on("chat_message", () => {
+      fetchUnread()
+    })
+    return unsub
+  }, [fetchUnread])
 
   const doSearch = useCallback((q: string) => {
     if (q.length < 2) {
@@ -206,10 +234,18 @@ const NavBar = () => {
       {/* ACTIONS */}
       <div className="flex items-center gap-3 sm:gap-4 ml-auto">
 
-        {/* Messages */}
-        <button className="relative p-2 rounded-lg text-zinc-500 hover:text-indigo-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
-          <MessageCircle size={18} />
-        </button>
+        {/* Chat */}
+        <Link
+          href="/list/chat"
+          className="relative p-2 rounded-lg text-zinc-500 hover:text-indigo-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
+        >
+          {unreadCount > 0 ? <MessageCircleMore size={18} /> : <MessageCircle size={18} />}
+          {unreadCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center">
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </span>
+          )}
+        </Link>
 
         {/* Notifications */}
         <NotificationDropdown />

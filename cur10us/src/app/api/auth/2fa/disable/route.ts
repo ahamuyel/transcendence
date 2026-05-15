@@ -14,7 +14,7 @@ async function handleDisable() {
 
     await prisma.user.update({
       where: { id: session.user.id },
-      data: { twoFactorSecret: null, twoFactorEnabled: false },
+      data: { twoFactorSecret: null, twoFactorEnabled: false, twoFactorVerifiedAt: null },
     })
 
     return NextResponse.json({ success: true })

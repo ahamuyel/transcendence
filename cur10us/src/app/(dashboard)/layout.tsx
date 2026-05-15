@@ -2,6 +2,7 @@ import Menu from "@/components/layout/Menu"
 import NavBar from "@/components/layout/Navbar"
 import MobileNav from "@/components/layout/MobileNav"
 import PendingAccountGate from "@/components/layout/PendingAccountGate"
+import TwoFactorGate from "@/components/layout/TwoFactorGate"
 import MustChangePasswordGate from "@/components/layout/MustChangePasswordGate"
 import MaintenanceGuard from "@/components/layout/MaintenanceGuard"
 import SessionGuard from "@/components/layout/SessionGuard"
@@ -18,6 +19,7 @@ export default function DashboardLayout({
     <SessionGuard>
     <MaintenanceGuard>
     <SchoolBrandingProvider>
+    <TwoFactorGate>
     <PendingAccountGate>
     <MustChangePasswordGate>
       <div className="h-screen flex flex-col md:flex-row">
@@ -43,6 +45,7 @@ export default function DashboardLayout({
       </div>
     </MustChangePasswordGate>
     </PendingAccountGate>
+    </TwoFactorGate>
     </SchoolBrandingProvider>
     </MaintenanceGuard>
     </SessionGuard>

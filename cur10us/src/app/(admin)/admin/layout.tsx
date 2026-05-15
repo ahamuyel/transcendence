@@ -22,6 +22,7 @@ import ThemeToggle from "@/components/ui/ThemeToggle"
 import AdminNavBar from "@/components/layout/AdminNavBar"
 import AdminMobileNav from "@/components/layout/AdminMobileNav"
 import SessionGuard from "@/components/layout/SessionGuard"
+import TwoFactorGate from "@/components/layout/TwoFactorGate"
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
@@ -59,6 +60,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <SessionGuard>
+    <TwoFactorGate>
     <div className="h-screen flex flex-col md:flex-row">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-[72px] lg:w-[220px] shrink-0 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 flex-col transition-all duration-200">
@@ -126,6 +128,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Mobile bottom nav */}
       <AdminMobileNav />
     </div>
+    </TwoFactorGate>
     </SessionGuard>
   )
 }

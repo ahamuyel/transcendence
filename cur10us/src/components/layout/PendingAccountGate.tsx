@@ -50,7 +50,7 @@ export default function PendingAccountGate({ children }: { children: React.React
   }
 
   // Inline pending screen for school_admin with inactive school
-  if (user && !user.isActive && isSchoolAdmin) {
+  if (user && isSchoolAdmin && user.schoolStatus !== "ativa") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black px-4">
         <div className="max-w-md text-center">
