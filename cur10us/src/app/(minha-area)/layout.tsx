@@ -38,7 +38,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   const pollingRef = useRef<ReturnType<typeof setInterval>>(undefined)
   useEffect(() => {
     if (status === "authenticated" && user && !isActive) {
-      pollingRef.current = setInterval(() => { update() }, 15000)
+      pollingRef.current = setInterval(() => { update() }, 60000)
     }
     return () => {
       if (pollingRef.current) clearInterval(pollingRef.current)

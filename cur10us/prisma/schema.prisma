@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 model School {
@@ -131,9 +131,7 @@ model User {
   conversationsAsParticipant1 Conversation[]     @relation("ConversationParticipant1")
   conversationsAsParticipant2 Conversation[]     @relation("ConversationParticipant2")
   chatMessages           ChatMessage[]
-  gamesAsPlayer1         GameMatch[]          @relation("GamePlayer1")
-  gamesAsPlayer2         GameMatch[]          @relation("GamePlayer2")
-  gamesWon               GameMatch[]          @relation("GameWinner")
+
 }
 
 model PasswordResetToken {
@@ -852,25 +850,6 @@ model Friend {
   @@unique([userId, friendId])
   @@index([userId])
   @@index([friendId])
-}
-
-model GameMatch {
-  id            String    @id @default(cuid())
-  player1Id     String
-  player2Id     String
-  status        String    @default("pending")
-  winnerId      String?
-  player1Move   String?
-  player2Move   String?
-  createdAt     DateTime  @default(now())
-  completedAt   DateTime?
-  player1       User      @relation("GamePlayer1", fields: [player1Id], references: [id], onDelete: Cascade)
-  player2       User      @relation("GamePlayer2", fields: [player2Id], references: [id], onDelete: Cascade)
-  winner        User?     @relation("GameWinner", fields: [winnerId], references: [id])
-
-  @@index([player1Id])
-  @@index([player2Id])
-  @@index([status])
 }
 
 model AuditLog {
