@@ -1,9 +1,11 @@
 "use client"
 import { useState, useEffect } from "react"
 import { Shield, ShieldOff, Loader2, Copy, CheckCircle, Smartphone } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { csrfPost } from "@/lib/csrf-client"
 
 export default function TwoFactorPage() {
+  const { update } = useSession()
   const [enabled, setEnabled] = useState(false)
   const [loading, setLoading] = useState(true)
   const [step, setStep] = useState<"idle" | "setup" | "verify">("idle")
@@ -49,6 +51,7 @@ export default function TwoFactorPage() {
       setEnabled(true)
       setStep("idle")
       setSuccessMsg("2FA ativado com sucesso!")
+      await update()
       setTimeout(() => setSuccessMsg(""), 5000)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Token inválido")
