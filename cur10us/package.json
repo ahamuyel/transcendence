@@ -8,6 +8,8 @@
     "vercel-build": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "npx prisma db seed",
     "db:studio": "npx prisma studio"
@@ -44,6 +46,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/jest": "^30.0.0",
     "@types/moment": "^2.11.29",
     "@types/node": "^20",
     "@types/qrcode": "^1.5.6",
@@ -55,9 +58,12 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "^16.1.6",
+    "jest": "^30.4.2",
     "prisma": "^6.19.2",
     "tailwindcss": "^4",
+    "ts-jest": "^29.4.9",
     "tsx": "^4.21.0",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "^4.1.6"
   }
 }

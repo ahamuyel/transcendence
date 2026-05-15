@@ -11,6 +11,8 @@ services:
       - .env
     environment:
       NODE_ENV: production
+      NEXT_PUBLIC_WS_URL: ws://localhost:3001
+      WS_SERVER_URL: ws://localhost:3001
     secrets:
       - auth_secret
       - google_client_id
@@ -26,6 +28,23 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    depends_on:
+      redis:
+        condition: service_started
+
+  redis:
+    image: redis:7-alpine
+    container_name: cur10usx-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 secrets:
   auth_secret:
@@ -41,4 +60,6 @@ volumes:
   app_uploads:
     driver: local
   app_logs:
+    driver: local
+  redis_data:
     driver: local

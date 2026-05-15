@@ -38,6 +38,9 @@
   ],
   "exclude": [
     "node_modules",
-    "prisma/seed.ts"
+    "prisma/seed.ts",
+    "jest.config.ts",
+    "vitest.config.ts",
+    "tests"
   ]
 }

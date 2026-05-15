@@ -6,12 +6,29 @@ set -e
 # Lemos o arquivo e exportamos a variável correspondente.
 load_secret() {
   var_name="$1"
-  secret_file="/secrets/$2"
+  secret_file="/run/secrets/$2"
   if [ -f "$secret_file" ]; then
-    # `tr -d '\n'` remove qualquer quebra de linha acidental
     export "$var_name"="$(cat "$secret_file" | tr -d '\n')"
+  else
+    echo "⚠️ Warning: Secret file $secret_file not found. Check docker-compose secrets config."
   fi
 }
+
+required_secrets() {
+  missing=0
+  for secret in "$@"; do
+    if [ ! -f "/run/secrets/$secret" ]; then
+      echo "❌ Required secret file /run/secrets/$secret is missing!"
+      missing=$((missing + 1))
+    fi
+  done
+  if [ "$missing" -gt 0 ]; then
+    echo "❌ $missing required secret(s) missing. Aborting."
+    exit 1
+  fi
+}
+
+required_secrets auth_secret google_client_id google_client_secret resend_api_key
 
 load_secret AUTH_SECRET          auth_secret
 load_secret GOOGLE_CLIENT_ID     google_client_id

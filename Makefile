@@ -29,11 +29,16 @@ all: build up
 
 build:
 	@echo "$(GREEN)Construindo as imagens do $(NAME)...$(RESET)"
-	UID=$$(id -u) GID=$$(id -g) $(DOCKER_COMPOSE) build
+	$(DOCKER_COMPOSE) build
 
 up:
 	@echo "$(GREEN)Subindo os containers...$(RESET)"
-	UID=$$(id -u) GID=$$(id -g) $(DOCKER_COMPOSE) up
+	$(DOCKER_COMPOSE) up -d
+	@echo "$(GREEN)App disponível em http://localhost:3000$(RESET)"
+
+up-logs:
+	@echo "$(GREEN)Subindo containers com logs...$(RESET)"
+	$(DOCKER_COMPOSE) up
 
 down:
 	@echo "$(RED)Removendo containers...$(RESET)"
@@ -42,7 +47,10 @@ down:
 clean:
 	@echo "$(RED)Limpando containers e volumes...$(RESET)"
 	$(DOCKER_COMPOSE) down -v
-	sudo rm -rf cur10us/.next cur10us/node_modules
+
+clean-local:
+	@echo "$(RED)Limpando artefactos locais...$(RESET)"
+	rm -rf cur10us/.next cur10us/node_modules cur10us/.next
 
 # --- KUBERNETES (Orchestration) ---
 
@@ -69,7 +77,11 @@ k8s-status:
 # Expõe o serviço web automaticamente
 k8s-web:
 	@echo "$(CYAN)Abrindo serviço web no browser...$(RESET)"
-	minikube service cur10usx-web-service
+	minikube service cur10usx-app-service
+
+k8s-logs:
+	@echo "$(CYAN)Logs dos pods...$(RESET)"
+	$(KUBECTL) logs -l app=cur10usx --tail=100
 
 # Cria o túnel necessário para LoadBalancer no Linux
 k8s-tunnel:

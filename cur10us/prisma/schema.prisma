@@ -127,6 +127,12 @@ model User {
   teacher                Teacher?
   school                 School?                 @relation(fields: [schoolId], references: [id])
   userPreference         UserPreference?
+  conversationsAsParticipant1 Conversation[]     @relation("ConversationParticipant1")
+  conversationsAsParticipant2 Conversation[]     @relation("ConversationParticipant2")
+  chatMessages           ChatMessage[]
+  gamesAsPlayer1         GameMatch[]          @relation("GamePlayer1")
+  gamesAsPlayer2         GameMatch[]          @relation("GamePlayer2")
+  gamesWon               GameMatch[]          @relation("GameWinner")
 }
 
 model PasswordResetToken {
@@ -372,6 +378,8 @@ model Result {
   examId          String?
   assignmentId    String?
   schoolId        String
+
+  @@unique([studentId, subjectId, trimester, academicYearId])
   academicYearRef AcademicYear? @relation(fields: [academicYearId], references: [id])
   assignment      Assignment?   @relation(fields: [assignmentId], references: [id])
   exam            Exam?         @relation(fields: [examId], references: [id])
@@ -411,6 +419,35 @@ model Message {
   from      User     @relation("SentMessages", fields: [fromId], references: [id], onDelete: Cascade)
   school    School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   to        User?    @relation("ReceivedMessages", fields: [toId], references: [id])
+}
+
+model Conversation {
+  id              String   @id @default(cuid())
+  participant1Id  String
+  participant2Id  String
+  lastMessageAt   DateTime?
+  createdAt       DateTime @default(now())
+  participant1    User     @relation("ConversationParticipant1", fields: [participant1Id], references: [id], onDelete: Cascade)
+  participant2    User     @relation("ConversationParticipant2", fields: [participant2Id], references: [id], onDelete: Cascade)
+  messages        ChatMessage[]
+
+  @@unique([participant1Id, participant2Id])
+  @@index([participant1Id])
+  @@index([participant2Id])
+}
+
+model ChatMessage {
+  id              String       @id @default(cuid())
+  conversationId  String
+  senderId        String
+  text            String
+  readAt          DateTime?
+  createdAt       DateTime     @default(now())
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender          User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([senderId])
 }
 
 model Announcement {
@@ -814,6 +851,25 @@ model Friend {
   @@unique([userId, friendId])
   @@index([userId])
   @@index([friendId])
+}
+
+model GameMatch {
+  id            String    @id @default(cuid())
+  player1Id     String
+  player2Id     String
+  status        String    @default("pending")
+  winnerId      String?
+  player1Move   String?
+  player2Move   String?
+  createdAt     DateTime  @default(now())
+  completedAt   DateTime?
+  player1       User      @relation("GamePlayer1", fields: [player1Id], references: [id], onDelete: Cascade)
+  player2       User      @relation("GamePlayer2", fields: [player2Id], references: [id], onDelete: Cascade)
+  winner        User?     @relation("GameWinner", fields: [winnerId], references: [id])
+
+  @@index([player1Id])
+  @@index([player2Id])
+  @@index([status])
 }
 
 model AuditLog {

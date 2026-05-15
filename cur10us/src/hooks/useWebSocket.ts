@@ -2,7 +2,7 @@
 import { useEffect, useRef, useCallback } from "react"
 import { useSession } from "next-auth/react"
 
-type WSEvent = "notification" | "message" | "friend_request" | "friend_accepted" | "online_status" | "session-update" | "chat_message"
+type WSEvent = "notification" | "message" | "friend_request" | "friend_accepted" | "online_status" | "session-update" | "chat_message" | "auth_ok" | "auth_error" | "game_invite" | "game_move" | "game_result"
 
 type WSCallback = (payload: unknown) => void
 
@@ -11,11 +11,36 @@ const listeners = new Map<WSEvent, Set<WSCallback>>()
 export function on(event: WSEvent, cb: WSCallback) {
   if (!listeners.has(event)) listeners.set(event, new Set())
   listeners.get(event)!.add(cb)
-  return () => listeners.get(event)?.delete(cb)
+  return () => { listeners.get(event)?.delete(cb) }
 }
 
 export function off(event: WSEvent, cb: WSCallback) {
   listeners.get(event)?.delete(cb)
+}
+
+let wsToken: string | null = null
+let tokenPromise: Promise<string> | null = null
+
+async function getWsToken(): Promise<string> {
+  if (wsToken) return wsToken
+  if (tokenPromise) return tokenPromise
+
+  tokenPromise = fetch("/api/auth/ws-token")
+    .then((r) => {
+      if (!r.ok) throw new Error("Failed to get WS token")
+      return r.json()
+    })
+    .then((data) => {
+      wsToken = data.token
+      setTimeout(() => { wsToken = null }, 25000)
+      return wsToken!
+    })
+
+  try {
+    return await tokenPromise
+  } finally {
+    tokenPromise = null
+  }
 }
 
 export function useWebSocket() {
@@ -31,9 +56,12 @@ export function useWebSocket() {
 
     const ws = new WebSocket(url)
 
-    ws.onopen = () => {
-      if (session?.user?.id) {
-        ws.send(JSON.stringify({ type: "auth", userId: session.user.id }))
+    ws.onopen = async () => {
+      try {
+        const token = await getWsToken()
+        ws.send(JSON.stringify({ type: "auth", token }))
+      } catch {
+        console.error("[WS] Failed to obtain auth token")
       }
     }
 
@@ -60,7 +88,7 @@ export function useWebSocket() {
 
     wsRef.current = ws
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.user?.id])
+  }, [])
 
   useEffect(() => {
     connectRef.current = connect
