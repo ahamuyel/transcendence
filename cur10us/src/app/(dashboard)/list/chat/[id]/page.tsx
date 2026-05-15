@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { Loader2, Send, ArrowLeft } from "lucide-react"
 import { on } from "@/hooks/useWebSocket"
+import { useOnlineStatus } from "@/hooks/useOnlineStatus"
 
 type Sender = {
   id: string
@@ -39,6 +40,7 @@ export default function ChatConversationPage() {
   const [loadingMore, setLoadingMore] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const topRef = useRef<HTMLDivElement>(null)
+  const { isUserOnline } = useOnlineStatus()
 
   const fetchMessages = useCallback(async (cursor?: string) => {
     const url = cursor
@@ -146,6 +148,8 @@ export default function ChatConversationPage() {
     return d.toLocaleDateString("pt-PT")
   }
 
+  const otherUserOnline = conversation ? isUserOnline(conversation.other.id) : false
+
   return (
     <div className="m-2 sm:m-3 flex flex-col gap-4 h-[calc(100vh-6rem)]">
       <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col flex-1 overflow-hidden">
@@ -158,14 +162,24 @@ export default function ChatConversationPage() {
           </button>
           {conversation && (
             <>
-              <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center text-sm font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden flex-shrink-0">
-                {conversation.other.image ? (
-                  <img src={conversation.other.image} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  conversation.other.name?.charAt(0).toUpperCase()
+              <div className="relative flex-shrink-0">
+                <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center text-sm font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden">
+                  {conversation.other.image ? (
+                    <img src={conversation.other.image} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    conversation.other.name?.charAt(0).toUpperCase()
+                  )}
+                </div>
+                {otherUserOnline && (
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-zinc-900" />
                 )}
               </div>
-              <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{conversation.other.name}</p>
+              <div>
+                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{conversation.other.name}</p>
+                {otherUserOnline && (
+                  <p className="text-[10px] text-emerald-500 font-medium">Online</p>
+                )}
+              </div>
             </>
           )}
         </div>

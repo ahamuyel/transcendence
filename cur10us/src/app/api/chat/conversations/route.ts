@@ -26,6 +26,19 @@ export async function GET(req: Request) {
       orderBy: { lastMessageAt: { sort: "desc", nulls: "last" } },
     })
 
+    // Get unread counts for all conversations
+    const conversationIds = conversations.map((c) => c.id)
+    const unreadCounts = await prisma.chatMessage.groupBy({
+      by: ["conversationId"],
+      where: {
+        conversationId: { in: conversationIds },
+        senderId: { not: session.user.id },
+        readAt: null,
+      },
+      _count: { id: true },
+    })
+    const unreadMap = new Map(unreadCounts.map((u) => [u.conversationId, u._count.id]))
+
     const mapped = conversations.map((c) => {
       const other = c.participant1Id === session.user.id ? c.participant2 : c.participant1
       return {
@@ -34,6 +47,7 @@ export async function GET(req: Request) {
         lastMessage: c.messages[0] || null,
         lastMessageAt: c.lastMessageAt,
         createdAt: c.createdAt,
+        unreadCount: unreadMap.get(c.id) || 0,
       }
     })
 

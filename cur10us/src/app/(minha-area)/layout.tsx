@@ -13,10 +13,10 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   const pathname = usePathname()
 
   const user = session?.user
-  const isActive = user?.isActive && !!user?.schoolId
+  const isActive = user?.isActive && !!user?.schoolId && (user?.role !== "school_admin" || user?.schoolStatus === "ativa")
 
   // Super admin: redirect to /admin
-  // School admin who is enrolled: redirect to dashboard
+  // School admin with active school (status = "ativa"): redirect to dashboard
   // Any other active user with school association: redirect to dashboard
   // Exception: allow change-password page to render
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   // But allow change-password to render
   if (status === "authenticated" && pathname !== "/change-password" && (
     session?.user?.role === "super_admin" ||
-    (session?.user?.isActive && session?.user?.schoolId)
+    (session?.user?.isActive && session?.user?.schoolId && (session?.user?.role !== "school_admin" || session?.user?.schoolStatus === "ativa"))
   )) {
     return (
       <div className="flex items-center justify-center min-h-screen">

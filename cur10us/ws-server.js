@@ -82,6 +82,8 @@ wss.on("connection", (ws, req) => {
             clients.set(result.userId, ws)
             clearTimeout(authTimer)
             ws.send(JSON.stringify({ event: "auth_ok", payload: { userId: result.userId } }))
+            // Notify all clients that this user is online
+            broadcastToAll("online_status", { userId: result.userId, online: true })
             console.log(`[WS] User ${result.userId} (${result.role}) authenticated`)
           } else {
             ws.send(JSON.stringify({ event: "auth_error", payload: { error: "Token inválido" } }))
@@ -110,6 +112,7 @@ wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     if (ws.userId) {
       clients.delete(ws.userId)
+      broadcastToAll("online_status", { userId: ws.userId, online: false })
       console.log(`[WS] User ${ws.userId} disconnected`)
     }
     clearTimeout(authTimer)
@@ -118,6 +121,7 @@ wss.on("connection", (ws, req) => {
   ws.on("error", () => {
     if (ws.userId) {
       clients.delete(ws.userId)
+      broadcastToAll("online_status", { userId: ws.userId, online: false })
     }
     clearTimeout(authTimer)
   })
