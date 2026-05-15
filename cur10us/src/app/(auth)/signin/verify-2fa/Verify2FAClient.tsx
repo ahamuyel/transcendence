@@ -93,7 +93,7 @@ export default function Verify2FAClient() {
       }
 
       setSuccess(true)
-      await update()
+      await update({ twoFactorVerifiedAt: new Date().toISOString() })
       router.replace("/minha-area")
       router.refresh()
     } catch {

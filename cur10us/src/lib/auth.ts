@@ -175,7 +175,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       delete token.picture;
 
       // Primeiro login — dados vêm do objecto user
@@ -206,8 +206,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.twoFactorVerifiedAt = null;
       }
 
+      // Handle session.update() — merge twoFactorVerifiedAt into token
+      // so the current session is marked as 2FA-verified after login verification
+      if (trigger === "update" && session?.twoFactorVerifiedAt) {
+        token.twoFactorVerifiedAt = session.twoFactorVerifiedAt;
+      }
+
       // Refresh from DB on every request to keep token in sync with latest user data
       // (approvals, role changes, school associations, etc.)
+      // NOTE: twoFactorVerifiedAt is intentionally NOT read from DB here.
+      // It is managed via session.update() after 2FA verification to ensure
+      // 2FA is always required on every new login session.
       if (token.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
@@ -260,11 +269,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.sessionVersion = dbUser.sessionVersion;
           token.hasPassword = !!dbUser.hashedPassword;
           token.twoFactorEnabled = dbUser.twoFactorEnabled;
-          // Only read twoFactorVerifiedAt from DB on subsequent refreshes,
-          // NOT on initial sign-in (to ensure 2FA is always required on new login)
-          if (!user) {
-            token.twoFactorVerifiedAt = dbUser.twoFactorVerifiedAt?.toISOString() ?? null;
-          }
         }
       }
 
