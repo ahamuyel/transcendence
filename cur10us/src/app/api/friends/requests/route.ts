@@ -48,6 +48,13 @@ export async function PUT(req: Request) {
 
     if (action === "accept") {
       await prisma.friend.update({ where: { id }, data: { status: "accepted" } })
+      // Auto-create a conversation between the two users
+      const [p1, p2] = [request.userId, session.user.id].sort()
+      await prisma.conversation.upsert({
+        where: { participant1Id_participant2Id: { participant1Id: p1, participant2Id: p2 } },
+        create: { participant1Id: p1, participant2Id: p2 },
+        update: {},
+      })
       try {
         await createNotification({
           userId: request.userId,

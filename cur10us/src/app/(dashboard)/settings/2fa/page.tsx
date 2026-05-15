@@ -51,7 +51,7 @@ export default function TwoFactorPage() {
       setEnabled(true)
       setStep("idle")
       setSuccessMsg("2FA ativado com sucesso!")
-      await update()
+      await update({ twoFactorVerifiedAt: new Date().toISOString() })
       setTimeout(() => setSuccessMsg(""), 5000)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Token inválido")

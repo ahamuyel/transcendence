@@ -29,11 +29,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Código inválido" }, { status: 400 })
     }
 
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { twoFactorVerifiedAt: new Date() },
-    })
-
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ error: "Erro ao verificar 2FA" }, { status: 500 })

@@ -1,7 +1,8 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useSession } from "next-auth/react"
-import { Loader2, UserPlus, UserCheck, Trash2, Clock, UserX, Search, X } from "lucide-react"
+import { Loader2, UserPlus, UserCheck, Trash2, Clock, UserX, Search, X, MessageSquare } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useOnlineStatus } from "@/hooks/useOnlineStatus"
 
 type Friend = {
@@ -112,6 +113,24 @@ export default function FriendsPage() {
     }
   }
 
+  const router = useRouter()
+
+  const handleStartChat = async (friendId: string) => {
+    try {
+      const res = await fetch("/api/chat/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ participantId: friendId }),
+      })
+      if (res.ok) {
+        const json = await res.json()
+        router.push(`/list/chat/${json.data.id}`)
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   const handleRemoveFriend = async (friendId: string) => {
     const res = await fetch("/api/friends", {
       method: "DELETE",
@@ -210,13 +229,22 @@ export default function FriendsPage() {
                         <p className="text-xs text-zinc-400">{roleLabel(f.friend.role)}</p>
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleRemoveFriend(f.friend.id)}
-                      className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-zinc-400 hover:text-red-500 transition"
-                      title="Remover amigo"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => handleStartChat(f.friend.id)}
+                        className="p-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950/30 text-zinc-400 hover:text-indigo-600 transition"
+                        title="Enviar mensagem"
+                      >
+                        <MessageSquare size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleRemoveFriend(f.friend.id)}
+                        className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-zinc-400 hover:text-red-500 transition"
+                        title="Remover amigo"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </div>
                 )
               })
