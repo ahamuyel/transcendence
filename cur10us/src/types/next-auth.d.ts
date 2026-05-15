@@ -19,6 +19,7 @@ declare module "next-auth" {
       schoolFeatures?: Record<string, boolean> | null
     hasPassword?: boolean
     sessionVersion?: number
+    twoFactorEnabled?: boolean
   }
 }
 
@@ -34,6 +35,7 @@ declare module "next-auth" {
     permissions?: string[]
     schoolFeatures?: Record<string, boolean> | null
     hasPassword?: boolean
+    twoFactorEnabled?: boolean
   }
 }
 

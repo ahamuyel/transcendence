@@ -6,3 +6,5 @@ node_modules/
 .env.local
 .env*.local
 secret/
+secrets/
+!setup-secrets.sh

@@ -18,7 +18,7 @@ metadata:
     app: cur10usx-app-service
 spec:
   selector:
-    app: cur10usx-app
+    app: cur10usx
   # type: LoadBalancer
   ports:
     - protocol: TCP

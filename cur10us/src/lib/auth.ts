@@ -114,6 +114,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             emailVerified: user.emailVerified ? new Date() : null,
             hasPassword: !!user.hashedPassword,
             sessionVersion: user.sessionVersion,
+            twoFactorEnabled: user.twoFactorEnabled,
           };
         } catch (error) {
           console.error("Authorize error:", error);
@@ -198,6 +199,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.userImage = img && !img.startsWith("data:") ? img : null;
         token.sessionVersion = (user as { sessionVersion?: number }).sessionVersion ?? 0;
         token.hasPassword = (user as { hasPassword?: boolean }).hasPassword ?? false;
+        token.twoFactorEnabled = (user as { twoFactorEnabled?: boolean }).twoFactorEnabled ?? false;
       }
 
       // Refresh from DB on every request to keep token in sync with latest user data
@@ -216,6 +218,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             emailVerified: true,
             sessionVersion: true,
             hashedPassword: true,
+            twoFactorEnabled: true,
             school: { select: { slug: true, features: true } },
             adminPermission: {
               select: {
@@ -250,6 +253,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.userImage = img && !img.startsWith("data:") ? img : null;
           token.sessionVersion = dbUser.sessionVersion;
           token.hasPassword = !!dbUser.hashedPassword;
+          token.twoFactorEnabled = dbUser.twoFactorEnabled;
         }
       }
 
@@ -275,6 +279,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           (token.schoolFeatures as Record<string, boolean>) ?? null;
         session.user.image = (token.userImage as string) ?? null;
         session.user.hasPassword = (token.hasPassword as boolean) ?? false;
+        session.user.twoFactorEnabled = (token.twoFactorEnabled as boolean) ?? false;
       }
       return session;
     },
