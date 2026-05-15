@@ -38,7 +38,10 @@ async function handleVerify(req: Request) {
 
     await prisma.user.update({
       where: { id: session.user.id },
-      data: { twoFactorEnabled: true },
+      data: {
+        twoFactorEnabled: true,
+        twoFactorVerifiedAt: new Date(),
+      },
     })
 
     return NextResponse.json({ success: true })
