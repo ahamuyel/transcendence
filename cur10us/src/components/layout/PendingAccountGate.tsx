@@ -32,7 +32,7 @@ export default function PendingAccountGate({ children }: { children: React.React
   const pollingRef = useRef<ReturnType<typeof setInterval>>(undefined)
   useEffect(() => {
     if (shouldRedirect) {
-      pollingRef.current = setInterval(() => { update() }, 15000)
+      pollingRef.current = setInterval(() => { update() }, 60000)
     }
     return () => {
       if (pollingRef.current) clearInterval(pollingRef.current)
