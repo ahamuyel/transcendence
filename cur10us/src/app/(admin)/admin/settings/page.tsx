@@ -67,16 +67,14 @@ export default function AdminSettingsPage() {
 
   if (!config) {
     return (
-      <div className="p-3 sm:p-4 lg:p-6">
-        <div className="text-center py-16 text-zinc-400 text-sm">Erro ao carregar configurações</div>
-      </div>
+      <div className="text-center py-16 text-zinc-400 text-sm">Erro ao carregar configurações</div>
     )
   }
 
   const inputClass = "w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-zinc-900 dark:text-zinc-100"
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6 max-w-2xl">
+    <div className="max-w-2xl">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-1">Configurações da Plataforma</h1>
       <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">Gerir definições globais do Cur10usX</p>
 

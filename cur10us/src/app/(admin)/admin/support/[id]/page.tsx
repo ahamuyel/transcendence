@@ -94,7 +94,7 @@ export default function AdminTicketDetailPage() {
   }
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6 max-w-3xl">
+    <div className="max-w-3xl">
       <button
         onClick={() => router.push("/admin/support")}
         className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 mb-4 transition"
@@ -204,14 +204,15 @@ export default function AdminTicketDetailPage() {
             onChange={(e) => setReply(e.target.value)}
             placeholder="Responder ao ticket..."
             rows={2}
-            className="flex-1 px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
+            className="flex-1 min-w-0 px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
           />
           <button
             type="submit"
             disabled={sending || !reply.trim()}
-            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50 shrink-0"
           >
             {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+            <span className="hidden sm:inline">Enviar</span>
           </button>
         </form>
       </div>

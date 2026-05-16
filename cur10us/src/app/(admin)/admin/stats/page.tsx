@@ -137,7 +137,7 @@ export default function StatsPage() {
   ]
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6">
+    <div>
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-1">
         Estatísticas da Plataforma
       </h1>

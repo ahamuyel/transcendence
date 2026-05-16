@@ -70,7 +70,7 @@ export default function AdminSupportPage() {
   useEffect(() => { fetchTickets() }, [fetchTickets])
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6">
+    <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between mb-6">
         <div>
           <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">Suporte Técnico</h1>

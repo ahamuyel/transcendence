@@ -87,7 +87,7 @@ export default function AdminDashboard() {
   const pieData = data.statusBreakdown.filter((s) => s.count > 0)
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6">
+    <div>
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-1">Painel Super Admin</h1>
       <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">Visão geral da plataforma</p>
 

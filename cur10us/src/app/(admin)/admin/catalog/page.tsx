@@ -517,6 +517,7 @@ function ClassesTab() {
   const [items, setItems] = useState<GlobalClass[]>([])
   const [cycles, setCycles] = useState<EducationCycle[]>([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState("")
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<GlobalClass | null>(null)
   const [form, setForm] = useState({ name: "", grade: 1, cycleId: "" })
@@ -527,8 +528,10 @@ function ClassesTab() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
+      const params = new URLSearchParams()
+      if (search) params.set("search", search)
       const [classRes, cycleRes] = await Promise.all([
-        fetch("/api/admin/catalog/classes"),
+        fetch(`/api/admin/catalog/classes?${params}`),
         fetch("/api/admin/catalog/cycles"),
       ])
       const classJson = await classRes.json()
@@ -540,7 +543,7 @@ function ClassesTab() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [search])
 
   useEffect(() => { fetchData() }, [fetchData])
 
@@ -609,10 +612,19 @@ function ClassesTab() {
 
   return (
     <>
-      <div className="flex items-center justify-end mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+        <div className="relative w-full sm:w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <input
+            className={inputClass + " pl-9"}
+            placeholder="Pesquisar classes..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20 shrink-0"
         >
           <Plus size={16} /> Nova Classe
         </button>
@@ -715,6 +727,7 @@ function ClassesTab() {
 function CyclesTab() {
   const [items, setItems] = useState<EducationCycle[]>([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState("")
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<EducationCycle | null>(null)
   const [form, setForm] = useState({ name: "", level: "primario", startGrade: 1, endGrade: 6 })
@@ -725,7 +738,9 @@ function CyclesTab() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await fetch("/api/admin/catalog/cycles")
+      const params = new URLSearchParams()
+      if (search) params.set("search", search)
+      const res = await fetch(`/api/admin/catalog/cycles?${params}`)
       const json = await res.json()
       setItems(json.data ?? [])
     } catch {
@@ -733,7 +748,7 @@ function CyclesTab() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [search])
 
   useEffect(() => { fetchData() }, [fetchData])
 
@@ -800,10 +815,19 @@ function CyclesTab() {
 
   return (
     <>
-      <div className="flex items-center justify-end mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+        <div className="relative w-full sm:w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <input
+            className={inputClass + " pl-9"}
+            placeholder="Pesquisar ciclos..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20 shrink-0"
         >
           <Plus size={16} /> Novo Ciclo
         </button>
@@ -919,7 +943,7 @@ export default function AdminCatalogPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("subjects")
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6">
+    <div>
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-1">Catálogo Global</h1>
       <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
         Gerir disciplinas, cursos, classes e ciclos de ensino da plataforma
