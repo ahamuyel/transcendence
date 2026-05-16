@@ -30,10 +30,13 @@ const LessonAttendanceForm = ({ lessonId, classId, onSuccess, onCancel }: Props)
   const [apiError, setApiError] = useState("")
 
   useEffect(() => {
-    fetch(`/api/classes/${classId}/students?limit=200`)
+    fetch(`/api/students?classId=${classId}&limit=200`)
       .then((r) => r.json())
       .then((d) => {
-        const items = d.data || []
+        const items: StudentOption[] = (d.data || []).map((s: { id: string; name: string; surname?: string }) => ({
+          id: s.id,
+          name: s.surname ? `${s.name} ${s.surname}` : s.name,
+        }))
         setStudents(items)
         const init: Record<string, Status> = {}
         items.forEach((s: StudentOption) => { init[s.id] = "presente" })

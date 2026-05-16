@@ -46,6 +46,15 @@ export async function GET(req: Request) {
       if (teacher) where.teacherId = teacher.id
     }
 
+    // Student: auto-filter to own class lessons
+    if (role === "student") {
+      const student = await prisma.student.findFirst({
+        where: { userId, schoolId },
+        select: { classId: true },
+      })
+      if (student?.classId) where.classId = student.classId
+    }
+
     const orderBy = buildOrderBy(searchParams, ["day", "startTime", "createdAt"], { day: "asc" })
 
     const [data, total] = await Promise.all([
