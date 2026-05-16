@@ -208,16 +208,26 @@ const BigCalendar = () => {
     const bg = subjectColors[event.type || ""] || "#64748b";
     return {
       style: {
-        backgroundColor: bg,
-        borderRadius: "8px",
+        background: `linear-gradient(135deg, ${bg} 0%, ${bg}dd 100%)`,
+        borderRadius: "6px",
         border: "none",
+        borderLeft: `3px solid ${bg}`,
         color: "#fff",
         fontSize: "0.7rem",
-        padding: "2px 4px",
-        boxShadow: `0 1px 3px ${bg}66`,
+        padding: "2px 5px",
+        boxShadow: `0 1px 3px ${bg}44`,
       },
     };
   };
+
+  const EventComponent = useCallback(({ event }: { event: CalendarEvent }) => (
+    <div className="leading-tight">
+      <div className="font-semibold truncate">{event.title}</div>
+      {event.teacher && (
+        <div className="text-[10px] opacity-80 truncate hidden sm:block">{event.teacher}</div>
+      )}
+    </div>
+  ), []);
 
   if (loading) {
     return (
@@ -274,7 +284,7 @@ const BigCalendar = () => {
           showMultiDayTimes
           eventPropGetter={eventStyleGetter}
           onSelectEvent={(event) => setSelectedEvent(event)}
-          components={{ toolbar: CalendarHeader }}
+          components={{ toolbar: CalendarHeader, event: EventComponent }}
           style={{ height: calendarHeight }}
         />
       </div>

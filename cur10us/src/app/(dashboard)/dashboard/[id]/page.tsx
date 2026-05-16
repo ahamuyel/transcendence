@@ -261,7 +261,7 @@ export default function DashboardPage() {
   // ========== STUDENT & PARENT DASHBOARD ==========
   if (role === "student" || role === "parent") {
     return (
-      <div className="p-3 sm:p-4 lg:p-6">
+      <div className="p-3 sm:p-4 lg:p-6 flex flex-col gap-4 sm:gap-6">
         {/* Parent child selector */}
         {role === "parent" && childrenList.length > 1 && (
           <div className="mb-4">
@@ -284,6 +284,23 @@ export default function DashboardPage() {
           <div className="flex items-center justify-center min-h-[40vh]">
             <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
           </div>
+        )}
+
+        {/* Schedule Calendar */}
+        {studentId && (
+          <section className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-3 sm:p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h2 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                  Horário de Aulas
+                </h2>
+                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+                  Visualize suas aulas da semana
+                </p>
+              </div>
+            </div>
+            <BigCalendar />
+          </section>
         )}
       </div>
     )
