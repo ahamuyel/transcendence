@@ -153,7 +153,7 @@ export default function SchoolDetailPage() {
   const revertTarget = REVERT_TARGET[school.status]
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6 max-w-3xl">
+    <div className="max-w-3xl">
       <button
         onClick={() => router.push("/admin/schools")}
         className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 mb-4 transition"
@@ -205,7 +205,7 @@ export default function SchoolDetailPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-4 text-sm mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm mb-6">
           <div><span className="text-zinc-500">E-mail:</span> <span className="text-zinc-900 dark:text-zinc-100">{school.email}</span></div>
           <div><span className="text-zinc-500">Telefone:</span> <span className="text-zinc-900 dark:text-zinc-100">{school.phone}</span></div>
           <div><span className="text-zinc-500">Endereço:</span> <span className="text-zinc-900 dark:text-zinc-100">{school.address}</span></div>
@@ -227,8 +227,8 @@ export default function SchoolDetailPage() {
             <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300 mb-2">
               Escola activada! Credenciais do administrador:
             </p>
-            <div className="flex items-center gap-3">
-              <code className="text-xs bg-white dark:bg-zinc-900 px-3 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 flex-1">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <code className="text-xs bg-white dark:bg-zinc-900 px-3 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 flex-1 break-all">
                 E-mail: {activatedCreds.email} | Palavra-passe: {activatedCreds.password}
               </code>
               <button
@@ -237,7 +237,7 @@ export default function SchoolDetailPage() {
                   setCopied(true)
                   setTimeout(() => setCopied(false), 2000)
                 }}
-                className="flex items-center gap-1 px-3 py-2 rounded-lg bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition"
+                className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition whitespace-nowrap"
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
                 {copied ? "Copiado" : "Copiar"}
@@ -250,7 +250,7 @@ export default function SchoolDetailPage() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-6">
           {[
             { label: "Utilizadores", value: school._count.users },
             { label: "Professores", value: school._count.teachers },

@@ -414,9 +414,9 @@ export default function GradingConfigPage() {
 
   /* ---------- Render ---------- */
   return (
-    <div className="p-3 sm:p-4 lg:p-6">
+    <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
             <Settings2 className="w-6 h-6 text-indigo-500" />

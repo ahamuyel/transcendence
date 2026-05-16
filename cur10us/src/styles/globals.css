@@ -1,20 +1,16 @@
 @import "tailwindcss";
 
-/* Estilos globais adicionais */
 html, body {
-  transition: background-color 0.3s, color 0.3s; /* transição suave entre temas */
-  font-family: 'Inter', sans-serif; /* sua fonte padrão */
+  font-family: 'Inter', sans-serif;
 }
 
 @theme {
-  /* Configuração das Fontes */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Suas Cores Customizadas */
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
-  
+
   --color-primary: #6366f1;
   --color-primary-dark: #4338ca;
   --color-accent: #6366f1;
@@ -22,9 +18,81 @@ html, body {
   --color-amber: #F59E0B;
   --color-emerald: #10B981;
   --color-rose: #f43f5e;
+
+  --animate-in: animate-in 0.2s ease-out;
+  --animate-out: animate-out 0.2s ease-in;
+
+  --keyframes-animate-in: {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  };
+
+  --keyframes-animate-out: {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+  };
+
+  --keyframes-fade-in: {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  };
+
+  --keyframes-fade-out: {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  };
+
+  --keyframes-slide-in-from-left: {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  };
+
+  --keyframes-slide-out-to-left: {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  };
+
+  --keyframes-slide-in-from-right: {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  };
+
+  --keyframes-slide-out-to-right: {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+  };
+
+  --keyframes-slide-in-from-top: {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  };
+
+  --keyframes-slide-out-to-top: {
+    from { transform: translateY(0); }
+    to { transform: translateY(-100%); }
+  };
+
+  --keyframes-slide-in-from-bottom: {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  };
+
+  --keyframes-slide-out-to-bottom: {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+  };
+
+  --keyframes-zoom-in: {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  };
+
+  --keyframes-zoom-out: {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+  };
 }
 
-/* Configuração de Dark Mode por Classe */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -43,6 +111,79 @@ html, body {
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
+}
+
+/* Radix / shadcn animations */
+@utility animate-in {
+  animation: animate-in 0.2s ease-out;
+}
+
+@utility animate-out {
+  animation: animate-out 0.15s ease-in;
+}
+
+@utility fade-in-0 {
+  opacity: 0;
+}
+
+@utility fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+@utility fade-out-0 {
+  opacity: 1;
+}
+
+@utility fade-out {
+  animation: fade-out 0.15s ease-in;
+}
+
+@utility zoom-in-95 {
+  transform: scale(0.95);
+}
+
+@utility zoom-in {
+  animation: zoom-in 0.2s ease-out;
+}
+
+@utility zoom-out-95 {
+  transform: scale(1);
+}
+
+@utility zoom-out {
+  animation: zoom-out 0.15s ease-in;
+}
+
+@utility slide-in-from-left-2 {
+  --tw-enter-translate-x: -0.5rem;
+}
+
+@utility slide-in-from-right-2 {
+  --tw-enter-translate-x: 0.5rem;
+}
+
+@utility slide-in-from-top-2 {
+  --tw-enter-translate-y: -0.5rem;
+}
+
+@utility slide-in-from-bottom-2 {
+  --tw-enter-translate-y: 0.5rem;
+}
+
+@utility slide-out-to-left-2 {
+  --tw-exit-translate-x: -0.5rem;
+}
+
+@utility slide-out-to-right-2 {
+  --tw-exit-translate-x: 0.5rem;
+}
+
+@utility slide-out-to-top-2 {
+  --tw-exit-translate-y: -0.5rem;
+}
+
+@utility slide-out-to-bottom-2 {
+  --tw-exit-translate-y: 0.5rem;
 }
 
 /* Safe area for mobile bottom nav */
@@ -90,4 +231,60 @@ html, body {
 }
 .dark .styled-scroll:hover::-webkit-scrollbar-thumb {
   background: rgba(255,255,255,0.12);
+}
+
+/* Radix Dialog/Sheet animations */
+@keyframes animate-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes animate-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes zoom-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes zoom-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+
+/* Radix data attributes for animation */
+.DialogOverlay[data-state="open"],
+.DialogContent[data-state="open"],
+.SheetOverlay[data-state="open"],
+.SheetContent[data-state="open"] {
+  animation: animate-in 0.2s ease-out;
+}
+
+.DialogOverlay[data-state="closed"],
+.DialogContent[data-state="closed"],
+.SheetOverlay[data-state="closed"],
+.SheetContent[data-state="closed"] {
+  animation: animate-out 0.15s ease-in;
+}
+
+.DropdownMenuContent[data-state="open"],
+.TooltipContent[data-state="open"] {
+  animation: zoom-in 0.15s ease-out;
+}
+
+.DropdownMenuContent[data-state="closed"],
+.TooltipContent[data-state="closed"] {
+  animation: zoom-out 0.1s ease-in;
 }

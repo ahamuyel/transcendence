@@ -1,53 +1,47 @@
-import Menu from "@/components/layout/Menu"
-import NavBar from "@/components/layout/Navbar"
-import MobileNav from "@/components/layout/MobileNav"
+import { SidebarProvider } from "@/hooks/useSidebar"
+import AppSidebar from "@/components/layout/app-sidebar"
+import DashboardHeader from "@/components/layout/dashboard-header"
+import SidebarMobile from "@/components/layout/sidebar-mobile"
 import PendingAccountGate from "@/components/layout/PendingAccountGate"
 import TwoFactorGate from "@/components/layout/TwoFactorGate"
 import MustChangePasswordGate from "@/components/layout/MustChangePasswordGate"
 import MaintenanceGuard from "@/components/layout/MaintenanceGuard"
 import SessionGuard from "@/components/layout/SessionGuard"
 import { SchoolBrandingProvider } from "@/provider/school-branding"
-import SidebarBrand from "@/components/layout/SidebarBrand"
 import FloatingHelpButton from "@/components/ui/FloatingHelpButton"
 
 export default function DashboardLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <SessionGuard>
-    <MaintenanceGuard>
-    <SchoolBrandingProvider>
-    <TwoFactorGate>
-    <PendingAccountGate>
-    <MustChangePasswordGate>
-      <div className="h-screen flex flex-col md:flex-row">
-        {/* SIDEBAR — hidden on mobile, visible md+ */}
-        <aside className="hidden md:flex md:flex-col md:w-[72px] lg:w-[220px] xl:w-[200px] shrink-0 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800">
-          <SidebarBrand />
-          <div className="flex-1 overflow-y-auto styled-scroll px-2 pb-4">
-            <Menu />
-          </div>
-        </aside>
-
-        {/* MAIN CONTENT */}
-        <div className="flex-1 flex flex-col min-w-0 bg-[#f7f8fa] dark:bg-zinc-950">
-          <NavBar />
-          <main className="flex-1 overflow-y-auto styled-scroll pb-20 md:pb-0">
-            {children}
-          </main>
-        </div>
-
-        {/* MOBILE BOTTOM NAV — visible on mobile only */}
-        <MobileNav />
-        <FloatingHelpButton />
-      </div>
-    </MustChangePasswordGate>
-    </PendingAccountGate>
-    </TwoFactorGate>
-    </SchoolBrandingProvider>
-    </MaintenanceGuard>
+      <MaintenanceGuard>
+        <SchoolBrandingProvider>
+          <TwoFactorGate>
+            <PendingAccountGate>
+              <MustChangePasswordGate>
+                <SidebarProvider>
+                  <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex">
+                    <AppSidebar />
+                    <SidebarMobile />
+                    <div className="flex-1 flex flex-col min-w-0 w-full">
+                      <DashboardHeader />
+                      <main className="flex-1 overflow-y-auto styled-scroll">
+                        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+                          {children}
+                        </div>
+                      </main>
+                    </div>
+                  </div>
+                  <FloatingHelpButton />
+                </SidebarProvider>
+              </MustChangePasswordGate>
+            </PendingAccountGate>
+          </TwoFactorGate>
+        </SchoolBrandingProvider>
+      </MaintenanceGuard>
     </SessionGuard>
-  );
+  )
 }

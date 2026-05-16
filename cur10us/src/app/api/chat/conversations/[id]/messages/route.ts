@@ -32,6 +32,26 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     const hasMore = messages.length > limit
     const data = hasMore ? messages.slice(0, limit) : messages
 
+    // Mark messages as read from the other participant
+    if (!cursor) {
+      const unreadIds = data
+        .filter((m) => m.senderId !== session.user.id && !m.readAt)
+        .map((m) => m.id)
+
+      if (unreadIds.length > 0) {
+        await prisma.chatMessage.updateMany({
+          where: { id: { in: unreadIds } },
+          data: { readAt: new Date() },
+        })
+
+        const otherId = conversation.participant1Id === session.user.id
+          ? conversation.participant2Id
+          : conversation.participant1Id
+
+        broadcastToUser(otherId, "messages-read", { conversationId: id })
+      }
+    }
+
     return NextResponse.json({
       data: data.reverse(),
       nextCursor: hasMore ? data[0]?.id : null,
@@ -72,7 +92,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       data: { lastMessageAt: new Date() },
     })
 
-    const otherId = conversation.participant1Id === session.user.id ? conversation.participant2Id : conversation.participant1Id
+    const otherId = conversation.participant1Id === session.user.id
+      ? conversation.participant2Id
+      : conversation.participant1Id
+
     broadcastToUser(otherId, "chat_message", {
       conversationId: id,
       message,

@@ -80,8 +80,8 @@ export default function SchoolsPage() {
   }
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Escolas</h1>
           <p className="text-sm text-zinc-500">{total} escola(s) encontrada(s)</p>
@@ -97,8 +97,8 @@ export default function SchoolsPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-4">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm flex-1 max-w-xs">
-          <Search size={14} className="text-zinc-400" />
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm flex-1 min-w-[200px] max-w-xs">
+          <Search size={14} className="text-zinc-400 shrink-0" />
           <input
             type="text"
             placeholder="Pesquisar..."
@@ -117,12 +117,12 @@ export default function SchoolsPage() {
             <option key={p} value={p}>{p}</option>
           ))}
         </select>
-        <div className="flex gap-1.5 flex-wrap">
+        <div className="flex gap-1.5 flex-wrap items-center">
           {statusFilters.map((f) => (
             <button
               key={f.value}
               onClick={() => { setStatusFilter(f.value); setPage(1) }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition whitespace-nowrap ${
                 statusFilter === f.value
                   ? "bg-indigo-600 text-white"
                   : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"

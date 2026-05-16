@@ -88,15 +88,15 @@ export default function SuperAdminsPage() {
   const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition"
 
   return (
-    <div className="p-3 sm:p-4 lg:p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Super Admins</h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">Gerir administradores da plataforma</p>
         </div>
         <button
           onClick={() => { setShowForm(true); setCreatedCreds(null) }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20"
+          className="flex items-center gap-2 self-start sm:self-auto px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20"
         >
           <Plus size={16} />
           Criar Super Admin
@@ -109,13 +109,13 @@ export default function SuperAdminsPage() {
           <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300 mb-2">
             Super admin criado com sucesso! Credenciais temporárias:
           </p>
-          <div className="flex items-center gap-3">
-            <code className="text-xs bg-white dark:bg-zinc-900 px-3 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 flex-1">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <code className="text-xs bg-white dark:bg-zinc-900 px-3 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 flex-1 break-all">
               E-mail: {createdCreds.email} | Palavra-passe: {createdCreds.password}
             </code>
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition"
+              className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition whitespace-nowrap"
             >
               {copied ? <Check size={14} /> : <Copy size={14} />}
               {copied ? "Copiado" : "Copiar"}
