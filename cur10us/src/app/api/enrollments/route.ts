@@ -114,6 +114,11 @@ export async function POST(req: Request) {
       },
     })
 
+    await prisma.student.update({
+      where: { id: studentId },
+      data: { classId },
+    })
+
     return NextResponse.json(enrollment, { status: 201 })
   } catch (error) {
     console.error(`[API Error] ${error}`)
