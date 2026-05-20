@@ -2,40 +2,36 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useState, useEffect } from "react"
-import { Menu, X, Sun, Moon } from "lucide-react"
+import { useState } from "react"
+import { Check, Languages, Menu, Moon, Sun, X } from "lucide-react"
 import { useTheme } from "@/provider/theme"
 import type { PlatformBranding } from "@/types/landing"
+import { languageLabels, type LandingCopy, type LandingLanguage } from "./landing-i18n"
 
-const navLinks = [
-  { label: "Como funciona", href: "#como-funciona" },
-  { label: "Funcionalidades", href: "#funcionalidades" },
-  { label: "Preços", href: "#precos" },
-  { label: "Para quem", href: "#para-quem" },
-  { label: "FAQ", href: "#faq" },
-]
+type Props = {
+  branding: PlatformBranding
+  copy: LandingCopy["nav"]
+  language: LandingLanguage
+  onLanguageChange: (language: LandingLanguage) => void
+}
 
-export default function LandingNavbar({ branding }: { branding: PlatformBranding }) {
+export default function LandingNavbar({ branding, copy, language, onLanguageChange }: Props) {
   const [open, setOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [languageOpen, setLanguageOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+  const navLinks = [
+    { label: copy.how, href: "#como-funciona" },
+    { label: copy.features, href: "#funcionalidades" },
+    { label: copy.profiles, href: "#para-quem" },
+  ]
 
   return (
-    <nav
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "backdrop-blur-xl bg-white/70 dark:bg-zinc-950/70 border-b border-zinc-200/50 dark:border-zinc-800/50 shadow-sm shadow-zinc-200/20 dark:shadow-black/20"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2.5">
+    <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3">
+      <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 rounded-3xl px-3 py-3 sm:px-5 bg-white dark:bg-zinc-950 border border-zinc-200/70 dark:border-zinc-700/70 shadow-lg shadow-zinc-900/5">
+        <Link
+          href="/"
+          className="flex min-h-11 items-center gap-2.5 rounded-2xl px-3 py-2 transition hover:bg-white/45 dark:hover:bg-zinc-800/45 shrink-0"
+        >
           {branding.logo && (
             <Image
               src={branding.logo}
@@ -59,46 +55,84 @@ export default function LandingNavbar({ branding }: { branding: PlatformBranding
           </span>
         </Link>
 
-        {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-1">
+        {/* Desktop nav links */}
+        <div className="hidden lg:flex items-center gap-1.5 rounded-2xl p-1">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition px-3 py-2 rounded-lg hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50"
+              className="rounded-xl px-3 py-2 text-sm text-zinc-600 transition hover:bg-white/45 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800/45 dark:hover:text-zinc-50"
             >
               {link.label}
             </a>
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Theme toggle */}
+        {/* Desktop right side */}
+        <div className="hidden lg:flex items-center gap-2">
+          <div className="relative">
+            <button
+              onClick={() => setLanguageOpen((value) => !value)}
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-zinc-600 transition hover:bg-white/45 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800/45 dark:hover:text-zinc-50"
+              aria-label={copy.language}
+              aria-expanded={languageOpen}
+            >
+              <Languages size={17} />
+              {languageLabels[language]}
+            </button>
+            {languageOpen && (
+              <div className="absolute right-0 mt-2 w-36 rounded-2xl border border-white/60 bg-white/90 p-1.5 shadow-xl shadow-zinc-900/10 backdrop-blur-xl dark:border-zinc-700/70 dark:bg-zinc-950/90">
+                {(Object.keys(languageLabels) as LandingLanguage[]).map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => {
+                      onLanguageChange(item)
+                      setLanguageOpen(false)
+                    }}
+                    className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm text-zinc-600 transition hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/70"
+                  >
+                    {languageLabels[item]}
+                    {language === item && <Check size={15} />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50 transition"
-            aria-label="Alternar tema"
+            className="min-h-11 min-w-11 rounded-xl p-2 text-zinc-600 transition hover:bg-white/45 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800/45 dark:hover:text-zinc-50"
+            aria-label={copy.theme}
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
           <Link
             href="/signup"
-            className="hidden sm:inline-block text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition px-4 py-2 rounded-lg hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50"
+            className="min-h-11 items-center rounded-xl px-4 py-2 text-sm font-medium text-zinc-600 transition hover:bg-white/45 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800/45 dark:hover:text-zinc-50 inline-flex"
           >
-            Criar conta
+            {copy.createAccount}
           </Link>
           <Link
             href="/signin"
-            className="px-4 py-2 text-sm rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/30"
+            className="inline-flex min-h-11 items-center rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition-all hover:from-indigo-700 hover:to-violet-700 hover:shadow-indigo-600/30"
           >
-            Entrar
+            {copy.signIn}
           </Link>
+        </div>
 
-          {/* Mobile menu button */}
+        {/* Mobile: sign in + hamburger */}
+        <div className="flex lg:hidden items-center gap-1.5">
+          <Link
+            href="/signin"
+            className="inline-flex min-h-11 items-center rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition-all hover:from-indigo-700 hover:to-violet-700 hover:shadow-indigo-600/30"
+          >
+            {copy.signIn}
+          </Link>
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden p-2 rounded-xl text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
+            className="min-h-11 min-w-11 rounded-xl p-2 text-zinc-600 transition hover:bg-white/45 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800/45 dark:hover:text-zinc-50"
+            aria-label={copy.menu}
           >
             {open ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -107,35 +141,62 @@ export default function LandingNavbar({ branding }: { branding: PlatformBranding
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-out ${
+        className={`lg:hidden overflow-hidden transition-all duration-300 ease-out ${
           open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="border-t border-zinc-200/50 dark:border-zinc-800/50 backdrop-blur-xl bg-white/80 dark:bg-zinc-950/80 px-6 py-4 space-y-1">
+        <div className="mx-3 mt-2 rounded-3xl px-4 py-4 space-y-1 bg-white dark:bg-zinc-950 border border-zinc-200/70 dark:border-zinc-700/70 shadow-lg shadow-zinc-900/5">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="block text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition py-2.5 px-3 rounded-lg hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50"
+              className="block rounded-xl px-3 py-2.5 text-sm text-zinc-600 transition hover:bg-white/45 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800/45 dark:hover:text-zinc-50"
             >
               {link.label}
             </a>
           ))}
-          <div className="pt-2 border-t border-zinc-200/50 dark:border-zinc-800/50 mt-2 flex flex-col gap-2">
-            <Link
-              href="/signin"
-              onClick={() => setOpen(false)}
-              className="text-sm text-indigo-600 dark:text-indigo-400 font-medium py-2.5 px-3 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition"
+
+          <div className="flex items-center gap-2 border-t border-zinc-200/50 dark:border-zinc-700/50 pt-3 mt-3">
+            {(Object.keys(languageLabels) as LandingLanguage[]).map((item) => (
+              <button
+                key={item}
+                onClick={() => {
+                  onLanguageChange(item)
+                  setOpen(false)
+                }}
+                className={`flex-1 rounded-xl px-3 py-2 text-sm font-medium transition ${
+                  language === item
+                    ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300"
+                    : "text-zinc-600 hover:bg-white/45 dark:text-zinc-300 dark:hover:bg-zinc-800/45"
+                }`}
+              >
+                {languageLabels[item]}
+              </button>
+            ))}
+            <button
+              onClick={() => { toggleTheme(); setOpen(false) }}
+              className="min-h-11 min-w-11 rounded-xl p-2 text-zinc-600 transition hover:bg-white/45 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800/45 dark:hover:text-zinc-50 flex items-center justify-center"
+              aria-label={copy.theme}
             >
-              Entrar
-            </Link>
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-2 pt-2">
             <Link
               href="/signup"
               onClick={() => setOpen(false)}
-              className="text-sm text-zinc-600 dark:text-zinc-400 font-medium py-2.5 px-3 rounded-lg hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50 transition"
+              className="block rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-600 transition hover:bg-white/45 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800/45 dark:hover:text-zinc-50 text-center"
             >
-              Criar conta
+              {copy.createAccount}
+            </Link>
+            <Link
+              href="/signin"
+              onClick={() => setOpen(false)}
+              className="block rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition-all hover:from-indigo-700 hover:to-violet-700 hover:shadow-indigo-600/30 text-center"
+            >
+              {copy.signIn}
             </Link>
           </div>
         </div>

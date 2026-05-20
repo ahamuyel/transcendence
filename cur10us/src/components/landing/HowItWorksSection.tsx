@@ -1,38 +1,31 @@
 import { FileText, Clock, Settings, Rocket } from "lucide-react"
 import AnimateOnScroll from "./AnimateOnScroll"
+import type { LandingCopy } from "./landing-i18n"
 
-const steps = [
+const stepVisuals = [
   {
     icon: FileText,
     step: "1",
-    title: "Registe a sua escola",
-    description: "Preencha o formulário com os dados da escola e submeta a candidatura.",
     color: "from-indigo-500 to-indigo-600",
   },
   {
     icon: Clock,
     step: "2",
-    title: "Aguarde aprovação",
-    description: "A nossa equipa analisa o pedido e aprova a sua escola na plataforma.",
     color: "from-violet-500 to-violet-600",
   },
   {
     icon: Settings,
     step: "3",
-    title: "Configure o sistema",
-    description: "Adicione turmas, professores e alunos. Personalize as funcionalidades.",
     color: "from-cyan-500 to-cyan-600",
   },
   {
     icon: Rocket,
     step: "4",
-    title: "Comece a gerir",
-    description: "Tudo pronto! Use os dashboards para acompanhar o dia-a-dia da escola.",
     color: "from-emerald-500 to-emerald-600",
   },
 ]
 
-export default function HowItWorksSection() {
+export default function HowItWorksSection({ copy }: { copy: LandingCopy["how"] }) {
   return (
     <section id="como-funciona" className="py-28 px-6 relative overflow-hidden">
       {/* Subtle background */}
@@ -43,16 +36,16 @@ export default function HowItWorksSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-20">
           <span className="inline-block text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/50 px-4 py-1.5 rounded-full border border-indigo-200/50 dark:border-indigo-800/50 mb-6">
-            Simples e rápido
+            {copy.badge}
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mb-5 tracking-tight">
-            Como{" "}
+            {copy.titlePrefix}{" "}
             <span className="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
-              funciona
+              {copy.titleAccent}
             </span>
           </h2>
           <p className="text-lg text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto">
-            Em 4 passos simples, a sua escola está pronta para usar o Cur10usX.
+            {copy.description}
           </p>
         </div>
 
@@ -60,8 +53,9 @@ export default function HowItWorksSection() {
           {/* Connecting line (desktop) */}
           <div className="hidden lg:block absolute top-[52px] left-[12.5%] right-[12.5%] h-[2px] bg-gradient-to-r from-indigo-300 via-violet-300 to-emerald-300 dark:from-indigo-800 dark:via-violet-800 dark:to-emerald-800 rounded-full" />
 
-          {steps.map((item, i) => {
+          {stepVisuals.map((item, i) => {
             const Icon = item.icon
+            const content = copy.steps[i]
             return (
               <AnimateOnScroll key={item.step} delay={i * 120}>
                 <div className="relative text-center group">
@@ -74,9 +68,9 @@ export default function HowItWorksSection() {
                       {item.step}
                     </span>
                   </div>
-                  <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                  <h3 className="font-bold text-lg mb-2">{content.title}</h3>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-[240px] mx-auto">
-                    {item.description}
+                    {content.description}
                   </p>
                 </div>
               </AnimateOnScroll>

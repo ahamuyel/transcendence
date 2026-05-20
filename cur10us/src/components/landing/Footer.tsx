@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { PlatformBranding } from "@/types/landing";
+import type { LandingCopy } from "./landing-i18n";
 
-export default function Footer({ branding }: { branding: PlatformBranding }) {
+export default function Footer({ branding, copy }: { branding: PlatformBranding; copy: LandingCopy["footer"] }) {
   return (
     <footer className="border-t border-zinc-200/60 dark:border-zinc-800/60 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-6 py-16">
@@ -21,29 +22,24 @@ export default function Footer({ branding }: { branding: PlatformBranding }) {
               )}
             </span>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-3 leading-relaxed max-w-xs">
-              {branding.description || "Plataforma de gestão escolar moderna, pensada para o contexto angolano."}
+              {branding.description || copy.fallbackDescription}
             </p>
           </div>
 
           {/* Plataforma */}
           <div>
             <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4 uppercase tracking-wider text-[13px]">
-              Plataforma
+              {copy.platform}
             </h4>
             <ul className="space-y-3 text-sm text-zinc-500 dark:text-zinc-400">
               <li>
                 <a href="#funcionalidades" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition">
-                  Funcionalidades
+                  {copy.features}
                 </a>
               </li>
               <li>
                 <a href="#para-quem" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition">
-                  Para quem
-                </a>
-              </li>
-              <li>
-                <a href="#faq" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition">
-                  Perguntas frequentes
+                  {copy.profiles}
                 </a>
               </li>
             </ul>
@@ -52,27 +48,27 @@ export default function Footer({ branding }: { branding: PlatformBranding }) {
           {/* Acesso */}
           <div>
             <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4 uppercase tracking-wider text-[13px]">
-              Acesso
+              {copy.access}
             </h4>
             <ul className="space-y-3 text-sm text-zinc-500 dark:text-zinc-400">
               <li>
                 <Link href="/signin" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition">
-                  Entrar
+                  {copy.signIn}
                 </Link>
               </li>
               <li>
                 <Link href="/registar-escola" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition">
-                  Registar escola
+                  {copy.registerSchool}
                 </Link>
               </li>
               <li>
                 <Link href="/aplicacao" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition">
-                  Solicitar matrícula
+                  {copy.apply}
                 </Link>
               </li>
               <li>
                 <Link href="/aplicacao/status" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition">
-                  Acompanhar candidatura
+                  {copy.trackApplication}
                 </Link>
               </li>
             </ul>
@@ -81,26 +77,26 @@ export default function Footer({ branding }: { branding: PlatformBranding }) {
           {/* Contacto */}
           <div>
             <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4 uppercase tracking-wider text-[13px]">
-              Contacto
+              {copy.contact}
             </h4>
             <ul className="space-y-3 text-sm text-zinc-500 dark:text-zinc-400">
               <li>{branding.contactEmail || "suporte@cur10usx.com"}</li>
               {branding.contactPhone && <li>{branding.contactPhone}</li>}
-              <li>Luanda, Angola</li>
+              <li>{copy.location}</li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-zinc-200/60 dark:border-zinc-800/60 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-zinc-400 dark:text-zinc-500">
-            &copy; {new Date().getFullYear()} {branding.name}. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} {branding.name}. {copy.rights}
           </p>
           <div className="flex items-center gap-6 text-sm text-zinc-400 dark:text-zinc-500">
             <Link href="/termos" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition">
-              Termos de uso
+              {copy.terms}
             </Link>
             <Link href="/privacidade" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition">
-              Privacidade
+              {copy.privacy}
             </Link>
           </div>
         </div>

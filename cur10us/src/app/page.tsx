@@ -1,15 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import LandingNavbar from "@/components/landing/LandingNavbar";
-import HeroSection from "@/components/landing/HeroSection";
-import StatsSection from "@/components/landing/StatsSection";
-import HowItWorksSection from "@/components/landing/HowItWorksSection";
-import FeaturesSection from "@/components/landing/FeaturesSection";
-import ProfilesSection from "@/components/landing/ProfilesSection";
-import PricingSection from "@/components/landing/PricingSection";
-import FAQSection from "@/components/landing/FAQSection";
-import CTASection from "@/components/landing/CTASection";
-import Footer from "@/components/landing/Footer";
-import { PlatformBranding } from "@/types/landing";
+import LandingPageClient from "@/components/landing/LandingPageClient";
 
 export const dynamic = "force-dynamic";
 
@@ -50,17 +40,10 @@ export default async function Home() {
   const { stats, branding, topSchools } = await getData();
 
   return (
-    <main className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 scroll-smooth">
-      <LandingNavbar branding={branding} />
-      <HeroSection branding={branding} schools={topSchools} />
-      <StatsSection {...stats} />
-      <HowItWorksSection />
-      <FeaturesSection />
-      <ProfilesSection />
-      <PricingSection />
-      <FAQSection />
-      <CTASection />
-      <Footer branding={branding} />
+    <main className="landing-shell min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 scroll-smooth">
+      <div className="landing-bg" aria-hidden="true" />
+      <div className="landing-bg-soft" aria-hidden="true" />
+      <LandingPageClient stats={stats} branding={branding} topSchools={topSchools} />
     </main>
   );
 }
