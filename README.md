@@ -1,6 +1,6 @@
 *This project has been created as part of the 42 curriculum by ahamuyel.*
 
-# Cur10usX — Plataforma de Gestão Escolar
+# Holy Squad — Plataforma de Gestão Escolar
 
 ## Description
 
