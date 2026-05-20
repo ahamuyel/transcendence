@@ -4,7 +4,7 @@
 
 ## Description
 
-Cur10usX is a modern school management platform built for the Angolan educational context. It provides a complete suite of tools for managing students, teachers, classes, grades, attendance, schedules, and institutional communication — all in one place.
+Holy Squad is a modern school management platform built for the Angolan educational context. It provides a complete suite of tools for managing students, teachers, classes, grades, attendance, schedules, and institutional communication — all in one place.
 
 ### Key Features
 
