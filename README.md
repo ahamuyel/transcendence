@@ -1,10 +1,10 @@
 *This project has been created as part of the 42 curriculum by ahamuyel.*
 
-# Cur10usX — Plataforma de Gestão Escolar
+# Holly Squad — Plataforma de Gestão Escolar
 
 ## Description
 
-Cur10usX is a modern school management platform built for the Angolan educational context. It provides a complete suite of tools for managing students, teachers, classes, grades, attendance, schedules, and institutional communication — all in one place.
+Holly Squad is a modern school management platform built for the Angolan educational context. It provides a complete suite of tools for managing students, teachers, classes, grades, attendance, schedules, and institutional communication — all in one place.
 
 ### Key Features
 
