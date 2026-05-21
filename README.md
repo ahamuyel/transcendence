@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by ahamuyel.*
+*This project has been created as part of the 42 curriculum by ahamuyel, edgomes.*
 
 # Holy Squad — Plataforma de Gestão Escolar
 
