@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   ReactNode,
 } from "react"
@@ -35,6 +36,7 @@ function getInitialTheme(): Theme {
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>("light")
   const [mounted, setMounted] = useState(false)
+  const isFirstRender = useRef(true)
 
   useEffect(() => {
     setTheme(getInitialTheme())
@@ -44,11 +46,28 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!mounted) return
 
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      document.documentElement.classList.remove("light", "dark")
+      document.documentElement.classList.add(theme)
+      localStorage.setItem("theme", theme)
+      document.cookie = `theme=${theme}; path=/; max-age=31536000`
+      return
+    }
+
+    document.documentElement.classList.add("theme-transitioning")
+
     document.documentElement.classList.remove("light", "dark")
     document.documentElement.classList.add(theme)
 
     localStorage.setItem("theme", theme)
     document.cookie = `theme=${theme}; path=/; max-age=31536000`
+
+    const timeout = setTimeout(() => {
+      document.documentElement.classList.remove("theme-transitioning")
+    }, 500)
+
+    return () => clearTimeout(timeout)
   }, [theme, mounted])
 
   const toggleTheme = () => {
