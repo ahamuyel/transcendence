@@ -9,7 +9,7 @@ import FeaturesSection from "@/components/landing/FeaturesSection"
 import ProfilesSection from "@/components/landing/ProfilesSection"
 import CTASection from "@/components/landing/CTASection"
 import Footer from "@/components/landing/Footer"
-import LandingBgScroll from "@/components/landing/LandingBgScroll"
+import SamacacaPattern from "@/components/landing/SamacacaPattern"
 import type { PlatformBranding } from "@/types/landing"
 import { landingCopy, type LandingLanguage } from "./landing-i18n"
 
@@ -30,7 +30,7 @@ export default function LandingPageClient({ stats, branding, topSchools }: Props
 
   return (
     <>
-      <LandingBgScroll />
+      <SamacacaPattern />
       <LandingNavbar
         branding={branding}
         copy={copy.nav}

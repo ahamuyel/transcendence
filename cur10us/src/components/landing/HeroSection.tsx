@@ -36,7 +36,7 @@ export default function HeroSection({ branding, schools, copy }: Props) {
       `}} />
 
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.03)_1px,transparent_1px)] bg-[size:64px_64px] dark:bg-[linear-gradient(rgba(99,102,241,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.05)_1px,transparent_1px)]" />
+        {/* Grid background removed to use global Samacaca pattern */}
       </div>
 
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-28 sm:pt-20 pb-24">

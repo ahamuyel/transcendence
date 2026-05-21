@@ -130,61 +130,6 @@ body {
   isolation: isolate;
 }
 
-.landing-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background-image: url("/landing-pattern.jpg");
-  background-position: center;
-  background-size: cover;
-  mix-blend-mode: multiply;
-  opacity: 0.15;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.6) 35%, transparent 85%);
-  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.6) 35%, transparent 85%);
-}
-
-.dark .landing-bg {
-  mix-blend-mode: screen;
-  filter: invert(1);
-  opacity: 0.12;
-}
-
-.landing-bg-soft {
-  position: fixed;
-  inset: 0;
-  z-index: -3;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
-}
-
-.dark .landing-bg-soft {
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
-}
-
-.landing-shell::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    linear-gradient(to bottom, rgba(250, 250, 250, 0.5) 0%, rgba(250, 250, 250, 0.72) 42%, rgba(250, 250, 250, 0.94) 100%),
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 32%),
-    radial-gradient(circle at 82% 12%, rgba(6, 182, 212, 0.1), transparent 26%);
-}
-
-.dark .landing-shell::after {
-  background:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.72) 46%, rgba(0, 0, 0, 0.94) 100%),
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 32%),
-    radial-gradient(circle at 82% 12%, rgba(6, 182, 212, 0.1), transparent 26%);
-}
-
 .landing-nav-3d,
 .landing-brand-3d,
 .landing-panel-3d,

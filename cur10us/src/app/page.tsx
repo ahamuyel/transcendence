@@ -41,8 +41,6 @@ export default async function Home() {
 
   return (
     <main className="landing-shell min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 scroll-smooth">
-      <div className="landing-bg" aria-hidden="true" />
-      <div className="landing-bg-soft" aria-hidden="true" />
       <LandingPageClient stats={stats} branding={branding} topSchools={topSchools} />
     </main>
   );

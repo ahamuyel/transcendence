@@ -46,53 +46,42 @@ function AnimatedCounter({ target, duration = 2000 }: { target: number; duration
   return <span ref={ref}>{count}</span>
 }
 
-function SchoolDeco() {
+function ZigzagDeco() {
   return (
-    <svg className="w-20 h-20" viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="22" y="32" width="36" height="36" rx="2" opacity="0.75" />
-      <polygon points="12,36 40,14 68,36" opacity="0.9" />
-      <rect x="36" y="50" width="8" height="18" rx="1" opacity="0.65" />
-      <rect x="24" y="42" width="6" height="6" rx="1" opacity="0.5" />
-      <rect x="50" y="42" width="6" height="6" rx="1" opacity="0.5" />
+    <svg className="w-32 h-32" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 0 40 L 20 20 L 40 40 L 60 20 L 80 40 L 100 20" opacity="0.8" />
+      <path d="M 0 55 L 20 35 L 40 55 L 60 35 L 80 55 L 100 35" opacity="0.6" />
+      <path d="M 0 70 L 20 50 L 40 70 L 60 50 L 80 70 L 100 50" opacity="0.4" />
     </svg>
   )
 }
 
-function StudentsDeco() {
+function DiamondDeco() {
   return (
-    <svg className="w-20 h-20" viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="20" cy="22" r="7" opacity="0.7" />
-      <path d="M10,45 Q10,32 20,32 Q30,32 30,45" opacity="0.7" />
-      <circle cx="40" cy="18" r="7" opacity="0.9" />
-      <path d="M30,41 Q30,28 40,28 Q50,28 50,41" opacity="0.9" />
-      <circle cx="60" cy="22" r="7" opacity="0.6" />
-      <path d="M50,45 Q50,32 60,32 Q70,32 70,45" opacity="0.6" />
+    <svg className="w-32 h-32" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 50 10 L 90 50 L 50 90 L 10 50 Z" opacity="0.8" />
+      <path d="M 50 25 L 75 50 L 50 75 L 25 50 Z" opacity="0.6" />
+      <path d="M 50 40 L 60 50 L 50 60 L 40 50 Z" opacity="0.4" />
     </svg>
   )
 }
 
-function TeacherDeco() {
+function CircleDeco() {
   return (
-    <svg className="w-20 h-20" viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="40" cy="20" r="8" opacity="0.8" />
-      <path d="M28,44 Q28,28 40,28 Q52,28 52,44" opacity="0.8" />
-      <rect x="22" y="48" width="36" height="4" rx="1" opacity="0.55" />
-      <rect x="30" y="52" width="20" height="16" rx="1" opacity="0.45" />
-      <line x1="40" y1="44" x2="40" y2="68" opacity="0.45" />
-      <line x1="32" y1="68" x2="48" y2="68" opacity="0.45" />
+    <svg className="w-32 h-32" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="50" cy="50" r="40" opacity="0.8" />
+      <circle cx="50" cy="50" r="25" opacity="0.6" />
+      <circle cx="50" cy="50" r="10" opacity="0.4" />
     </svg>
   )
 }
 
-function ClassesDeco() {
+function WavyDeco() {
   return (
-    <svg className="w-20 h-20" viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="14" y="22" width="22" height="16" rx="1.5" opacity="0.75" />
-      <rect x="44" y="22" width="22" height="16" rx="1.5" opacity="0.75" />
-      <rect x="14" y="42" width="22" height="16" rx="1.5" opacity="0.55" />
-      <rect x="44" y="42" width="22" height="16" rx="1.5" opacity="0.55" />
-      <rect x="14" y="62" width="22" height="8" rx="1" opacity="0.35" />
-      <rect x="44" y="62" width="22" height="8" rx="1" opacity="0.35" />
+    <svg className="w-32 h-32" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 20 0 Q 30 25 20 50 T 20 100" opacity="0.8" />
+      <path d="M 40 0 Q 50 25 40 50 T 40 100" opacity="0.6" />
+      <path d="M 60 0 Q 70 25 60 50 T 60 100" opacity="0.4" />
     </svg>
   )
 }
@@ -104,7 +93,7 @@ const statItems = [
     gradient: "from-indigo-500 to-indigo-600",
     bg: "bg-white dark:bg-zinc-900",
     decoColor: "text-indigo-500/35 dark:text-indigo-400/35",
-    deco: SchoolDeco,
+    deco: ZigzagDeco,
   },
   {
     key: "students" as const,
@@ -112,7 +101,7 @@ const statItems = [
     gradient: "from-violet-500 to-violet-600",
     bg: "bg-white dark:bg-zinc-900",
     decoColor: "text-violet-500/35 dark:text-violet-400/35",
-    deco: StudentsDeco,
+    deco: DiamondDeco,
   },
   {
     key: "teachers" as const,
@@ -120,7 +109,7 @@ const statItems = [
     gradient: "from-cyan-500 to-cyan-600",
     bg: "bg-white dark:bg-zinc-900",
     decoColor: "text-cyan-500/35 dark:text-cyan-400/35",
-    deco: TeacherDeco,
+    deco: CircleDeco,
   },
   {
     key: "classes" as const,
@@ -128,13 +117,13 @@ const statItems = [
     gradient: "from-emerald-500 to-emerald-600",
     bg: "bg-white dark:bg-zinc-900",
     decoColor: "text-emerald-500/35 dark:text-emerald-400/35",
-    deco: ClassesDeco,
+    deco: WavyDeco,
   },
 ]
 
 export default function StatsSection(props: Props) {
   return (
-    <section className="relative py-20 px-6">
+    <section id="stats-section" className="relative py-20 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {statItems.map((stat) => {
           const Icon = stat.icon

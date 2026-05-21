@@ -12,7 +12,7 @@ export default function CTASection({ copy }: { copy: LandingCopy["cta"] }) {
           <div className="absolute inset-0">
             <div className="absolute top-[-50%] left-[-20%] w-[500px] h-[500px] rounded-full bg-white/10 blur-3xl" />
             <div className="absolute bottom-[-50%] right-[-20%] w-[400px] h-[400px] rounded-full bg-white/5 blur-3xl" />
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:48px_48px]" />
+            {/* Grid background removed to use global Samacaca pattern */}
           </div>
 
           <div className="relative z-10">
