@@ -2,13 +2,12 @@
 
 import { useEffect } from "react"
 
-const MAX_OPACITY = 0.15
-
 export default function LandingBgScroll() {
   useEffect(() => {
     const bg = document.querySelector<HTMLElement>(".landing-bg")
     if (!bg) return
 
+    const maxOpacity = parseFloat(getComputedStyle(bg).opacity) || 0.15
     let ticking = false
 
     const handleScroll = () => {
@@ -16,7 +15,7 @@ export default function LandingBgScroll() {
         requestAnimationFrame(() => {
           const vh = window.innerHeight
           const scrollY = window.scrollY
-          const opacity = Math.max(0, MAX_OPACITY - scrollY / (vh * 0.8))
+          const opacity = Math.max(0, maxOpacity - scrollY / (vh * 0.8))
           bg.style.opacity = String(opacity)
           ticking = false
         })
