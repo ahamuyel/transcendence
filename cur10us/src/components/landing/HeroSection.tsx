@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ArrowRight, Sparkles, GraduationCap, Users, Calendar, BarChart3 } from "lucide-react"
 import type { PlatformBranding } from "@/types/landing"
 import type { LandingCopy } from "./landing-i18n"
+import TypewriterText from "./TypewriterText"
 
 type Props = {
   branding: PlatformBranding
@@ -50,8 +51,9 @@ export default function HeroSection({ branding, schools, copy }: Props) {
             <h1 className="text-2xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] px-2 sm:px-0">
               {copy.titlePrefix}
               <br />
+              <span className="text-zinc-900 dark:text-zinc-100">mais </span>
               <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 dark:from-indigo-400 dark:via-violet-400 dark:to-purple-400 bg-clip-text text-transparent">
-                {copy.titleAccent}
+                <TypewriterText words={copy.titleAdjectives ?? [copy.titleAccent.replace("mais ", "")]} />
               </span>
             </h1>
 

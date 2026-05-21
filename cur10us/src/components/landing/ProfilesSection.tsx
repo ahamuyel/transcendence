@@ -57,7 +57,7 @@ export default function ProfilesSection({ copy }: { copy: LandingCopy["profiles"
             const content = copy.items[i]
             return (
               <AnimateOnScroll key={content.role} delay={i * 100}>
-                <div className={`landing-panel-3d group rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-sm ${profile.border} p-6 h-full transition-all duration-300 hover:shadow-lg hover:shadow-zinc-200/50 dark:hover:shadow-black/20`}>
+                <div className={`group rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 ${profile.border} p-6 h-full transition-all duration-300 hover:shadow-lg hover:shadow-zinc-200/50 dark:hover:shadow-black/20`}>
                   <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${profile.gradient} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <Icon className="w-5 h-5 text-white" />
                   </div>

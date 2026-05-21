@@ -87,7 +87,7 @@ export default function FeaturesSection({ copy }: { copy: LandingCopy["features"
             return (
               <AnimateOnScroll key={content.title} delay={i * 60}>
                 <div
-                  className={`landing-panel-3d group relative rounded-2xl bg-white/60 dark:bg-zinc-900/60 backdrop-blur-sm p-6 hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300 h-full overflow-hidden hover:shadow-lg hover:shadow-zinc-200/50 dark:hover:shadow-black/20 ${item.span}`}
+                  className={`group relative rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300 h-full overflow-hidden hover:shadow-lg hover:shadow-zinc-200/50 dark:hover:shadow-black/20 ${item.span}`}
                 >
                   {/* Hover gradient glow */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-[0.03] dark:group-hover:opacity-[0.06] transition-opacity duration-500`} />

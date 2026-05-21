@@ -51,29 +51,25 @@ const statItems = [
     key: "schools" as const,
     icon: School,
     gradient: "from-indigo-500 to-indigo-600",
-    bg: "bg-indigo-50 dark:bg-indigo-950/50",
-    ring: "ring-indigo-100 dark:ring-indigo-900/50",
+    bg: "bg-white dark:bg-zinc-900",
   },
   {
     key: "students" as const,
     icon: Users,
     gradient: "from-violet-500 to-violet-600",
-    bg: "bg-violet-50 dark:bg-violet-950/50",
-    ring: "ring-violet-100 dark:ring-violet-900/50",
+    bg: "bg-white dark:bg-zinc-900",
   },
   {
     key: "teachers" as const,
     icon: GraduationCap,
     gradient: "from-cyan-500 to-cyan-600",
-    bg: "bg-cyan-50 dark:bg-cyan-950/50",
-    ring: "ring-cyan-100 dark:ring-cyan-900/50",
+    bg: "bg-white dark:bg-zinc-900",
   },
   {
     key: "classes" as const,
     icon: BookOpen,
     gradient: "from-emerald-500 to-emerald-600",
-    bg: "bg-emerald-50 dark:bg-emerald-950/50",
-    ring: "ring-emerald-100 dark:ring-emerald-900/50",
+    bg: "bg-white dark:bg-zinc-900",
   },
 ]
 
@@ -87,7 +83,7 @@ export default function StatsSection(props: Props) {
           return (
             <div
               key={stat.key}
-              className={`landing-panel-3d relative flex flex-col items-center py-8 px-4 rounded-2xl ${stat.bg} ring-1 ${stat.ring} transition-all hover:scale-[1.03]`}
+              className={`relative flex flex-col items-center py-8 px-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 ${stat.bg} transition-all hover:scale-[1.03] hover:shadow-lg`}
             >
               <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center mb-4 shadow-lg`}>
                 <Icon className="w-5 h-5 text-white" />

@@ -17,6 +17,7 @@ export type LandingCopy = {
     badge: string
     titlePrefix: string
     titleAccent: string
+    titleAdjectives?: string[]
     fallbackDescription: string
     primaryCta: string
     secondaryCta: string
@@ -129,6 +130,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       badge: "Plataforma de Gestão Escolar para Angola",
       titlePrefix: "A sua escola,",
       titleAccent: "mais organizada",
+      titleAdjectives: ["organizada", "eficiente", "moderna"],
       fallbackDescription:
         "Centralize a gestão de alunos, professores, notas e comunicação numa única plataforma moderna.",
       primaryCta: "Começar agora",
@@ -307,6 +309,7 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       badge: "School management platform for Angola",
       titlePrefix: "Your school,",
       titleAccent: "better organized",
+      titleAdjectives: ["organized", "efficient", "modern"],
       fallbackDescription:
         "Centralize students, teachers, grades, attendance and communication in one modern platform.",
       primaryCta: "Get started",
@@ -482,9 +485,10 @@ export const landingCopy: Record<LandingLanguage, LandingCopy> = {
       menu: "Ouvrir le menu",
     },
     hero: {
-      badge: "Plateforme de gestion scolaire pour l'Angola",
-      titlePrefix: "Votre ecole,",
-      titleAccent: "mieux organisee",
+      badge: "Plateforme de Gestion Scolaire pour l'Angola",
+      titlePrefix: "Votre école,",
+      titleAccent: "plus ",
+      titleAdjectives: ["organisée", "efficace", "connectée", "intelligente", "moderne"],
       fallbackDescription:
         "Centralisez les eleves, enseignants, notes, presences et communications dans une plateforme moderne.",
       primaryCta: "Commencer",
