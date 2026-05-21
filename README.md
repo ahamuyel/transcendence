@@ -16,7 +16,7 @@ Holy Squad is a modern school management platform built for the Angolan educatio
 - Internal messaging and announcement system
 - Real-time notifications via WebSocket
 - Public API with rate limiting
-- Multi-language support (PT, EN, FR, ES)
+- Multi-language support (PT, EN, FR)
 - File uploads for assignments, avatars, and documents
 - Data import (bulk CSV/XLSX) and export
 - GDPR compliance tools (data export, account deletion)
