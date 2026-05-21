@@ -11,46 +11,160 @@ import {
 import AnimateOnScroll from "./AnimateOnScroll"
 import type { LandingCopy } from "./landing-i18n"
 
+function DecoBars() {
+  return (
+    <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      <rect x="10" y="28" width="8" height="24" rx="1.5" opacity="0.6" />
+      <rect x="22" y="18" width="8" height="34" rx="1.5" opacity="0.8" />
+      <rect x="34" y="24" width="8" height="28" rx="1.5" opacity="0.5" />
+      <rect x="46" y="12" width="8" height="40" rx="1.5" opacity="0.7" />
+    </svg>
+  )
+}
+
+function DecoNetwork() {
+  return (
+    <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="20" cy="20" r="7" opacity="0.7" />
+      <circle cx="44" cy="20" r="7" opacity="0.5" />
+      <circle cx="32" cy="44" r="7" opacity="0.6" />
+      <line x1="27" y1="22" x2="37" y2="40" opacity="0.4" />
+      <line x1="37" y1="22" x2="27" y2="40" opacity="0.4" />
+      <line x1="20" y1="27" x2="32" y2="44" opacity="0.3" />
+      <line x1="44" y1="27" x2="32" y2="44" opacity="0.3" />
+    </svg>
+  )
+}
+
+function DecoChecklist() {
+  return (
+    <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="14" y="8" width="36" height="48" rx="3" opacity="0.6" />
+      <line x1="22" y1="20" x2="42" y2="20" opacity="0.4" />
+      <line x1="22" y1="30" x2="36" y2="30" opacity="0.4" />
+      <polyline points="28,46 34,52 42,40" opacity="0.8" />
+    </svg>
+  )
+}
+
+function DecoStar() {
+  return (
+    <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="32,6 39,24 58,24 43,36 48,54 32,43 16,54 21,36 6,24 25,24" opacity="0.7" />
+      <circle cx="32" cy="30" r="3" opacity="0.4" />
+    </svg>
+  )
+}
+
+function DecoChat() {
+  return (
+    <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14,28 Q14,14 32,14 Q50,14 50,28 Q50,42 32,42 Q28,42 24,40 L14,46 L18,38 Q14,34 14,28Z" opacity="0.7" />
+      <circle cx="26" cy="28" r="2" opacity="0.4" />
+      <circle cx="32" cy="28" r="2" opacity="0.4" />
+      <circle cx="38" cy="28" r="2" opacity="0.4" />
+    </svg>
+  )
+}
+
+function DecoDocs() {
+  return (
+    <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18,12 L32,12 L42,22 L42,54 Q42,56 40,56 L20,56 Q18,56 18,54 Z" opacity="0.7" />
+      <path d="M32,12 L32,22 L42,22" opacity="0.5" />
+      <line x1="22" y1="30" x2="38" y2="30" opacity="0.4" />
+      <line x1="22" y1="38" x2="38" y2="38" opacity="0.4" />
+      <line x1="22" y1="46" x2="34" y2="46" opacity="0.4" />
+    </svg>
+  )
+}
+
+function DecoCalendar() {
+  return (
+    <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="10" y="16" width="44" height="40" rx="3" opacity="0.6" />
+      <line x1="10" y1="28" x2="54" y2="28" opacity="0.5" />
+      <line x1="20" y1="10" x2="20" y2="20" opacity="0.5" />
+      <line x1="44" y1="10" x2="44" y2="20" opacity="0.5" />
+      <circle cx="22" cy="38" r="3" opacity="0.6" />
+      <circle cx="32" cy="38" r="3" opacity="0.6" />
+      <circle cx="42" cy="38" r="3" opacity="0.6" />
+      <circle cx="27" cy="48" r="3" opacity="0.4" />
+      <circle cx="37" cy="48" r="3" opacity="0.4" />
+    </svg>
+  )
+}
+
+function DecoLineChart() {
+  return (
+    <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="8,48 18,38 28,42 38,22 48,30 56,14" opacity="0.8" />
+      <circle cx="8" cy="48" r="2.5" opacity="0.5" />
+      <circle cx="18" cy="38" r="2.5" opacity="0.5" />
+      <circle cx="28" cy="42" r="2.5" opacity="0.5" />
+      <circle cx="38" cy="22" r="2.5" opacity="0.5" />
+      <circle cx="48" cy="30" r="2.5" opacity="0.5" />
+      <circle cx="56" cy="14" r="2.5" opacity="0.7" />
+    </svg>
+  )
+}
+
 const featureVisuals = [
   {
     icon: LayoutDashboard,
     gradient: "from-indigo-500 to-indigo-600",
     span: "sm:col-span-2 lg:col-span-2",
+    decoColor: "text-indigo-500/10 dark:text-indigo-400/10",
+    deco: DecoBars,
   },
   {
     icon: Users,
     gradient: "from-cyan-500 to-cyan-600",
     span: "",
+    decoColor: "text-cyan-500/10 dark:text-cyan-400/10",
+    deco: DecoNetwork,
   },
   {
     icon: ClipboardCheck,
     gradient: "from-emerald-500 to-emerald-600",
     span: "",
+    decoColor: "text-emerald-500/10 dark:text-emerald-400/10",
+    deco: DecoChecklist,
   },
   {
     icon: GraduationCap,
     gradient: "from-amber-500 to-amber-600",
     span: "",
+    decoColor: "text-amber-500/10 dark:text-amber-400/10",
+    deco: DecoStar,
   },
   {
     icon: MessageSquare,
     gradient: "from-rose-500 to-rose-600",
     span: "",
+    decoColor: "text-rose-500/10 dark:text-rose-400/10",
+    deco: DecoChat,
   },
   {
     icon: FileText,
     gradient: "from-violet-500 to-violet-600",
     span: "sm:col-span-2 lg:col-span-2",
+    decoColor: "text-violet-500/10 dark:text-violet-400/10",
+    deco: DecoDocs,
   },
   {
     icon: Calendar,
     gradient: "from-sky-500 to-sky-600",
     span: "",
+    decoColor: "text-sky-500/10 dark:text-sky-400/10",
+    deco: DecoCalendar,
   },
   {
     icon: BarChart3,
     gradient: "from-orange-500 to-orange-600",
     span: "",
+    decoColor: "text-orange-500/10 dark:text-orange-400/10",
+    deco: DecoLineChart,
   },
 ]
 
@@ -91,6 +205,11 @@ export default function FeaturesSection({ copy }: { copy: LandingCopy["features"
                 >
                   {/* Hover gradient glow */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-[0.03] dark:group-hover:opacity-[0.06] transition-opacity duration-500`} />
+
+                  {/* Decorative illustration */}
+                  <div className={`absolute -bottom-2 -right-2 sm:-bottom-3 sm:-right-3 ${item.decoColor} pointer-events-none`}>
+                    <item.deco />
+                  </div>
 
                   <div className="relative z-10">
                     <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:shadow-xl transition-all duration-300`}>

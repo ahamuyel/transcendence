@@ -46,30 +46,89 @@ function AnimatedCounter({ target, duration = 2000 }: { target: number; duration
   return <span ref={ref}>{count}</span>
 }
 
+function SchoolDeco() {
+  return (
+    <svg className="w-20 h-20" viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="22" y="32" width="36" height="36" rx="2" opacity="0.5" />
+      <polygon points="12,36 40,14 68,36" opacity="0.7" />
+      <rect x="36" y="50" width="8" height="18" rx="1" opacity="0.4" />
+      <rect x="24" y="42" width="6" height="6" rx="1" opacity="0.3" />
+      <rect x="50" y="42" width="6" height="6" rx="1" opacity="0.3" />
+    </svg>
+  )
+}
+
+function StudentsDeco() {
+  return (
+    <svg className="w-20 h-20" viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="20" cy="22" r="7" opacity="0.5" />
+      <path d="M10,45 Q10,32 20,32 Q30,32 30,45" opacity="0.5" />
+      <circle cx="40" cy="18" r="7" opacity="0.7" />
+      <path d="M30,41 Q30,28 40,28 Q50,28 50,41" opacity="0.7" />
+      <circle cx="60" cy="22" r="7" opacity="0.4" />
+      <path d="M50,45 Q50,32 60,32 Q70,32 70,45" opacity="0.4" />
+    </svg>
+  )
+}
+
+function TeacherDeco() {
+  return (
+    <svg className="w-20 h-20" viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="40" cy="20" r="8" opacity="0.6" />
+      <path d="M28,44 Q28,28 40,28 Q52,28 52,44" opacity="0.6" />
+      <rect x="22" y="48" width="36" height="4" rx="1" opacity="0.35" />
+      <rect x="30" y="52" width="20" height="16" rx="1" opacity="0.25" />
+      <line x1="40" y1="44" x2="40" y2="68" opacity="0.25" />
+      <line x1="32" y1="68" x2="48" y2="68" opacity="0.25" />
+    </svg>
+  )
+}
+
+function ClassesDeco() {
+  return (
+    <svg className="w-20 h-20" viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="14" y="22" width="22" height="16" rx="1.5" opacity="0.5" />
+      <rect x="44" y="22" width="22" height="16" rx="1.5" opacity="0.5" />
+      <rect x="14" y="42" width="22" height="16" rx="1.5" opacity="0.35" />
+      <rect x="44" y="42" width="22" height="16" rx="1.5" opacity="0.35" />
+      <rect x="14" y="62" width="22" height="8" rx="1" opacity="0.2" />
+      <rect x="44" y="62" width="22" height="8" rx="1" opacity="0.2" />
+    </svg>
+  )
+}
+
 const statItems = [
   {
     key: "schools" as const,
     icon: School,
     gradient: "from-indigo-500 to-indigo-600",
     bg: "bg-white dark:bg-zinc-900",
+    decoColor: "text-indigo-500/15 dark:text-indigo-400/15",
+    deco: SchoolDeco,
   },
   {
     key: "students" as const,
     icon: Users,
     gradient: "from-violet-500 to-violet-600",
     bg: "bg-white dark:bg-zinc-900",
+    decoColor: "text-violet-500/15 dark:text-violet-400/15",
+    deco: StudentsDeco,
   },
   {
     key: "teachers" as const,
     icon: GraduationCap,
     gradient: "from-cyan-500 to-cyan-600",
     bg: "bg-white dark:bg-zinc-900",
+    decoColor: "text-cyan-500/15 dark:text-cyan-400/15",
+    deco: TeacherDeco,
   },
   {
     key: "classes" as const,
     icon: BookOpen,
     gradient: "from-emerald-500 to-emerald-600",
     bg: "bg-white dark:bg-zinc-900",
+    decoColor: "text-emerald-500/15 dark:text-emerald-400/15",
+    deco: ClassesDeco,
   },
 ]
 
@@ -80,11 +139,15 @@ export default function StatsSection(props: Props) {
         {statItems.map((stat) => {
           const Icon = stat.icon
           const value = props[stat.key]
+          const Deco = stat.deco
           return (
             <div
               key={stat.key}
-              className={`relative flex flex-col items-center py-8 px-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 ${stat.bg} transition-all hover:scale-[1.03] hover:shadow-lg`}
+              className={`relative flex flex-col items-center py-8 px-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 ${stat.bg} transition-all hover:scale-[1.03] hover:shadow-lg overflow-hidden`}
             >
+              <div className={`absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 ${stat.decoColor} pointer-events-none`}>
+                <Deco />
+              </div>
               <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center mb-4 shadow-lg`}>
                 <Icon className="w-5 h-5 text-white" />
               </div>
