@@ -43,15 +43,17 @@ function useNavFilter() {
 
 function useGroupState(groupTitles: string[]) {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
-    if (typeof window === "undefined") return {}
-    try {
-      const saved = localStorage.getItem(GROUP_STATE_KEY)
-      if (saved) return JSON.parse(saved)
-    } catch { /* ignore */ }
     const initial: Record<string, boolean> = {}
     groupTitles.forEach((t) => { initial[t] = true })
     return initial
   })
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(GROUP_STATE_KEY)
+      if (saved) setOpenGroups(JSON.parse(saved))
+    } catch { /* ignore */ }
+  }, [])
 
   useEffect(() => {
     localStorage.setItem(GROUP_STATE_KEY, JSON.stringify(openGroups))
@@ -189,11 +191,11 @@ export default function AppSidebar() {
               <span className="font-bold text-lg text-zinc-900 dark:text-zinc-100 shrink-0">
                 {collapsed ? (
                   <>
-                    C<span className="text-indigo-600 dark:text-indigo-400">X</span>
+                    C<span className="text-primary">X</span>
                   </>
                 ) : (
                   <>
-                    Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
+                    Cur10us<span className="text-primary">X</span>
                   </>
                 )}
               </span>
@@ -315,13 +317,13 @@ export default function AppSidebar() {
               {userImage ? (
                 <AvatarImage src={userImage} alt={userName} />
               ) : null}
-              <AvatarFallback className="text-[10px] font-semibold bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
+              <AvatarFallback className="text-[10px] font-semibold bg-primary-light text-primary">
                 {userInitials}
               </AvatarFallback>
             </Avatar>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-zinc-800 dark:text-zinc-200 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                <p className="text-xs font-medium text-zinc-800 dark:text-zinc-200 truncate group-hover:text-primary transition-colors">
                   {userName}
                 </p>
                 <p className="text-[10px] text-zinc-400 dark:text-zinc-500 truncate">

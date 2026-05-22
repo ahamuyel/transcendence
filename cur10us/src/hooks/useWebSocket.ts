@@ -2,7 +2,7 @@
 import { useEffect, useRef, useCallback } from "react"
 import { useSession } from "next-auth/react"
 
-type WSEvent = "notification" | "message" | "friend_request" | "friend_accepted" | "online_status" | "session-update" | "chat_message" | "messages-read" | "auth_ok" | "auth_error"
+type WSEvent = "notification" | "message" | "friend_request" | "friend_accepted" | "online_status" | "session-update" | "chat_message" | "messages-read" | "messages-delivered" | "auth_ok" | "auth_error"
 
 type WSCallback = (payload: unknown) => void
 
@@ -19,28 +19,35 @@ export function off(event: WSEvent, cb: WSCallback) {
 }
 
 let wsToken: string | null = null
-let tokenPromise: Promise<string> | null = null
+let tokenRefreshTimer: ReturnType<typeof setTimeout> | null = null
+
+async function fetchToken(): Promise<string> {
+  const res = await fetch("/api/auth/ws-token")
+  if (!res.ok) throw new Error("Failed to get WS token")
+  const data = await res.json()
+  wsToken = data.token
+  scheduleTokenRefresh()
+  return wsToken!
+}
+
+function scheduleTokenRefresh() {
+  if (tokenRefreshTimer) clearTimeout(tokenRefreshTimer)
+  tokenRefreshTimer = setTimeout(() => {
+    wsToken = null
+    fetchToken().catch(() => {})
+  }, 240000)
+}
+
+function clearTokenRefresh() {
+  if (tokenRefreshTimer) {
+    clearTimeout(tokenRefreshTimer)
+    tokenRefreshTimer = null
+  }
+}
 
 async function getWsToken(): Promise<string> {
   if (wsToken) return wsToken
-  if (tokenPromise) return tokenPromise
-
-  tokenPromise = fetch("/api/auth/ws-token")
-    .then((r) => {
-      if (!r.ok) throw new Error("Failed to get WS token")
-      return r.json()
-    })
-    .then((data) => {
-      wsToken = data.token
-      setTimeout(() => { wsToken = null }, 25000)
-      return wsToken!
-    })
-
-  try {
-    return await tokenPromise
-  } finally {
-    tokenPromise = null
-  }
+  return fetchToken()
 }
 
 export function useWebSocket() {
@@ -79,6 +86,7 @@ export function useWebSocket() {
 
     ws.onclose = () => {
       wsRef.current = null
+      wsToken = null
       reconnectRef.current = setTimeout(connectRef.current, 3000)
     }
 
@@ -99,6 +107,7 @@ export function useWebSocket() {
     if (!userId) return
     connect()
     return () => {
+      clearTokenRefresh()
       if (reconnectRef.current) clearTimeout(reconnectRef.current)
       if (wsRef.current) {
         wsRef.current.onclose = null

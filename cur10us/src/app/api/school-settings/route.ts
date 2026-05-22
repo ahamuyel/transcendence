@@ -15,7 +15,32 @@ const SETTINGS_SELECT = {
   socialWhatsapp: true,
   loginMessage: true,
   footerText: true,
+  themePreset: true,
+  fontFamily: true,
+  fontSize: true,
+  fontWeight: true,
+  borderRadius: true,
+  shadowSize: true,
+  spacing: true,
+  cardStyle: true,
+  buttonStyle: true,
+  layoutDensity: true,
 }
+
+const ALLOWED_FIELDS = [
+  "logo", "primaryColor", "secondaryColor", "slogan",
+  "contactEmail", "socialFacebook", "socialInstagram",
+  "socialWhatsapp", "loginMessage", "footerText",
+  "themePreset", "fontFamily", "fontSize", "fontWeight",
+  "borderRadius", "shadowSize", "spacing",
+  "cardStyle", "buttonStyle", "layoutDensity",
+]
+
+const THEME_PRESET_FIELDS = [
+  "themePreset", "fontFamily", "fontSize", "fontWeight",
+  "borderRadius", "shadowSize", "spacing",
+  "cardStyle", "buttonStyle", "layoutDensity",
+]
 
 export async function GET() {
   try {
@@ -48,16 +73,23 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Logo muito grande (máx. 200KB)" }, { status: 400 })
     }
 
-    const allowedFields = [
-      "logo", "primaryColor", "secondaryColor", "slogan",
-      "contactEmail", "socialFacebook", "socialInstagram",
-      "socialWhatsapp", "loginMessage", "footerText",
-    ] as const
-
     const data: Record<string, string | null> = {}
-    for (const field of allowedFields) {
+    for (const field of ALLOWED_FIELDS) {
       if (body[field] !== undefined) {
         data[field] = body[field] || null
+      }
+    }
+
+    // If themePreset is set without individual overrides, apply preset defaults
+    if (body.themePreset && !THEME_PRESET_FIELDS.some(f => f !== "themePreset" && body[f] !== undefined && body[f] !== null && body[f] !== "")) {
+      const { THEME_PRESETS } = await import("@/provider/school-branding")
+      const preset = THEME_PRESETS[body.themePreset as keyof typeof THEME_PRESETS]
+      if (preset) {
+        for (const [key, val] of Object.entries(preset)) {
+          if (val !== undefined && val !== null) {
+            data[key] = val
+          }
+        }
       }
     }
 

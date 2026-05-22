@@ -3,7 +3,7 @@ FROM node:20-alpine AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -30,7 +30,7 @@ COPY --from=builder /app/ws-server.js ./ws-server.js
 
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/package-lock.json ./package-lock.json
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 COPY --from=builder /app/prisma ./prisma
 RUN npx prisma generate

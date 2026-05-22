@@ -1,19 +1,17 @@
 @import "tailwindcss";
 
-html, body {
-  font-family: 'Inter', sans-serif;
-}
-
-@theme {
+@theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
 
-  --color-primary: #6366f1;
-  --color-primary-dark: #4338ca;
-  --color-accent: #6366f1;
+  --color-primary: var(--school-primary);
+  --color-primary-dark: var(--school-primary-dark);
+  --color-primary-light: var(--school-primary-light);
+  --color-accent: var(--school-secondary, var(--school-primary));
+  --color-accent-light: var(--school-secondary-light);
   --color-cyan: #06B6D4;
   --color-amber: #F59E0B;
   --color-emerald: #10B981;
@@ -98,14 +96,62 @@ html, body {
 :root {
   --color-background: #ffffff;
   --color-foreground: #09090b;
+
+  /* School brand colors */
   --school-primary: #6366f1;
   --school-primary-light: #eef2ff;
   --school-primary-dark: #312e81;
+  --school-secondary: #06B6D4;
+  --school-secondary-light: hsl(186, 94%, 95%);
+
+  /* Typography */
+  --school-font-family: 'Inter', sans-serif;
+  --school-font-size-base: 16px;
+  --school-font-weight-normal: 400;
+  --school-font-weight-bold: 700;
+
+  /* Border radius */
+  --school-radius-sm: 0.375rem;
+  --school-radius-md: 0.5rem;
+  --school-radius-lg: 0.75rem;
+  --school-radius-xl: 1rem;
+  --school-radius-2xl: 1.5rem;
+  --school-radius-full: 9999px;
+
+  /* Shadows */
+  --school-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --school-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --school-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --school-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Spacing density multiplier */
+  --school-spacing: 1;
+
+  /* Card styles */
+  --school-card-radius: 0.75rem;
+  --school-card-bg: #ffffff;
+  --school-card-border: 1px solid #e4e4e7;
+  --school-card-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  /* Button styles */
+  --school-button-radius: 0.5rem;
+  --school-button-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --school-button-font-weight: 600;
+
+  /* Layout density */
+  --school-density-padding: 1;
 }
 
 .dark {
   --color-background: #000000;
   --color-foreground: #fafafa;
+  --school-card-bg: #09090b;
+  --school-card-border: 1px solid #27272a;
+}
+
+html, body {
+  font-family: var(--school-font-family);
+  font-size: var(--school-font-size-base);
 }
 
 body {
@@ -185,6 +231,44 @@ body {
 @utility slide-out-to-bottom-2 {
   --tw-exit-translate-y: 0.5rem;
 }
+
+/* Theme utility classes */
+.theme-btn {
+  border-radius: var(--school-button-radius);
+  box-shadow: var(--school-button-shadow);
+  font-weight: var(--school-button-font-weight);
+}
+
+.theme-card {
+  border-radius: var(--school-card-radius);
+  box-shadow: var(--school-card-shadow);
+  background-color: var(--school-card-bg);
+  border: var(--school-card-border);
+}
+
+.theme-radius-sm { border-radius: var(--school-radius-sm); }
+.theme-radius-md { border-radius: var(--school-radius-md); }
+.theme-radius-lg { border-radius: var(--school-radius-lg); }
+.theme-radius-xl { border-radius: var(--school-radius-xl); }
+.theme-radius-2xl { border-radius: var(--school-radius-2xl); }
+.theme-radius-full { border-radius: var(--school-radius-full); }
+
+.theme-shadow-sm { box-shadow: var(--school-shadow-sm); }
+.theme-shadow-md { box-shadow: var(--school-shadow-md); }
+.theme-shadow-lg { box-shadow: var(--school-shadow-lg); }
+.theme-shadow-xl { box-shadow: var(--school-shadow-xl); }
+
+/* Density-aware padding */
+@utility density-px-2 { padding: calc(0.5rem * var(--school-density-padding)); }
+@utility density-px-3 { padding: calc(0.75rem * var(--school-density-padding)); }
+@utility density-px-4 { padding: calc(1rem * var(--school-density-padding)); }
+@utility density-px-6 { padding: calc(1.5rem * var(--school-density-padding)); }
+@utility density-px-8 { padding: calc(2rem * var(--school-density-padding)); }
+
+/* Spacing-aware gaps */
+@utility density-gap-2 { gap: calc(0.5rem * var(--school-spacing)); }
+@utility density-gap-3 { gap: calc(0.75rem * var(--school-spacing)); }
+@utility density-gap-4 { gap: calc(1rem * var(--school-spacing)); }
 
 /* Safe area for mobile bottom nav */
 .safe-area-bottom {

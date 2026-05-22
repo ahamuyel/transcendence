@@ -9,6 +9,7 @@ import MaintenanceGuard from "@/components/layout/MaintenanceGuard"
 import SessionGuard from "@/components/layout/SessionGuard"
 import { SchoolBrandingProvider } from "@/provider/school-branding"
 import FloatingHelpButton from "@/components/ui/FloatingHelpButton"
+import DashboardFooter from "@/components/layout/DashboardFooter"
 
 export default function DashboardLayout({
   children,
@@ -33,6 +34,7 @@ export default function DashboardLayout({
                           {children}
                         </div>
                       </main>
+                      <DashboardFooter />
                     </div>
                   </div>
                   <FloatingHelpButton />
