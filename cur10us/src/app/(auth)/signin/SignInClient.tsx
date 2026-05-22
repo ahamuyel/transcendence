@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -39,6 +40,31 @@ export default function SignInClient() {
     general?: string;
   }>({});
   const [loading, setLoading] = useState(false);
+  const [schoolBranding, setSchoolBranding] = useState<{
+    logo: string | null
+    loginMessage: string | null
+    primaryColor: string | null
+  } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/school-settings")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data) {
+          setSchoolBranding(data)
+          if (data.primaryColor) {
+            document.documentElement.style.setProperty("--school-primary", data.primaryColor)
+          }
+          if (data.secondaryColor) {
+            document.documentElement.style.setProperty("--school-secondary", data.secondaryColor)
+          }
+          if (data.fontFamily) {
+            document.documentElement.style.setProperty("--school-font-family", `'${data.fontFamily}', sans-serif`)
+          }
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     const checkSessionAndRedirect = async () => {
@@ -146,8 +172,13 @@ export default function SignInClient() {
         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden">
           <div className="p-8">
             <div className="mb-8">
+              {schoolBranding?.logo && (
+                <div className="flex justify-center mb-4">
+                  <Image src={schoolBranding.logo} alt="Logo" width={64} height={64} className="w-16 h-16 object-contain rounded-xl" />
+                </div>
+              )}
               <h1 className="text-2xl font-bold tracking-tight">
-                Bem-vindo de volta
+                {schoolBranding?.loginMessage || "Bem-vindo de volta"}
               </h1>
               <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
                 Entre na sua conta para continuar
@@ -242,7 +273,7 @@ export default function SignInClient() {
             <div className="text-right -mt-3">
               <Link
                 href="/forgot-password"
-                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+                className="text-xs text-primary hover:underline"
               >
                 Esqueceu-se da senha?
               </Link>
@@ -295,7 +326,7 @@ export default function SignInClient() {
 
             <div className="mt-6 text-center text-sm">
               Não tem conta?{" "}
-              <Link href="/signup" className="text-indigo-500">
+              <Link               href="/signup" className="text-primary">
                 Criar conta
               </Link>
             </div>
