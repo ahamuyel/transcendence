@@ -32,8 +32,25 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     const hasMore = messages.length > limit
     const data = hasMore ? messages.slice(0, limit) : messages
 
-    // Mark messages as read from the other participant
+    // Mark messages as delivered and read from the other participant
     if (!cursor) {
+      const otherId = conversation.participant1Id === session.user.id
+        ? conversation.participant2Id
+        : conversation.participant1Id
+
+      const undeliveredIds = data
+        .filter((m) => m.senderId !== session.user.id && !m.deliveredAt)
+        .map((m) => m.id)
+
+      if (undeliveredIds.length > 0) {
+        await prisma.chatMessage.updateMany({
+          where: { id: { in: undeliveredIds } },
+          data: { deliveredAt: new Date() },
+        })
+
+        broadcastToUser(otherId, "messages-delivered", { conversationId: id })
+      }
+
       const unreadIds = data
         .filter((m) => m.senderId !== session.user.id && !m.readAt)
         .map((m) => m.id)
@@ -43,10 +60,6 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
           where: { id: { in: unreadIds } },
           data: { readAt: new Date() },
         })
-
-        const otherId = conversation.participant1Id === session.user.id
-          ? conversation.participant2Id
-          : conversation.participant1Id
 
         broadcastToUser(otherId, "messages-read", { conversationId: id })
       }

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { Loader2, Send, ArrowLeft } from "lucide-react"
+import { Loader2, Send, ArrowLeft, Check, CheckCheck } from "lucide-react"
 import { on } from "@/hooks/useWebSocket"
 import { useOnlineStatus } from "@/hooks/useOnlineStatus"
 
@@ -18,6 +18,7 @@ type Message = {
   senderId: string
   text: string
   createdAt: string
+  deliveredAt: string | null
   readAt: string | null
   sender: Sender
 }
@@ -68,13 +69,28 @@ export default function ChatConversationPage() {
   }, [messages])
 
   useEffect(() => {
-    const unsub = on("chat_message", (payload: unknown) => {
+    const unsubMsg = on("chat_message", (payload: unknown) => {
       const data = payload as { conversationId: string; message: Message }
       if (data.conversationId === id) {
         setMessages((prev) => [...prev, data.message])
       }
     })
-    return () => { unsub() }
+
+    const unsubDelivered = on("messages-delivered", (payload: unknown) => {
+      const data = payload as { conversationId: string }
+      if (data.conversationId === id) {
+        setMessages((prev) => prev.map((m) => m.deliveredAt ? m : { ...m, deliveredAt: new Date().toISOString() }))
+      }
+    })
+
+    const unsubRead = on("messages-read", (payload: unknown) => {
+      const data = payload as { conversationId: string }
+      if (data.conversationId === id) {
+        setMessages((prev) => prev.map((m) => m.readAt ? m : { ...m, deliveredAt: m.deliveredAt || new Date().toISOString(), readAt: new Date().toISOString() }))
+      }
+    })
+
+    return () => { unsubMsg(); unsubDelivered(); unsubRead() }
   }, [id])
 
   const loadMore = async () => {
@@ -216,9 +232,14 @@ export default function ChatConversationPage() {
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words">{msg.text}</p>
-                    <p className={`text-xs mt-1 ${isMe ? "text-indigo-200" : "text-zinc-400"}`}>
-                      {timeLabel(msg.createdAt)}
-                    </p>
+                    <div className={`flex items-center gap-1 mt-1 ${isMe ? "text-indigo-200" : "text-zinc-400"}`}>
+                      <span className="text-xs">{timeLabel(msg.createdAt)}</span>
+                      {isMe && (
+                        msg.readAt ? <CheckCheck size={14} className="text-blue-300" />
+                        : msg.deliveredAt ? <CheckCheck size={14} />
+                        : <Check size={14} />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

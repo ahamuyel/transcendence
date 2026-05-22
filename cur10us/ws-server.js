@@ -1,11 +1,80 @@
 const { WebSocketServer } = require("ws")
 const http = require("http")
+const Redis = require("ioredis")
 
 const WS_PORT = parseInt(process.env.WS_PORT, 10) || 3001
+const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379"
 
 const wss = new WebSocketServer({ port: WS_PORT })
-
 const clients = new Map()
+
+let pub = null
+let sub = null
+let redisEnabled = false
+
+function onRedisMessage(channel, message) {
+  if (channel !== "ws:messages") return
+  try {
+    const { target, userId, event, payload } = JSON.parse(message)
+    if (target === "user") {
+      const client = clients.get(userId)
+      if (client && client.readyState === 1) {
+        client.send(JSON.stringify({ event, payload }))
+      }
+    } else {
+      broadcastToAll(event, payload)
+    }
+  } catch {
+    // ignore malformed messages
+  }
+}
+
+function disableRedis() {
+  if (!redisEnabled) return
+  console.warn("[WS] Redis not available, running in single-instance mode")
+  redisEnabled = false
+  try { pub?.disconnect() } catch {}
+  try { sub?.disconnect() } catch {}
+  pub = null
+  sub = null
+}
+
+function initRedis() {
+  try {
+    const redisOpts = {
+      lazyConnect: true,
+      maxRetriesPerRequest: 0,
+      retryStrategy: () => null,
+      connectTimeout: 3000,
+    }
+    pub = new Redis(REDIS_URL, redisOpts)
+    sub = new Redis(REDIS_URL, redisOpts)
+
+    pub.on("error", disableRedis)
+    sub.on("error", disableRedis)
+    sub.on("message", onRedisMessage)
+
+    Promise.all([pub.connect(), sub.connect()])
+      .then(() => {
+        redisEnabled = true
+        sub.subscribe("ws:messages")
+        console.log("[WS] Redis pub/sub connected")
+      })
+      .catch(disableRedis)
+  } catch {
+    disableRedis()
+  }
+}
+
+function publishToRedis(msg) {
+  if (pub && redisEnabled) {
+    try {
+      pub.publish("ws:messages", JSON.stringify(msg))
+    } catch {
+      // Redis not available
+    }
+  }
+}
 
 function broadcast(userId, event, payload) {
   const client = clients.get(userId)
@@ -81,7 +150,7 @@ wss.on("connection", (ws, req) => {
             clients.set(result.userId, ws)
             clearTimeout(authTimer)
             ws.send(JSON.stringify({ event: "auth_ok", payload: { userId: result.userId } }))
-            // Notify all clients that this user is online
+            publishToRedis({ target: "all", event: "online_status", payload: { userId: result.userId, online: true } })
             broadcastToAll("online_status", { userId: result.userId, online: true })
             console.log(`[WS] User ${result.userId} (${result.role}) authenticated`)
           } else {
@@ -94,13 +163,13 @@ wss.on("connection", (ws, req) => {
         return
       }
 
-      if (msg.type === "broadcast" && msg.target === "user") {
-        broadcast(msg.userId, msg.event, msg.payload)
-        return
-      }
-
-      if (msg.type === "broadcast" && msg.target === "all") {
-        broadcastToAll(msg.event, msg.payload)
+      if (msg.type === "broadcast") {
+        publishToRedis(msg)
+        if (msg.target === "user") {
+          broadcast(msg.userId, msg.event, msg.payload)
+        } else {
+          broadcastToAll(msg.event, msg.payload)
+        }
         return
       }
     } catch {
@@ -111,6 +180,7 @@ wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     if (ws.userId) {
       clients.delete(ws.userId)
+      publishToRedis({ target: "all", event: "online_status", payload: { userId: ws.userId, online: false } })
       broadcastToAll("online_status", { userId: ws.userId, online: false })
       console.log(`[WS] User ${ws.userId} disconnected`)
     }
@@ -120,10 +190,12 @@ wss.on("connection", (ws, req) => {
   ws.on("error", () => {
     if (ws.userId) {
       clients.delete(ws.userId)
+      publishToRedis({ target: "all", event: "online_status", payload: { userId: ws.userId, online: false } })
       broadcastToAll("online_status", { userId: ws.userId, online: false })
     }
     clearTimeout(authTimer)
   })
 })
 
+initRedis()
 console.log(`[WS] WebSocket server running on port ${WS_PORT}`)

@@ -280,9 +280,6 @@ function applyThemeSettings(settings: Partial<SchoolBranding>) {
         doc.style.setProperty("--school-card-border", "none")
         break
       default:
-        doc.style.setProperty("--school-card-bg", "var(--color-background)")
-        doc.style.setProperty("--school-card-border", "1px solid var(--color-zinc-200)")
-        doc.style.setProperty("--school-card-shadow", "var(--school-shadow-sm)")
         break
     }
   }

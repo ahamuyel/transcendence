@@ -295,9 +295,9 @@ export default function SchoolSettingsPage() {
 
     setForm((prev) => ({
       ...prev,
-      ...theme,
+      ...(theme as Record<string, string>),
       themePreset: preset,
-    }));
+    } as FormData));
 
     setIsDirty(true);
   };

@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   }
 
   const timestamp = parseInt(parts[2], 10)
-  if (Date.now() - timestamp > 60000) {
+  if (Date.now() - timestamp > 300000) {
     return Response.json({ valid: false, error: "Token expirado" }, { status: 401 })
   }
 
