@@ -20,7 +20,7 @@ RED   = \033[0;31m
 RESET = \033[0m
 
 # Comandos
-DOCKER_COMPOSE = docker compose
+DOCKER_COMPOSE = docker-compose
 KUBECTL = kubectl
 
 # --- DOCKER COMPOSE (Development) ---

@@ -2,8 +2,6 @@
 set -e
 
 # ── Carrega Docker Secrets como variáveis de ambiente ──────────────────────────
-# O Docker monta cada secret em /run/secrets/<nome>.
-# Lemos o arquivo e exportamos a variável correspondente.
 load_secret() {
   var_name="$1"
   secret_file="/run/secrets/$2"
@@ -37,7 +35,8 @@ load_secret RESEND_API_KEY       resend_api_key
 # ──────────────────────────────────────────────────────────────────────────────
 
 echo "🌐 Verificando conexão com o banco..."
-npx prisma migrate deploy
+# Usa o Prisma do projecto (node_modules) em vez do npx buscar a versão mais recente
+./node_modules/.bin/prisma migrate deploy
 
 echo "🔌 Iniciando WebSocket server..."
 node ws-server.js &
