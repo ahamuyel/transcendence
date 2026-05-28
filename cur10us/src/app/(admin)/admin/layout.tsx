@@ -24,6 +24,7 @@ import SessionGuard from "@/components/layout/SessionGuard"
 import TwoFactorGate from "@/components/layout/TwoFactorGate"
 import { SidebarProvider, useSidebar } from "@/hooks/useSidebar"
 import { cn } from "@/lib/utils"
+import { usePlatformBranding } from "@/provider/platform-branding"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -32,6 +33,30 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip"
+
+function AdminBrand({ collapsed }: { collapsed?: boolean }) {
+  const { name } = usePlatformBranding()
+  if (name === "Cur10usX") {
+    if (collapsed) {
+      return <>C<span className="text-indigo-600 dark:text-indigo-400">X</span></>
+    }
+    return (
+      <>Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span></>
+    )
+  }
+  if (collapsed) {
+    return <>{name.charAt(0)}</>
+  }
+  return <>{name}</>
+}
+
+function AdminMiniBrand() {
+  const { name } = usePlatformBranding()
+  if (name === "Cur10usX") {
+    return <>Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span></>
+  }
+  return <>{name}</>
+}
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
@@ -75,15 +100,7 @@ function AdminSidebar() {
                 "text-zinc-900 dark:text-zinc-100 shrink-0"
               )}
             >
-              {collapsed ? (
-                <>
-                  C<span className="text-indigo-600 dark:text-indigo-400">X</span>
-                </>
-              ) : (
-                <>
-                  Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
-                </>
-              )}
+              <AdminBrand collapsed={collapsed} />
             </span>
             {!collapsed && (
               <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-medium">
@@ -241,7 +258,7 @@ function AdminMobileHeader() {
       >
         <div className="flex items-center justify-between h-14 px-4 border-b border-zinc-200 dark:border-zinc-800">
           <Link href="/admin" className="font-bold text-zinc-900 dark:text-zinc-100">
-            Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
+            <AdminMiniBrand />
             <span className="text-[10px] ml-1.5 px-1.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-medium">
               Admin
             </span>
@@ -298,7 +315,7 @@ function AdminMobileHeader() {
             <PanelLeft size={18} />
           </button>
           <span className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">
-            Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
+            <AdminMiniBrand />
           </span>
           <span className="text-zinc-300 dark:text-zinc-700">|</span>
           <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{getPageTitle(pathname)}</span>

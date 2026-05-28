@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireRole } from "@/lib/api-auth"
+import { invalidatePlatformCache } from "@/lib/platform-config"
 
 const SINGLETON_ID = "singleton"
 
@@ -51,6 +52,8 @@ export async function PUT(req: Request) {
         allowRegistration: allowRegistration ?? true,
       },
     })
+
+    invalidatePlatformCache()
 
     return NextResponse.json(config)
   } catch (error) {

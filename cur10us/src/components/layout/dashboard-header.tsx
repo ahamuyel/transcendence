@@ -274,9 +274,15 @@ export default function DashboardHeader() {
 
       {/* Mobile logo */}
       <Link href="/dashboard" className="md:hidden flex flex-col items-center shrink-0 ml-auto mr-auto">
-        <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
-          {branding.name || "Cur10us"}<span className="text-primary">X</span>
-        </span>
+        {branding.name ? (
+          <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+            {branding.name}
+          </span>
+        ) : (
+          <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+            Dashboard
+          </span>
+        )}
         {branding.slogan && (
           <span className="text-[9px] text-zinc-400 dark:text-zinc-500 leading-tight">{branding.slogan}</span>
         )}
