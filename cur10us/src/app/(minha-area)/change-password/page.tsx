@@ -7,7 +7,7 @@ import { csrfPost } from "@/lib/csrf-client"
 import { changePasswordSchema } from "@/lib/validations/auth"
 
 const inputClass =
-  "w-full px-3 py-2 pr-10 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+  "w-full px-3 py-2 pr-10 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary transition"
 
 function PasswordInput({ value, onChange, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
   const [show, setShow] = useState(false)
@@ -116,8 +116,8 @@ export default function ChangePasswordPage() {
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center">
-              <Lock className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center">
+              <Lock className="w-5 h-5 text-primary dark:text-primary-400" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
@@ -177,7 +177,7 @@ export default function ChangePasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20"
+              className="w-full py-2.5 rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20"
             >
               {loading
                 ? "A guardar..."

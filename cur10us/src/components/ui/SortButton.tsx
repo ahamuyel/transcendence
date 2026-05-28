@@ -47,7 +47,7 @@ const SortButton = ({ options, sort, onChange }: SortButtonProps) => {
         onClick={() => setOpen(!open)}
         className={`p-2 sm:p-2.5 rounded-xl transition active:scale-95 ${
           sort
-            ? "bg-indigo-100 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400"
+            ? "bg-primary-100 dark:bg-primary-950/50 text-primary dark:text-primary-400"
             : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
         }`}
       >
@@ -65,7 +65,7 @@ const SortButton = ({ options, sort, onChange }: SortButtonProps) => {
                 onClick={() => handleSelect(opt.field)}
                 className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${
                   isActive
-                    ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30"
+                    ? "text-primary dark:text-primary-400 bg-primary-50 dark:bg-primary-950/30"
                     : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
                 }`}
               >

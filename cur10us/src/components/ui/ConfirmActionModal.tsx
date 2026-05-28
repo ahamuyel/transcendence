@@ -15,7 +15,7 @@ type ConfirmActionModalProps = {
 const colorMap = {
   red: "bg-rose-600 hover:bg-rose-700 shadow-rose-600/20",
   amber: "bg-amber-600 hover:bg-amber-700 shadow-amber-600/20",
-  indigo: "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20",
+  indigo: "bg-primary hover:bg-primary-700 shadow-primary/20",
   emerald: "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20",
 }
 

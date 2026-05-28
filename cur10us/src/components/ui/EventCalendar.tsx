@@ -29,8 +29,8 @@ const EventCalendar = () => {
                 className="react-calendar-custom"
                 next2Label={null}
                 prev2Label={null}
-                nextLabel={<ChevronRight size={20} className="text-zinc-400 hover:text-indigo-600 transition-colors" />}
-                prevLabel={<ChevronLeft size={20} className="text-zinc-400 hover:text-indigo-600 transition-colors" />}
+                nextLabel={<ChevronRight size={20} className="text-zinc-400 hover:text-primary transition-colors" />}
+                prevLabel={<ChevronLeft size={20} className="text-zinc-400 hover:text-primary transition-colors" />}
                 navigationLabel={({ date }) => (
                     <div className="flex items-center gap-1.5 text-zinc-800 dark:text-zinc-100 font-bold text-base sm:text-xl px-1">
                         <span className="capitalize">{date.toLocaleString('pt', { month: 'long' })}</span>
@@ -50,9 +50,9 @@ const EventCalendar = () => {
                     return `
                         relative flex items-center justify-center transition-all duration-200
                         aspect-square w-full rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium
-                        ${isToday ? 'border-2 border-indigo-600/30 text-indigo-600 dark:text-indigo-400' : ''}
+                        ${isToday ? 'border-2 border-primary/30 text-primary dark:text-primary-400' : ''}
                         ${isSelected
-                            ? '!bg-indigo-600 !text-white shadow-lg shadow-indigo-500/30 scale-90'
+                            ? '!bg-primary !text-white shadow-lg shadow-primary/30 scale-90'
                             : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'}
                     `
                 }}

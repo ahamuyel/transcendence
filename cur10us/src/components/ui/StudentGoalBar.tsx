@@ -15,7 +15,7 @@ export default function StudentGoalBar({ average, goal = 14 }: Props) {
   return (
     <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 shadow-sm">
       <div className="flex items-center gap-2 mb-4">
-        <Target className="w-4 h-4 text-indigo-500" />
+        <Target className="w-4 h-4 text-primary" />
         <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Meta Académica</h3>
       </div>
 
@@ -43,10 +43,10 @@ export default function StudentGoalBar({ average, goal = 14 }: Props) {
         />
         {/* Goal marker */}
         <div
-          className="absolute top-0 w-0.5 h-6 -mt-1 bg-indigo-600 dark:bg-indigo-400"
+          className="absolute top-0 w-0.5 h-6 -mt-1 bg-primary dark:bg-primary-400"
           style={{ left: `${goalPercent}%` }}
         >
-          <div className="absolute -top-5 -translate-x-1/2 text-[10px] font-bold text-indigo-600 dark:text-indigo-400">
+          <div className="absolute -top-5 -translate-x-1/2 text-[10px] font-bold text-primary dark:text-primary-400">
             {goal}
           </div>
         </div>

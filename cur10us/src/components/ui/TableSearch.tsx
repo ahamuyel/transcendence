@@ -8,10 +8,10 @@ type TableSearchProps = {
 
 const TableSearch = ({ value, onChange }: TableSearchProps) => {
   return (
-    <div className="group w-full flex items-center gap-2 text-sm rounded-xl ring-[1.5px] ring-zinc-200 dark:ring-zinc-800 px-2.5 sm:px-3 py-1.5 sm:py-1 bg-white dark:bg-zinc-950 transition-all focus-within:ring-indigo-600 dark:focus-within:ring-indigo-500 shadow-sm">
+    <div className="group w-full flex items-center gap-2 text-sm rounded-xl ring-[1.5px] ring-zinc-200 dark:ring-zinc-800 px-2.5 sm:px-3 py-1.5 sm:py-1 bg-white dark:bg-zinc-950 transition-all focus-within:ring-primary dark:focus-within:ring-primary shadow-sm">
       <Search
         size={14}
-        className="text-zinc-400 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 transition-colors shrink-0"
+        className="text-zinc-400 group-focus-within:text-primary dark:group-focus-within:text-primary-400 transition-colors shrink-0"
       />
       <input
         type="text"

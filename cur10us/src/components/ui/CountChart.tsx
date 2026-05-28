@@ -27,7 +27,7 @@ const CountChart = ({ maleStudents, femaleStudents, loading }: CountChartProps) 
 
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
-          <Loader2 size={20} className="animate-spin text-indigo-500" />
+          <Loader2 size={20} className="animate-spin text-primary" />
         </div>
       ) : total === 0 ? (
         <div className="flex-1 flex items-center justify-center text-zinc-400 text-sm">
@@ -62,7 +62,7 @@ const CountChart = ({ maleStudents, femaleStudents, loading }: CountChartProps) 
 
           <div className="flex justify-center gap-6 mt-2 sm:mt-4 text-xs sm:text-sm">
             <div className="flex flex-col items-center gap-0.5">
-              <span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-indigo-500" />
+              <span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-primary" />
               <span className="font-bold text-xs text-zinc-900 dark:text-zinc-100">{maleStudents}</span>
               <span className="text-[10px] sm:text-xs text-zinc-500">Rapazes</span>
             </div>

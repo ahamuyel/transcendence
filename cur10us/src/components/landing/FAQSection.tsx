@@ -44,18 +44,18 @@ export default function FAQSection() {
   return (
     <section id="faq" className="py-28 px-6 relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute bottom-0 left-[50%] -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-indigo-400/5 dark:bg-indigo-600/5 blur-[120px]" />
+        <div className="absolute bottom-0 left-[50%] -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary-400/5 dark:bg-primary/5 blur-[120px]" />
       </div>
 
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-16">
-          <span className="inline-block text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/50 px-4 py-1.5 rounded-full border border-indigo-200/50 dark:border-indigo-800/50 mb-6">
+          <span className="inline-block text-sm font-medium text-primary dark:text-primary-400 bg-primary-50/80 dark:bg-primary-950/50 px-4 py-1.5 rounded-full border border-primary-200/50 dark:border-primary-800/50 mb-6">
             <HelpCircle className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
             Tire as suas dúvidas
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mb-5 tracking-tight">
             Perguntas{" "}
-            <span className="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-600 to-primary-600 dark:from-primary-400 dark:to-primary-400 bg-clip-text text-transparent">
               frequentes
             </span>
           </h2>
@@ -72,7 +72,7 @@ export default function FAQSection() {
                 key={i}
                 className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
                   isOpen
-                    ? "border-indigo-200 dark:border-indigo-800/50 bg-white dark:bg-zinc-900 shadow-lg shadow-indigo-100/50 dark:shadow-black/20"
+                    ? "border-primary-200 dark:border-primary-800/50 bg-white dark:bg-zinc-900 shadow-lg shadow-primary-100/50 dark:shadow-black/20"
                     : "border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-sm hover:border-zinc-300 dark:hover:border-zinc-700"
                 }`}
               >
@@ -84,14 +84,14 @@ export default function FAQSection() {
                   <div
                     className={`shrink-0 w-8 h-8 rounded-xl flex items-center justify-center transition-all duration-300 ${
                       isOpen
-                        ? "bg-indigo-100 dark:bg-indigo-950 rotate-180"
+                        ? "bg-primary-100 dark:bg-primary-950 rotate-180"
                         : "bg-zinc-100 dark:bg-zinc-800 group-hover:bg-zinc-200 dark:group-hover:bg-zinc-700"
                     }`}
                   >
                     <ChevronDown
                       size={16}
                       className={`transition-colors ${
-                        isOpen ? "text-indigo-600 dark:text-indigo-400" : "text-zinc-400"
+                        isOpen ? "text-primary dark:text-primary-400" : "text-zinc-400"
                       }`}
                     />
                   </div>

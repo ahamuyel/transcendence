@@ -10,6 +10,17 @@
   --color-primary: var(--school-primary);
   --color-primary-dark: var(--school-primary-dark);
   --color-primary-light: var(--school-primary-light);
+  --color-primary-50: var(--school-primary-50);
+  --color-primary-100: var(--school-primary-100);
+  --color-primary-200: var(--school-primary-200);
+  --color-primary-300: var(--school-primary-300);
+  --color-primary-400: var(--school-primary-400);
+  --color-primary-500: var(--school-primary-500);
+  --color-primary-600: var(--school-primary-600);
+  --color-primary-700: var(--school-primary-700);
+  --color-primary-800: var(--school-primary-800);
+  --color-primary-900: var(--school-primary-900);
+  --color-primary-950: var(--school-primary-950);
   --color-accent: var(--school-secondary, var(--school-primary));
   --color-accent-light: var(--school-secondary-light);
   --color-cyan: #06B6D4;
@@ -101,6 +112,17 @@
   --school-primary: #6366f1;
   --school-primary-light: #eef2ff;
   --school-primary-dark: #312e81;
+  --school-primary-50: #eef2ff;
+  --school-primary-100: #e0e7ff;
+  --school-primary-200: #c7d2fe;
+  --school-primary-300: #a5b4fc;
+  --school-primary-400: #818cf8;
+  --school-primary-500: #6366f1;
+  --school-primary-600: #4f46e5;
+  --school-primary-700: #4338ca;
+  --school-primary-800: #3730a3;
+  --school-primary-900: #312e81;
+  --school-primary-950: #1e1b4b;
   --school-secondary: #06B6D4;
   --school-secondary-light: hsl(186, 94%, 95%);
 
@@ -147,6 +169,11 @@
   --color-foreground: #fafafa;
   --school-card-bg: #09090b;
   --school-card-border: 1px solid #27272a;
+  --school-primary-light: #1e1b4b;
+  --school-primary-50: #1e1b4b;
+  --school-primary-100: #1e1b4b;
+  --school-primary-200: #312e81;
+  --school-primary-950: #eef2ff;
 }
 
 html, body {

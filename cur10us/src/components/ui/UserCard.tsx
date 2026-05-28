@@ -7,7 +7,7 @@ const typeConfig: Record<
   students: {
     label: "Alunos",
     icon: Users,
-    cardBg: "bg-gradient-to-br from-indigo-500 to-indigo-600 dark:from-indigo-600 dark:to-indigo-700",
+    cardBg: "bg-gradient-to-br from-primary to-primary dark:from-primary dark:to-primary-700",
     iconBg: "bg-white/20",
   },
   teachers: {

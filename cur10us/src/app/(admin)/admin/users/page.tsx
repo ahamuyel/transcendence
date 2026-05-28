@@ -25,7 +25,7 @@ const roleLabels: Record<string, string> = {
 }
 
 const roleColors: Record<string, string> = {
-  super_admin: "bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400",
+  super_admin: "bg-primary-100 dark:bg-primary-950/40 text-primary dark:text-primary-400",
   school_admin: "bg-cyan-100 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400",
   teacher: "bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400",
   student: "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400",
@@ -167,7 +167,7 @@ export default function UsersPage() {
               onClick={() => { setRoleFilter(f.value); setPage(1) }}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition whitespace-nowrap ${
                 roleFilter === f.value
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-primary text-white"
                   : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
               }`}
             >
@@ -180,7 +180,7 @@ export default function UsersPage() {
       {/* Table */}
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 size={24} className="animate-spin text-indigo-500" />
+          <Loader2 size={24} className="animate-spin text-primary" />
         </div>
       ) : users.length === 0 ? (
         <div className="text-center py-16 text-zinc-400 text-sm">Nenhum utilizador encontrado</div>

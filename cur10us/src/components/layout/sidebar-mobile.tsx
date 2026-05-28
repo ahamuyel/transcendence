@@ -177,7 +177,7 @@ export default function SidebarMobile() {
                           className={cn(
                             "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
                             isActive
-                              ? "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400"
+                              ? "bg-primary-50 dark:bg-primary-950/40 text-primary dark:text-primary-400"
                               : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-200"
                           )}
                         >
@@ -205,7 +205,7 @@ export default function SidebarMobile() {
           <div className="flex items-center gap-3 px-2 py-1.5 mb-2">
             <Avatar className="h-9 w-9 border border-zinc-200 dark:border-zinc-700">
               {userImage ? <AvatarImage src={userImage} alt={userName} /> : null}
-              <AvatarFallback className="text-xs font-semibold bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
+              <AvatarFallback className="text-xs font-semibold bg-primary-100 dark:bg-primary-950 text-primary dark:text-primary-400">
                 {userInitials}
               </AvatarFallback>
             </Avatar>

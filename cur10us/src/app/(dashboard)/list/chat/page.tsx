@@ -53,7 +53,7 @@ export default function ChatListPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -76,8 +76,8 @@ export default function ChatListPage() {
     <div className="m-2 sm:m-3 flex flex-col gap-4">
       <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center">
-            <MessageSquare className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center">
+            <MessageSquare className="w-5 h-5 text-primary dark:text-primary-400" />
           </div>
           <div>
             <h1 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">Chat</h1>
@@ -102,7 +102,7 @@ export default function ChatListPage() {
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition group"
                 >
                   <div className="relative flex-shrink-0">
-                    <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center text-sm font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden">
+                    <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-950/40 flex items-center justify-center text-sm font-bold text-primary dark:text-primary-400 overflow-hidden">
                       {c.other.image ? (
                         <img src={c.other.image} alt="" className="w-full h-full object-cover" />
                       ) : (
@@ -135,7 +135,7 @@ export default function ChatListPage() {
                     ) : c.lastMessageAt ? (
                       <span className="text-xs text-zinc-400">{timeAgo(c.lastMessageAt)}</span>
                     ) : null}
-                    <ArrowRight size={16} className="text-zinc-300 group-hover:text-indigo-500 transition" />
+                    <ArrowRight size={16} className="text-zinc-300 group-hover:text-primary transition" />
                   </div>
                 </Link>
               )

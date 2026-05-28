@@ -38,7 +38,7 @@ export default function StudentRecentGrades({ grades }: Props) {
   return (
     <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 shadow-sm">
       <div className="flex items-center gap-2 mb-4">
-        <BookOpen className="w-4 h-4 text-indigo-500" />
+        <BookOpen className="w-4 h-4 text-primary" />
         <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Últimas Notas</h3>
       </div>
 

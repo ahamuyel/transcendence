@@ -14,7 +14,7 @@ type Notification = {
 }
 
 const typeColors: Record<string, string> = {
-  anuncio: "bg-indigo-500",
+  anuncio: "bg-primary",
   tarefa: "bg-amber-500",
   nota: "bg-emerald-500",
   assiduidade: "bg-cyan-500",
@@ -75,11 +75,11 @@ const NotificationDropdown = () => {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-2 rounded-lg text-zinc-500 hover:text-indigo-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
+        className="relative p-2 rounded-lg text-zinc-500 hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
       >
         <Bell size={18} />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 flex items-center justify-center w-4 h-4 rounded-full bg-indigo-600 text-white text-[9px] font-bold">
+          <span className="absolute top-1 right-1 flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -90,7 +90,7 @@ const NotificationDropdown = () => {
           <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800">
             <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Notificações</span>
             {unreadCount > 0 && (
-              <button onClick={markAllRead} className="flex items-center gap-1 text-[11px] text-indigo-600 hover:text-indigo-700 font-medium">
+              <button onClick={markAllRead} className="flex items-center gap-1 text-[11px] text-primary hover:text-primary-700 font-medium">
                 <CheckCheck size={12} /> Marcar todas
               </button>
             )}
@@ -104,7 +104,7 @@ const NotificationDropdown = () => {
                 <div
                   key={n.id}
                   className={`flex gap-3 px-4 py-3 border-b border-zinc-50 dark:border-zinc-800/50 hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition ${
-                    !n.read ? "bg-indigo-50/50 dark:bg-indigo-950/10" : ""
+                    !n.read ? "bg-primary-50/50 dark:bg-primary-950/10" : ""
                   }`}
                 >
                   <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${typeColors[n.type] || "bg-zinc-400"}`} />
@@ -114,12 +114,12 @@ const NotificationDropdown = () => {
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-[10px] text-zinc-400">{timeAgo(n.createdAt)}</span>
                       {!n.read && (
-                        <button onClick={() => markAsRead(n.id)} className="text-[10px] text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-0.5">
+                        <button onClick={() => markAsRead(n.id)} className="text-[10px] text-primary hover:text-primary-700 font-medium flex items-center gap-0.5">
                           <Check size={10} /> Lida
                         </button>
                       )}
                       {n.link && (
-                        <Link href={n.link} onClick={() => { markAsRead(n.id); setOpen(false) }} className="text-[10px] text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-0.5">
+                        <Link href={n.link} onClick={() => { markAsRead(n.id); setOpen(false) }} className="text-[10px] text-primary hover:text-primary-700 font-medium flex items-center gap-0.5">
                           <ExternalLink size={10} /> Ver
                         </Link>
                       )}

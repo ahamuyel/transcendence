@@ -95,7 +95,7 @@ export default function RegistarEscolaPage() {
           </p>
           <Link
             href="/signin"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 transition"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-medium text-sm hover:bg-primary-700 transition"
           >
             Ir para o login
           </Link>
@@ -104,7 +104,7 @@ export default function RegistarEscolaPage() {
     )
   }
 
-  const inputClass = "w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+  const inputClass = "w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
   const labelClass = "block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300"
 
   return (
@@ -127,7 +127,7 @@ export default function RegistarEscolaPage() {
           {/* Admin section */}
           <div>
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xs font-bold">1</span>
+              <span className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-950 text-primary dark:text-primary-400 flex items-center justify-center text-xs font-bold">1</span>
               Dados do administrador
             </h2>
             <div className="space-y-4">
@@ -154,7 +154,7 @@ export default function RegistarEscolaPage() {
           {/* School section */}
           <div>
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xs font-bold">2</span>
+              <span className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-950 text-primary dark:text-primary-400 flex items-center justify-center text-xs font-bold">2</span>
               Dados da escola
             </h2>
             <div className="space-y-4">
@@ -207,7 +207,7 @@ export default function RegistarEscolaPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 shadow-lg shadow-indigo-600/25 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-medium text-sm hover:bg-primary-700 shadow-lg shadow-primary/25 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <School className="w-4 h-4" />}
             {loading ? "Registando..." : "Registar escola"}
@@ -218,11 +218,11 @@ export default function RegistarEscolaPage() {
       {/* Footer link */}
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
         Já tem uma conta?{" "}
-        <Link href="/signin" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
+        <Link href="/signin" className="text-primary dark:text-primary-400 font-medium hover:underline">
           Entrar
         </Link>
         {" · "}
-        <Link href="/signup" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
+        <Link href="/signup" className="text-primary dark:text-primary-400 font-medium hover:underline">
           Criar conta pessoal
         </Link>
       </p>

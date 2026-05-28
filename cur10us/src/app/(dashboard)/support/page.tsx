@@ -49,7 +49,7 @@ export default function SupportPage() {
           <select
             value={filters.status || ""}
             onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-            className="px-2 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="px-2 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition"
           >
             <option value="">Todos os estados</option>
             <option value="aberto">Aberto</option>
@@ -59,7 +59,7 @@ export default function SupportPage() {
           </select>
           <button
             onClick={() => setCreateOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-xs sm:text-sm active:scale-95 shadow-lg shadow-indigo-600/20 transition"
+            className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-primary text-white font-semibold text-xs sm:text-sm active:scale-95 shadow-lg shadow-primary/20 transition"
           >
             <Plus size={16} />
             <span className="hidden sm:inline">Novo ticket</span>
@@ -69,7 +69,7 @@ export default function SupportPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 size={24} className="animate-spin text-indigo-500" />
+          <Loader2 size={24} className="animate-spin text-primary" />
         </div>
       ) : data.length === 0 ? (
         <div className="text-center py-12">
@@ -77,7 +77,7 @@ export default function SupportPage() {
           <p className="text-zinc-400 text-sm">Nenhum ticket de suporte encontrado</p>
           <button
             onClick={() => setCreateOpen(true)}
-            className="mt-3 text-sm text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
+            className="mt-3 text-sm text-primary dark:text-primary-400 font-medium hover:underline"
           >
             Criar o primeiro ticket
           </button>

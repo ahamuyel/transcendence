@@ -27,7 +27,7 @@ type Props = {
 
 type ClassOption = { id: string; name: string; grade: number }
 
-const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary transition"
 
 const StudentForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
   const [form, setForm] = useState({
@@ -125,7 +125,7 @@ const StudentForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
           </button>
           <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-2">O utilizador será obrigado a alterar a palavra-passe no primeiro acesso.</p>
         </div>
-        <button type="button" onClick={onSuccess} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20">
+        <button type="button" onClick={onSuccess} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-700 transition shadow-lg shadow-primary/20">
           Fechar
         </button>
       </div>
@@ -197,7 +197,7 @@ const StudentForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
 
       {mode === "create" && (
         <label className="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" checked={createAccount} onChange={(e) => setCreateAccount(e.target.checked)} className="w-4 h-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500" />
+          <input type="checkbox" checked={createAccount} onChange={(e) => setCreateAccount(e.target.checked)} className="w-4 h-4 rounded border-zinc-300 text-primary focus:ring-primary" />
           <span className="text-sm text-zinc-700 dark:text-zinc-300">Criar conta de acesso (palavra-passe temporária)</span>
         </label>
       )}
@@ -206,7 +206,7 @@ const StudentForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
         <button type="button" onClick={onCancel} className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
           Cancelar
         </button>
-        <button type="submit" disabled={loading} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20">
+        <button type="submit" disabled={loading} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20">
           {loading ? "Salvando..." : mode === "edit" ? "Salvar" : "Criar"}
         </button>
       </div>

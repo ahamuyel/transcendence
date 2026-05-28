@@ -88,7 +88,7 @@ export default function SchoolsPage() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition"
         >
           <Plus className="w-4 h-4" />
           Nova escola
@@ -124,7 +124,7 @@ export default function SchoolsPage() {
               onClick={() => { setStatusFilter(f.value); setPage(1) }}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition whitespace-nowrap ${
                 statusFilter === f.value
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-primary text-white"
                   : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
               }`}
             >
@@ -150,7 +150,7 @@ export default function SchoolsPage() {
       {/* Table */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
       ) : (
         <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">

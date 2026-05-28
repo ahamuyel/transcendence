@@ -12,8 +12,8 @@ export default function HeroSection({ branding, schools }: Props) {
     <section className="relative overflow-hidden min-h-[90vh] flex items-center">
       {/* Gradient mesh background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[-30%] left-[-15%] w-[700px] h-[700px] rounded-full bg-indigo-400/20 dark:bg-indigo-600/10 blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-30%] right-[-15%] w-[600px] h-[600px] rounded-full bg-violet-400/20 dark:bg-violet-600/10 blur-[120px] animate-pulse [animation-delay:1s]" />
+        <div className="absolute top-[-30%] left-[-15%] w-[700px] h-[700px] rounded-full bg-primary-400/20 dark:bg-primary/10 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-30%] right-[-15%] w-[600px] h-[600px] rounded-full bg-primary-400/20 dark:bg-primary-600/10 blur-[120px] animate-pulse [animation-delay:1s]" />
         <div className="absolute top-[20%] right-[10%] w-[400px] h-[400px] rounded-full bg-cyan-400/10 dark:bg-cyan-600/5 blur-[100px] animate-pulse [animation-delay:2s]" />
         <div className="absolute bottom-[20%] left-[15%] w-[300px] h-[300px] rounded-full bg-emerald-400/10 dark:bg-emerald-600/5 blur-[100px] animate-pulse [animation-delay:3s]" />
         {/* Grid pattern */}
@@ -24,7 +24,7 @@ export default function HeroSection({ branding, schools }: Props) {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: Copy */}
           <div className="flex flex-col gap-8">
-            <span className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/50 px-4 py-2 rounded-full border border-indigo-200/50 dark:border-indigo-800/50 w-fit backdrop-blur-sm">
+            <span className="inline-flex items-center gap-2 text-sm font-medium text-primary dark:text-primary-400 bg-primary-50/80 dark:bg-primary-950/50 px-4 py-2 rounded-full border border-primary-200/50 dark:border-primary-800/50 w-fit backdrop-blur-sm">
               <Sparkles className="w-4 h-4" />
               Plataforma de Gestão Escolar para Angola
             </span>
@@ -33,7 +33,7 @@ export default function HeroSection({ branding, schools }: Props) {
               A sua escola,
               <br />
               mais{" "}
-              <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 dark:from-indigo-400 dark:via-violet-400 dark:to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary-600 via-primary-600 to-primary-600 dark:from-primary-400 dark:via-primary-400 dark:to-primary-400 bg-clip-text text-transparent">
                 organizada
               </span>
             </h1>
@@ -46,7 +46,7 @@ export default function HeroSection({ branding, schools }: Props) {
             <div className="flex gap-3 flex-wrap">
               <Link
                 href="/signin"
-                className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold hover:from-indigo-700 hover:to-violet-700 shadow-xl shadow-indigo-600/25 hover:shadow-indigo-600/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-primary-600 to-primary-600 text-white font-semibold hover:from-primary-700 hover:to-primary-700 shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 Começar agora
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -64,7 +64,7 @@ export default function HeroSection({ branding, schools }: Props) {
               <div className="flex -space-x-2">
                 {schools.length > 0
                   ? schools.map((school, i) => {
-                    const colors = ["bg-indigo-500", "bg-violet-500", "bg-cyan-500", "bg-emerald-500"]
+                    const colors = ["bg-primary", "bg-primary-500", "bg-cyan-500", "bg-emerald-500"]
                     const initials = school.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()
                     return (
                       <div key={i} className={`w-8 h-8 rounded-full ${colors[i % colors.length]} border-2 border-white dark:border-zinc-950 flex items-center justify-center`}>
@@ -72,7 +72,7 @@ export default function HeroSection({ branding, schools }: Props) {
                       </div>
                     )
                   })
-                  : ["bg-indigo-500", "bg-violet-500", "bg-cyan-500", "bg-emerald-500"].map((color, i) => (
+                  : ["bg-primary", "bg-primary-500", "bg-cyan-500", "bg-emerald-500"].map((color, i) => (
                     <div key={i} className={`w-8 h-8 rounded-full ${color} border-2 border-white dark:border-zinc-950`} />
                   ))
                 }
@@ -92,7 +92,7 @@ export default function HeroSection({ branding, schools }: Props) {
                 {/* Top bar */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-500 flex items-center justify-center">
                       <GraduationCap className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -110,8 +110,8 @@ export default function HeroSection({ branding, schools }: Props) {
                 {/* Stats row */}
                 <div className="grid grid-cols-3 gap-3">
                   {[
-                    { label: "Alunos", value: "1.247", icon: Users, color: "from-indigo-500 to-indigo-600" },
-                    { label: "Professores", value: "86", icon: GraduationCap, color: "from-violet-500 to-violet-600" },
+                    { label: "Alunos", value: "1.247", icon: Users, color: "from-primary-500 to-primary-600" },
+                    { label: "Professores", value: "86", icon: GraduationCap, color: "from-primary-500 to-primary-600" },
                     { label: "Turmas", value: "42", icon: Calendar, color: "from-cyan-500 to-cyan-600" },
                   ].map((stat) => {
                     const Icon = stat.icon
@@ -140,7 +140,7 @@ export default function HeroSection({ branding, schools }: Props) {
                     {[40, 65, 45, 80, 55, 90, 70, 85, 60, 95, 75, 88].map((h, i) => (
                       <div
                         key={i}
-                        className="flex-1 rounded-t-md bg-gradient-to-t from-indigo-500 to-violet-400 dark:from-indigo-600 dark:to-violet-500 opacity-80"
+                        className="flex-1 rounded-t-md bg-gradient-to-t from-primary-500 to-primary-400 dark:from-primary-600 dark:to-primary-500 opacity-80"
                         style={{ height: `${h}%` }}
                       />
                     ))}
@@ -163,8 +163,8 @@ export default function HeroSection({ branding, schools }: Props) {
 
               {/* Floating user card */}
               <div className="absolute -top-4 -right-6 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-xl p-4 flex items-center gap-3 animate-bounce [animation-duration:4s] [animation-delay:1s]">
-                <div className="w-9 h-9 rounded-xl bg-violet-100 dark:bg-violet-950 flex items-center justify-center">
-                  <Users className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+                <div className="w-9 h-9 rounded-xl bg-primary-100 dark:bg-primary-950 flex items-center justify-center">
+                  <Users className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
                   <div className="text-xs font-semibold">+12 alunos</div>

@@ -13,7 +13,7 @@ function MinhaAreaBrand() {
   if (name === "Cur10usX") {
     return (
       <span className="font-bold text-zinc-900 dark:text-zinc-100">
-        Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
+        Cur10us<span className="text-primary dark:text-primary-400">X</span>
       </span>
     )
   }
@@ -67,7 +67,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -80,7 +80,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   )) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }

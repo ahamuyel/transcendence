@@ -61,7 +61,7 @@ const AttendanceChart = () => {
 
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
-          <Loader2 size={20} className="animate-spin text-indigo-500" />
+          <Loader2 size={20} className="animate-spin text-primary" />
         </div>
       ) : !hasData ? (
         <div className="flex-1 flex items-center justify-center text-zinc-400 text-sm">

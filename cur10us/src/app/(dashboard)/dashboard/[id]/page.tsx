@@ -130,7 +130,7 @@ export default function DashboardPage() {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -179,7 +179,7 @@ export default function DashboardPage() {
                         nl[i] = { ...nl[i], visible: !nl[i].visible }
                         saveLayout(nl)
                       }}
-                      className="rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+                      className="rounded border-zinc-300 text-primary focus:ring-primary"
                     />
                     {cardLabels[card.key] || card.key}
                   </label>
@@ -201,7 +201,7 @@ export default function DashboardPage() {
             </div>
             <button
               onClick={() => setCustomizeOpen(false)}
-              className="mt-3 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition"
+              className="mt-3 px-4 py-2 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-700 transition"
             >
               Fechar
             </button>
@@ -269,7 +269,7 @@ export default function DashboardPage() {
             <select
               value={studentId || ""}
               onChange={(e) => setStudentId(e.target.value)}
-              className="px-3 py-2 rounded-xl text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 rounded-xl text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
             >
               {childrenList.map((child) => (
                 <option key={child.id} value={child.id}>{child.name}</option>
@@ -282,7 +282,7 @@ export default function DashboardPage() {
           <StudentDashboard studentId={studentId} />
         ) : (
           <div className="flex items-center justify-center min-h-[40vh]">
-            <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+            <Loader2 className="w-6 h-6 animate-spin text-primary" />
           </div>
         )}
 

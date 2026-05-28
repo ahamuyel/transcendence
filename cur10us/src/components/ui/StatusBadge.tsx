@@ -3,7 +3,7 @@ const statusColors: Record<string, string> = {
   em_analise: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",
   aprovada: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400",
   ativa: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400",
-  matriculada: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-400",
+  matriculada: "bg-primary-100 text-primary-700 dark:bg-primary-950 dark:text-primary-400",
   rejeitada: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400",
   suspensa: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400",
   // Ticket statuses

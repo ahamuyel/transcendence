@@ -12,7 +12,7 @@ export default function Footer({ branding }: { branding: PlatformBranding }) {
               {branding.name === "Cur10usX" ? (
                 <>
                   Cur10us
-                  <span className="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-primary-600 to-primary-600 dark:from-primary-400 dark:to-primary-400 bg-clip-text text-transparent">
                     X
                   </span>
                 </>

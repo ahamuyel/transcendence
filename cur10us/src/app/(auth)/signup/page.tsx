@@ -64,12 +64,12 @@ export default function SignUpPage() {
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed">
             Enviámos um e-mail de verificação. Clique no link para activar a sua conta antes de fazer login.
           </p>
-          <Link href="/signin" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition">
+          <Link href="/signin" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition">
             Ir para o login
           </Link>
           <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-4">
             Não recebeu o e-mail?{" "}
-            <Link href="/verify-email" className="text-indigo-500 hover:underline">
+            <Link href="/verify-email" className="text-primary hover:underline">
               Reenviar verificação
             </Link>
           </p>
@@ -95,8 +95,8 @@ export default function SignUpPage() {
             <div className="grid grid-cols-2 gap-2.5 mb-6">
               {ACCOUNT_TYPES.map(({ icon: Icon, label, desc }) => (
                 <div key={label} className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 p-3 text-center">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-950/50 flex items-center justify-center mx-auto mb-1.5">
-                    <Icon size={16} className="text-indigo-600 dark:text-indigo-400" />
+                  <div className="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-950/50 flex items-center justify-center mx-auto mb-1.5">
+                    <Icon size={16} className="text-primary dark:text-primary-400" />
                   </div>
                   <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">{label}</p>
                   <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">{desc}</p>
@@ -110,25 +110,25 @@ export default function SignUpPage() {
               )}
               <div>
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Nome completo</label>
-                <input type="text" placeholder="Seu nome" value={name} onChange={(e) => setName(e.target.value)} className={`w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition disabled:opacity-50 ${errors.name ? "border-red-500" : ""}`} disabled={loading} autoFocus />
+                <input type="text" placeholder="Seu nome" value={name} onChange={(e) => setName(e.target.value)} className={`w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition disabled:opacity-50 ${errors.name ? "border-red-500" : ""}`} disabled={loading} autoFocus />
                 {errors.name && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.name}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">E-mail</label>
-                <input type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} className={`w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition disabled:opacity-50 ${errors.email ? "border-red-500" : ""}`} disabled={loading} />
+                <input type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} className={`w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition disabled:opacity-50 ${errors.email ? "border-red-500" : ""}`} disabled={loading} />
                 {errors.email && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.email}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Palavra-passe</label>
                 <div className="relative">
-                  <input type={showPassword ? "text" : "password"} placeholder="Mínimo 8 caracteres" value={password} onChange={(e) => setPassword(e.target.value)} className={`w-full h-10 px-3 pr-10 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition disabled:opacity-50 ${errors.password ? "border-red-500" : ""}`} disabled={loading} />
+                  <input type={showPassword ? "text" : "password"} placeholder="Mínimo 8 caracteres" value={password} onChange={(e) => setPassword(e.target.value)} className={`w-full h-10 px-3 pr-10 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition disabled:opacity-50 ${errors.password ? "border-red-500" : ""}`} disabled={loading} />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition">
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
                 {errors.password && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.password}</p>}
               </div>
-              <button type="submit" disabled={loading} className="w-full h-10 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-medium hover:from-indigo-700 hover:to-violet-700 shadow-lg shadow-indigo-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              <button type="submit" disabled={loading} className="w-full h-10 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-violet-600 text-white text-sm font-medium hover:from-primary-700 hover:to-violet-700 shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                 {loading ? <><Loader2 size={16} className="animate-spin" /> Criando conta...</> : "Criar conta"}
               </button>
             </form>
@@ -164,7 +164,7 @@ export default function SignUpPage() {
         {/* Footer */}
         <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
           Já tem uma conta?{" "}
-          <Link href="/signin" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
+          <Link href="/signin" className="text-primary dark:text-primary-400 font-medium hover:underline">
             Entrar
           </Link>
         </p>

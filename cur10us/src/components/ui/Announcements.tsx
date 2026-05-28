@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Megaphone, Loader2 } from "lucide-react"
 
 const colors = [
-  "bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800",
+  "bg-primary-50 dark:bg-primary-950/30 border-primary-200 dark:border-primary-800",
   "bg-cyan-50 dark:bg-cyan-950/30 border-cyan-200 dark:border-cyan-800",
   "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800",
   "bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800",
@@ -41,7 +41,7 @@ const Announcements = () => {
         </h2>
         <Link
           href="/list/announcements"
-          className="text-[11px] sm:text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+          className="text-[11px] sm:text-xs text-primary dark:text-primary-400 hover:underline font-medium"
         >
           Ver todos
         </Link>
@@ -50,7 +50,7 @@ const Announcements = () => {
       {/* List */}
       {loading ? (
         <div className="flex items-center justify-center py-8">
-          <Loader2 size={20} className="animate-spin text-indigo-500" />
+          <Loader2 size={20} className="animate-spin text-primary" />
         </div>
       ) : data.length === 0 ? (
         <p className="text-center text-zinc-400 text-sm py-6">Nenhum aviso</p>

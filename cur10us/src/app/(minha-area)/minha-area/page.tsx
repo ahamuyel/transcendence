@@ -220,7 +220,7 @@ export default function MinhaAreaPage() {
   return (
     <div className="space-y-8">
       {/* 1. HERO */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 dark:from-indigo-800 dark:via-violet-800 dark:to-purple-900 p-6 sm:p-8">
+      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600 via-violet-600 to-purple-700 dark:from-primary-800 dark:via-violet-800 dark:to-purple-900 p-6 sm:p-8">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
         <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
           <div className="relative">
@@ -271,7 +271,7 @@ export default function MinhaAreaPage() {
       {hasActiveSchools && (
         <section>
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-            <School size={18} className="text-indigo-500" /> As minhas escolas
+            <School size={18} className="text-primary" /> As minhas escolas
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {userSchools.map((school) => <SchoolCard key={school.id} school={school} />)}
@@ -283,7 +283,7 @@ export default function MinhaAreaPage() {
       {!hasActiveSchools && (
         <section>
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-            <UserPlus size={18} className="text-indigo-500" /> Solicitar vinculação
+            <UserPlus size={18} className="text-primary" /> Solicitar vinculação
           </h2>
           {escolasDisponiveis.length === 0 ? (
             <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 text-center">
@@ -298,7 +298,7 @@ export default function MinhaAreaPage() {
               </p>
               <button
                 onClick={openModal}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition shadow-lg shadow-indigo-600/20"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition shadow-lg shadow-primary/20"
               >
                 <UserPlus size={16} /> Nova solicitação
               </button>
@@ -311,7 +311,7 @@ export default function MinhaAreaPage() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <ClipboardList size={18} className="text-indigo-500" /> Histórico de solicitações
+            <ClipboardList size={18} className="text-primary" /> Histórico de solicitações
           </h2>
           <span className="text-xs text-zinc-400 dark:text-zinc-500">
             {applications.length} {applications.length === 1 ? "solicitação" : "solicitações"}
@@ -360,13 +360,13 @@ export default function MinhaAreaPage() {
       {quickActions.length > 0 && (
         <section>
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-            <Sparkles size={18} className="text-indigo-500" /> Acções rápidas
+            <Sparkles size={18} className="text-primary" /> Acções rápidas
           </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {quickActions.map((action, i) => (
-              <Link key={i} href={action.href} className="group rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 flex items-center gap-3 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md transition-all">
-                <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center group-hover:bg-indigo-100 dark:group-hover:bg-indigo-950 transition-colors">
-                  <action.icon size={18} className="text-indigo-600 dark:text-indigo-400" />
+              <Link key={i} href={action.href} className="group rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 flex items-center gap-3 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md transition-all">
+                <div className="w-10 h-10 rounded-lg bg-primary-50 dark:bg-primary-950/50 flex items-center justify-center group-hover:bg-primary-100 dark:group-hover:bg-primary-950 transition-colors">
+                  <action.icon size={18} className="text-primary dark:text-primary-400" />
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{action.label}</p>
@@ -382,7 +382,7 @@ export default function MinhaAreaPage() {
       {!hasActiveSchools && (
         <section>
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-            <Sparkles size={18} className="text-indigo-500" /> Como funciona
+            <Sparkles size={18} className="text-primary" /> Como funciona
           </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -392,8 +392,8 @@ export default function MinhaAreaPage() {
               { icon: ShieldCheck, label: "Aceder", desc: "Acesso ao painel da escola" },
             ].map((step, i) => (
               <div key={i} className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 text-center">
-                <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-950 flex items-center justify-center mx-auto mb-3">
-                  <step.icon size={18} className="text-indigo-600 dark:text-indigo-400" />
+                <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-950 flex items-center justify-center mx-auto mb-3">
+                  <step.icon size={18} className="text-primary dark:text-primary-400" />
                 </div>
                 <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{step.label}</p>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{step.desc}</p>
@@ -406,7 +406,7 @@ export default function MinhaAreaPage() {
       {/* 7. A MINHA CONTA */}
       <section>
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-          <Settings size={18} className="text-indigo-500" /> A minha conta
+          <Settings size={18} className="text-primary" /> A minha conta
         </h2>
         <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
           <div className="p-4 sm:p-6">
@@ -432,7 +432,7 @@ export default function MinhaAreaPage() {
           </div>
           <div className="px-4 sm:px-6 py-3 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
             <p className="text-xs text-zinc-500 dark:text-zinc-400">Gerir as suas definições de conta</p>
-            <Link href="/change-password" className="inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Link href="/change-password" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary dark:text-primary-400 hover:underline">
               Alterar palavra-passe <ArrowRight size={14} />
             </Link>
           </div>
@@ -478,7 +478,7 @@ export default function MinhaAreaPage() {
                     <select
                       value={selSchool}
                       onChange={(e) => setSelSchool(e.target.value)}
-                      className="w-full h-10 px-3 pr-8 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition"
+                      className="w-full h-10 px-3 pr-8 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
                     >
                       <option value="">Seleccione uma escola...</option>
                       {escolasDisponiveis.map((s) => (
@@ -490,7 +490,7 @@ export default function MinhaAreaPage() {
                   <button
                     onClick={handleNextStep}
                     disabled={!selSchool}
-                    className="w-full h-10 flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="w-full h-10 flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Continuar <ArrowRight size={14} />
                   </button>
@@ -510,14 +510,14 @@ export default function MinhaAreaPage() {
                           onClick={() => setSelRole(id)}
                           className={`p-3 rounded-xl border text-center transition-all ${
                             selRole === id
-                              ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950/30 dark:border-indigo-700"
-                              : "border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 hover:border-indigo-300 dark:hover:border-indigo-600"
+                              ? "border-primary bg-primary-50 dark:bg-primary-950/30 dark:border-primary-700"
+                              : "border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 hover:border-primary-300 dark:hover:border-primary-600"
                           }`}
                         >
-                          <div className={`w-8 h-8 rounded-lg mx-auto mb-1.5 flex items-center justify-center ${selRole === id ? "bg-indigo-100 dark:bg-indigo-950" : "bg-zinc-100 dark:bg-zinc-700"}`}>
-                            <Icon size={14} className={selRole === id ? "text-indigo-600 dark:text-indigo-400" : "text-zinc-400 dark:text-zinc-500"} />
+                          <div className={`w-8 h-8 rounded-lg mx-auto mb-1.5 flex items-center justify-center ${selRole === id ? "bg-primary-100 dark:bg-primary-950" : "bg-zinc-100 dark:bg-zinc-700"}`}>
+                            <Icon size={14} className={selRole === id ? "text-primary dark:text-primary-400" : "text-zinc-400 dark:text-zinc-500"} />
                           </div>
-                          <p className={`text-xs font-medium ${selRole === id ? "text-indigo-700 dark:text-indigo-300" : "text-zinc-600 dark:text-zinc-400"}`}>{label}</p>
+                          <p className={`text-xs font-medium ${selRole === id ? "text-primary-700 dark:text-primary-300" : "text-zinc-600 dark:text-zinc-400"}`}>{label}</p>
                         </button>
                       )
                     })}
@@ -529,7 +529,7 @@ export default function MinhaAreaPage() {
                     <button
                       onClick={handleNextStep}
                       disabled={!selRole}
-                      className="flex-1 h-10 flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex-1 h-10 flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       Continuar <ArrowRight size={14} />
                     </button>
@@ -554,7 +554,7 @@ export default function MinhaAreaPage() {
                       placeholder="+244 900 000 000"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition"
+                      className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
                     />
                   </div>
 
@@ -563,7 +563,7 @@ export default function MinhaAreaPage() {
                     <>
                       <div>
                         <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Género *</label>
-                        <select value={gender} onChange={(e) => setGender(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition appearance-none">
+                        <select value={gender} onChange={(e) => setGender(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition appearance-none">
                           <option value="">Seleccione...</option>
                           <option value="masculino">Masculino</option>
                           <option value="feminino">Feminino</option>
@@ -572,7 +572,7 @@ export default function MinhaAreaPage() {
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Tipo de documento</label>
-                          <select value={docType} onChange={(e) => setDocType(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition appearance-none">
+                          <select value={docType} onChange={(e) => setDocType(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition appearance-none">
                             <option value="">Seleccione...</option>
                             <option value="BI">BI</option>
                             <option value="Passaporte">Passaporte</option>
@@ -580,16 +580,16 @@ export default function MinhaAreaPage() {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Nº do documento</label>
-                          <input type="text" value={docNumber} onChange={(e) => setDocNumber(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition" />
+                          <input type="text" value={docNumber} onChange={(e) => setDocNumber(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition" />
                         </div>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Data de nascimento</label>
-                        <input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition" />
+                        <input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Classe pretendida *</label>
-                        <select value={desiredGrade} onChange={(e) => setDesiredGrade(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition appearance-none">
+                        <select value={desiredGrade} onChange={(e) => setDesiredGrade(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition appearance-none">
                           <option value="">Seleccione a classe...</option>
                           {CLASSES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
                         </select>
@@ -607,7 +607,7 @@ export default function MinhaAreaPage() {
                           placeholder="Ex: Matemática, Física, Português"
                           value={teachingArea}
                           onChange={(e) => setTeachingArea(e.target.value)}
-                          className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition"
+                          className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
                         />
                       </div>
                     </>
@@ -618,7 +618,7 @@ export default function MinhaAreaPage() {
                     <>
                       <div>
                         <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Parentesco *</label>
-                        <select value={relationship} onChange={(e) => setRelationship(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition appearance-none">
+                        <select value={relationship} onChange={(e) => setRelationship(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition appearance-none">
                           <option value="">Seleccione...</option>
                           <option value="pai">Pai</option>
                           <option value="mae">Mãe</option>
@@ -635,7 +635,7 @@ export default function MinhaAreaPage() {
                     <button
                       onClick={handleSubmit}
                       disabled={submitting}
-                      className="flex-1 h-10 flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition shadow-lg shadow-indigo-600/20 disabled:opacity-50"
+                      className="flex-1 h-10 flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition shadow-lg shadow-primary/20 disabled:opacity-50"
                     >
                       {submitting ? <><Loader2 size={16} className="animate-spin" /> Enviando...</> : <><Send size={16} /> Enviar solicitação</>}
                     </button>
@@ -651,7 +651,7 @@ export default function MinhaAreaPage() {
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
                     A sua solicitação foi enviada à escola. Aguarda aprovação.
                   </p>
-                  <button onClick={closeModal} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition">
+                  <button onClick={closeModal} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition">
                     Fechar
                   </button>
                 </div>
@@ -702,8 +702,8 @@ function SchoolCard({ school }: { school: UserSchool }) {
           {school.logo ? (
             <img src={school.logo} alt={school.name} className="w-10 h-10 rounded-lg object-cover border border-zinc-200 dark:border-zinc-700" />
           ) : (
-            <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center shrink-0">
-              <School size={18} className="text-indigo-600 dark:text-indigo-400" />
+            <div className="w-10 h-10 rounded-lg bg-primary-50 dark:bg-primary-950/50 flex items-center justify-center shrink-0">
+              <School size={18} className="text-primary dark:text-primary-400" />
             </div>
           )}
           <div className="min-w-0 flex-1">
@@ -724,7 +724,7 @@ function SchoolCard({ school }: { school: UserSchool }) {
             )
           })}
         </div>
-        <Link href="/dashboard" className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition shadow-lg shadow-indigo-600/20">
+        <Link href="/dashboard" className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition shadow-lg shadow-primary/20">
           Aceder ao painel <ExternalLink size={14} />
         </Link>
       </div>

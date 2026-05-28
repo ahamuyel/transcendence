@@ -144,7 +144,7 @@ export default function ChatConversationPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -179,7 +179,7 @@ export default function ChatConversationPage() {
           {conversation && (
             <>
               <div className="relative flex-shrink-0">
-                <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center text-sm font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden">
+                <div className="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-950/40 flex items-center justify-center text-sm font-bold text-primary dark:text-primary-400 overflow-hidden">
                   {conversation.other.image ? (
                     <img src={conversation.other.image} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -227,12 +227,12 @@ export default function ChatConversationPage() {
                   <div
                     className={`max-w-[75%] px-3 py-2 rounded-2xl text-sm ${
                       isMe
-                        ? "bg-indigo-600 text-white rounded-br-md"
+                        ? "bg-primary text-white rounded-br-md"
                         : "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-bl-md"
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words">{msg.text}</p>
-                    <div className={`flex items-center gap-1 mt-1 ${isMe ? "text-indigo-200" : "text-zinc-400"}`}>
+                    <div className={`flex items-center gap-1 mt-1 ${isMe ? "text-primary-200" : "text-zinc-400"}`}>
                       <span className="text-xs">{timeLabel(msg.createdAt)}</span>
                       {isMe && (
                         msg.readAt ? <CheckCheck size={14} className="text-blue-300" />
@@ -256,12 +256,12 @@ export default function ChatConversationPage() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Escreva uma mensagem..."
-              className="flex-1 px-4 py-2.5 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 px-4 py-2.5 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 outline-none focus:ring-2 focus:ring-primary"
             />
             <button
               onClick={handleSend}
               disabled={sending || !input.trim()}
-              className="p-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition disabled:opacity-50"
+              className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-700 transition disabled:opacity-50"
             >
               {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
             </button>

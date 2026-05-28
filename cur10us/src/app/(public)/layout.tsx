@@ -7,7 +7,7 @@ async function PublicBrand() {
   if (name === "Cur10usX") {
     return (
       <span className="text-lg font-bold tracking-tight">
-        Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
+        Cur10us<span className="text-primary dark:text-primary-400">X</span>
       </span>
     )
   }
@@ -26,7 +26,7 @@ export default async function PublicLayout({ children }: { children: React.React
             <Link href="/signin" className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition">
               Entrar
             </Link>
-            <Link href="/signup" className="px-4 py-2 text-sm rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition">
+            <Link href="/signup" className="px-4 py-2 text-sm rounded-lg bg-primary text-white font-medium hover:bg-primary-700 transition">
               Criar conta
             </Link>
           </div>

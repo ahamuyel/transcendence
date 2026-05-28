@@ -15,7 +15,7 @@ const features = [
     icon: LayoutDashboard,
     title: "Dashboards intuitivos",
     description: "Visão geral em tempo real com métricas claras para cada perfil de utilizador.",
-    gradient: "from-indigo-500 to-indigo-600",
+    gradient: "from-primary-500 to-primary-600",
     span: "sm:col-span-2 lg:col-span-2",
   },
   {
@@ -50,7 +50,7 @@ const features = [
     icon: FileText,
     title: "Candidaturas online",
     description: "Formulário público de matrícula com acompanhamento de estado.",
-    gradient: "from-violet-500 to-violet-600",
+    gradient: "from-primary-500 to-primary-600",
     span: "sm:col-span-2 lg:col-span-2",
   },
   {
@@ -74,19 +74,19 @@ export default function FeaturesSection() {
     <section id="funcionalidades" className="py-28 px-6 relative overflow-hidden">
       {/* Background accent */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-violet-400/5 dark:bg-violet-600/5 blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-indigo-400/5 dark:bg-indigo-600/5 blur-[120px]" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-primary-400/5 dark:bg-primary-600/5 blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-primary-400/5 dark:bg-primary/5 blur-[120px]" />
       </div>
 
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-20">
-          <span className="inline-block text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/50 px-4 py-1.5 rounded-full border border-indigo-200/50 dark:border-indigo-800/50 mb-6">
+          <span className="inline-block text-sm font-medium text-primary dark:text-primary-400 bg-primary-50/80 dark:bg-primary-950/50 px-4 py-1.5 rounded-full border border-primary-200/50 dark:border-primary-800/50 mb-6">
             Tudo incluído
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mb-5 tracking-tight">
             Tudo que a sua escola precisa,{" "}
             <br className="hidden sm:block" />
-            <span className="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-600 to-primary-600 dark:from-primary-400 dark:to-primary-400 bg-clip-text text-transparent">
               num só lugar
             </span>
           </h2>

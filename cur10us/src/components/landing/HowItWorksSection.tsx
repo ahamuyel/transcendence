@@ -7,14 +7,14 @@ const steps = [
     step: "1",
     title: "Registe a sua escola",
     description: "Preencha o formulário com os dados da escola e submeta a candidatura.",
-    color: "from-indigo-500 to-indigo-600",
+    color: "from-primary-500 to-primary-600",
   },
   {
     icon: Clock,
     step: "2",
     title: "Aguarde aprovação",
     description: "A nossa equipa analisa o pedido e aprova a sua escola na plataforma.",
-    color: "from-violet-500 to-violet-600",
+    color: "from-primary-500 to-primary-600",
   },
   {
     icon: Settings,
@@ -37,17 +37,17 @@ export default function HowItWorksSection() {
     <section id="como-funciona" className="py-28 px-6 relative overflow-hidden">
       {/* Subtle background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-indigo-400/5 dark:bg-indigo-600/5 blur-[120px]" />
+        <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-primary-400/5 dark:bg-primary/5 blur-[120px]" />
       </div>
 
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-20">
-          <span className="inline-block text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/50 px-4 py-1.5 rounded-full border border-indigo-200/50 dark:border-indigo-800/50 mb-6">
+          <span className="inline-block text-sm font-medium text-primary dark:text-primary-400 bg-primary-50/80 dark:bg-primary-950/50 px-4 py-1.5 rounded-full border border-primary-200/50 dark:border-primary-800/50 mb-6">
             Simples e rápido
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mb-5 tracking-tight">
             Como{" "}
-            <span className="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-600 to-primary-600 dark:from-primary-400 dark:to-primary-400 bg-clip-text text-transparent">
               funciona
             </span>
           </h2>
@@ -58,7 +58,7 @@ export default function HowItWorksSection() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
           {/* Connecting line (desktop) */}
-          <div className="hidden lg:block absolute top-[52px] left-[12.5%] right-[12.5%] h-[2px] bg-gradient-to-r from-indigo-300 via-violet-300 to-emerald-300 dark:from-indigo-800 dark:via-violet-800 dark:to-emerald-800 rounded-full" />
+          <div className="hidden lg:block absolute top-[52px] left-[12.5%] right-[12.5%] h-[2px] bg-gradient-to-r from-primary-300 via-primary-300 to-emerald-300 dark:from-primary-800 dark:via-primary-800 dark:to-emerald-800 rounded-full" />
 
           {steps.map((item, i) => {
             const Icon = item.icon

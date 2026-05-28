@@ -26,7 +26,7 @@ export default function ForgotPasswordPage() {
           </p>
           <Link
             href="/signin"
-            className="inline-flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
+            className="inline-flex items-center gap-2 text-sm text-primary dark:text-primary-400 font-medium hover:underline"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar para o login
@@ -63,8 +63,8 @@ export default function ForgotPasswordPage() {
     <div className="w-full max-w-md">
       <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-8">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-full bg-indigo-100 dark:bg-indigo-950 flex items-center justify-center mx-auto mb-4">
-            <Mail className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
+          <div className="w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-950 flex items-center justify-center mx-auto mb-4">
+            <Mail className="w-7 h-7 text-primary dark:text-primary-400" />
           </div>
           <h1 className="text-2xl font-bold mb-2">Recuperar palavra-passe</h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
             />
           </div>
 
@@ -102,7 +102,7 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 shadow-lg shadow-indigo-600/25 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-medium text-sm hover:bg-primary-700 shadow-lg shadow-primary/25 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -118,7 +118,7 @@ export default function ForgotPasswordPage() {
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
         <Link
           href="/signin"
-          className="inline-flex items-center gap-1 text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
+          className="inline-flex items-center gap-1 text-primary dark:text-primary-400 font-medium hover:underline"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Voltar para o login

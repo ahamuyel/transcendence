@@ -85,7 +85,7 @@ export default function SuperAdminsPage() {
     fetchAdmins()
   }
 
-  const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+  const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary transition"
 
   return (
     <div>
@@ -96,7 +96,7 @@ export default function SuperAdminsPage() {
         </div>
         <button
           onClick={() => { setShowForm(true); setCreatedCreds(null) }}
-          className="flex items-center gap-2 self-start sm:self-auto px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20"
+          className="flex items-center gap-2 self-start sm:self-auto px-4 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary-700 transition shadow-lg shadow-primary/20"
         >
           <Plus size={16} />
           Criar Super Admin
@@ -155,7 +155,7 @@ export default function SuperAdminsPage() {
                 <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                   Cancelar
                 </button>
-                <button type="submit" disabled={formLoading} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20">
+                <button type="submit" disabled={formLoading} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20">
                   {formLoading ? "A criar..." : "Criar"}
                 </button>
               </div>
@@ -167,7 +167,7 @@ export default function SuperAdminsPage() {
       {/* Table */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 size={24} className="animate-spin text-indigo-500" />
+          <Loader2 size={24} className="animate-spin text-primary" />
         </div>
       ) : admins.length === 0 ? (
         <div className="text-center py-16 text-zinc-400 text-sm">Nenhum super admin encontrado</div>
@@ -189,8 +189,8 @@ export default function SuperAdminsPage() {
                 <tr key={admin.id} className="border-b border-zinc-100 dark:border-zinc-800/50 hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center">
-                        <ShieldCheck size={14} className="text-indigo-600 dark:text-indigo-400" />
+                      <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-950/40 flex items-center justify-center">
+                        <ShieldCheck size={14} className="text-primary dark:text-primary-400" />
                       </div>
                       <span className="font-medium text-sm text-zinc-900 dark:text-zinc-100">{admin.name}</span>
                     </div>

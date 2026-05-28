@@ -78,7 +78,7 @@ export default function TicketDetailPage() {
   if (loading || !ticket) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -120,14 +120,14 @@ export default function TicketDetailPage() {
                 key={msg.id}
                 className={`p-3 rounded-xl text-sm ${
                   msg.isStaff
-                    ? "bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800"
+                    ? "bg-primary-50 dark:bg-primary-950/30 border border-primary-200 dark:border-primary-800"
                     : "bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800"
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1 text-xs">
                   <span className="font-medium text-zinc-900 dark:text-zinc-100">{msg.user.name}</span>
                   {msg.isStaff && (
-                    <span className="px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 text-[10px] font-medium">
+                    <span className="px-1.5 py-0.5 rounded bg-primary-100 dark:bg-primary-900 text-primary dark:text-primary-400 text-[10px] font-medium">
                       Equipa
                     </span>
                   )}
@@ -147,12 +147,12 @@ export default function TicketDetailPage() {
               onChange={(e) => setReply(e.target.value)}
               placeholder="Escreva uma mensagem..."
               rows={2}
-              className="flex-1 px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
+              className="flex-1 px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary transition resize-none"
             />
             <button
               type="submit"
               disabled={sending || !reply.trim()}
-              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition disabled:opacity-50"
             >
               {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
             </button>

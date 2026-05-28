@@ -49,7 +49,7 @@ export default function LandingNavbar({ branding }: { branding: PlatformBranding
             {branding.name === "Cur10usX" ? (
               <>
                 Cur10us
-                <span className="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-primary-600 to-primary-600 dark:from-primary-400 dark:to-primary-400 bg-clip-text text-transparent">
                   X
                 </span>
               </>
@@ -90,7 +90,7 @@ export default function LandingNavbar({ branding }: { branding: PlatformBranding
           </Link>
           <Link
             href="/signin"
-            className="px-4 py-2 text-sm rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/30"
+            className="px-4 py-2 text-sm rounded-xl bg-gradient-to-r from-primary-600 to-primary-600 text-white font-medium hover:from-primary-700 hover:to-primary-700 transition-all shadow-lg shadow-primary/20 hover:shadow-primary/30"
           >
             Entrar
           </Link>
@@ -126,7 +126,7 @@ export default function LandingNavbar({ branding }: { branding: PlatformBranding
             <Link
               href="/signin"
               onClick={() => setOpen(false)}
-              className="text-sm text-indigo-600 dark:text-indigo-400 font-medium py-2.5 px-3 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition"
+              className="text-sm text-primary dark:text-primary-400 font-medium py-2.5 px-3 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-950/50 transition"
             >
               Entrar
             </Link>

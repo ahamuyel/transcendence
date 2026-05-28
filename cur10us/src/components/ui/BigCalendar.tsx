@@ -84,7 +84,7 @@ const CalendarHeader: React.FC<ToolbarProps<CalendarEvent, object>> = ({
               className={`px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm rounded-lg transition
                 ${
                   view === v.key
-                    ? "bg-white dark:bg-zinc-700 shadow text-indigo-600 dark:text-indigo-400 font-medium"
+                    ? "bg-white dark:bg-zinc-700 shadow text-primary dark:text-primary-400 font-medium"
                     : "text-zinc-500 dark:text-zinc-400"
                 }`}
             >
@@ -232,7 +232,7 @@ const BigCalendar = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 size={24} className="animate-spin text-indigo-500" />
+        <Loader2 size={24} className="animate-spin text-primary" />
       </div>
     );
   }
@@ -362,7 +362,7 @@ const BigCalendar = () => {
 
             <button
               onClick={() => setSelectedEvent(null)}
-              className="mt-6 w-full rounded-xl bg-indigo-600 text-white py-2.5 font-medium hover:bg-indigo-700 transition active:scale-[0.98]"
+              className="mt-6 w-full rounded-xl bg-primary text-white py-2.5 font-medium hover:bg-primary-700 transition active:scale-[0.98]"
             >
               Fechar
             </button>

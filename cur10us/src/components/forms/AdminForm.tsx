@@ -68,7 +68,7 @@ const defaultPermissions = {
   canManageAdmins: false,
 }
 
-const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary transition"
 
 const AdminForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
   const [form, setForm] = useState({
@@ -181,7 +181,7 @@ const AdminForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
           <button
             type="button"
             onClick={toggleAll}
-            className="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+            className="text-[11px] font-medium text-primary dark:text-primary-400 hover:underline"
           >
             {allSelected ? "Desmarcar todas" : "Seleccionar todas"}
           </button>
@@ -196,7 +196,7 @@ const AdminForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
                 type="checkbox"
                 checked={form.permissions[key as keyof typeof form.permissions]}
                 onChange={() => togglePermission(key)}
-                className="w-4 h-4 rounded border-zinc-300 dark:border-zinc-700 text-indigo-600 focus:ring-indigo-500 accent-indigo-600"
+                className="w-4 h-4 rounded border-zinc-300 dark:border-zinc-700 text-primary focus:ring-primary accent-primary"
               />
               <span className="text-xs text-zinc-700 dark:text-zinc-300 font-medium">{label}</span>
             </label>
@@ -208,7 +208,7 @@ const AdminForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
         <button type="button" onClick={onCancel} className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
           Cancelar
         </button>
-        <button type="submit" disabled={loading} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20">
+        <button type="submit" disabled={loading} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20">
           {loading ? "Salvando..." : mode === "edit" ? "Salvar" : "Criar"}
         </button>
       </div>

@@ -88,7 +88,7 @@ export default function AdminApplicationsPage() {
               onClick={() => { setStatusFilter(f.value); setPage(1) }}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition whitespace-nowrap ${
                 statusFilter === f.value
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-primary text-white"
                   : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
               }`}
             >
@@ -101,7 +101,7 @@ export default function AdminApplicationsPage() {
       {/* Table */}
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
       ) : applications.length === 0 ? (
         <div className="text-center py-16 text-zinc-400 text-sm">Nenhuma solicitação encontrada</div>

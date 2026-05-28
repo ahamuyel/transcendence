@@ -143,7 +143,7 @@ const EnrollmentListPage = () => {
         </div>
       </td>
       <td className="py-2.5 sm:py-3 px-1.5 sm:px-2">
-        <span className="px-1.5 sm:px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded text-[9px] sm:text-[10px] font-bold">
+        <span className="px-1.5 sm:px-2 py-0.5 bg-primary-50 dark:bg-primary-950/40 text-primary dark:text-primary-400 rounded text-[9px] sm:text-[10px] font-bold">
           {item.class.name}
         </span>
       </td>
@@ -165,7 +165,7 @@ const EnrollmentListPage = () => {
         <div className="flex items-center gap-1 justify-end">
           <button
             onClick={() => setViewItem(item)}
-            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-indigo-600 hover:text-white transition-all active:scale-90"
+            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-primary hover:text-white transition-all active:scale-90"
             title="Ver detalhes"
           >
             <Eye size={13} />
@@ -192,7 +192,7 @@ const EnrollmentListPage = () => {
             <select
               value={filters.status || ""}
               onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-              className="px-2 py-2 sm:py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="px-2 py-2 sm:py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition"
             >
               <option value="">Todos os estados</option>
               {allStatuses.map((s) => (
@@ -203,7 +203,7 @@ const EnrollmentListPage = () => {
             <select
               value={filters.academicYearId || ""}
               onChange={(e) => setFilters({ ...filters, academicYearId: e.target.value })}
-              className="px-2 py-2 sm:py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="px-2 py-2 sm:py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition"
             >
               <option value="">Todos os anos</option>
               {academicYears.map((ay) => (
@@ -219,7 +219,7 @@ const EnrollmentListPage = () => {
             {isAdmin && (
               <button
                 onClick={() => { setCreateOpen(true); loadCreateOptions() }}
-                className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-xs sm:text-sm active:scale-95 shadow-lg shadow-indigo-600/20 transition"
+                className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-primary text-white font-semibold text-xs sm:text-sm active:scale-95 shadow-lg shadow-primary/20 transition"
               >
                 <Plus size={16} />
                 <span className="hidden sm:inline">Nova Matricula</span>
@@ -233,7 +233,7 @@ const EnrollmentListPage = () => {
       <div className="overflow-x-auto -mx-2.5 px-2.5 sm:-mx-4 sm:px-4 md:mx-0 md:px-0">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 size={24} className="animate-spin text-indigo-500" />
+            <Loader2 size={24} className="animate-spin text-primary" />
           </div>
         ) : data.length === 0 ? (
           <div className="text-center py-12 text-zinc-400 text-sm">Nenhuma matricula encontrada</div>
@@ -262,7 +262,7 @@ const EnrollmentListPage = () => {
             <select
               value={createForm.studentId}
               onChange={(e) => setCreateForm({ ...createForm, studentId: e.target.value })}
-              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition"
             >
               <option value="">Selecione um aluno</option>
               {students.map((s) => (
@@ -275,7 +275,7 @@ const EnrollmentListPage = () => {
             <select
               value={createForm.classId}
               onChange={(e) => setCreateForm({ ...createForm, classId: e.target.value })}
-              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition"
             >
               <option value="">Selecione uma turma</option>
               {classes.map((c) => (
@@ -288,7 +288,7 @@ const EnrollmentListPage = () => {
             <select
               value={createForm.academicYearId}
               onChange={(e) => setCreateForm({ ...createForm, academicYearId: e.target.value })}
-              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition"
             >
               <option value="">Selecione o ano letivo</option>
               {academicYears.map((ay) => (
@@ -301,7 +301,7 @@ const EnrollmentListPage = () => {
             <select
               value={createForm.status}
               onChange={(e) => setCreateForm({ ...createForm, status: e.target.value })}
-              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition"
             >
               {allStatuses.map((s) => (
                 <option key={s} value={s}>{statusLabels[s]}</option>
@@ -314,7 +314,7 @@ const EnrollmentListPage = () => {
               value={createForm.observation}
               onChange={(e) => setCreateForm({ ...createForm, observation: e.target.value })}
               rows={3}
-              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
+              className="w-full px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition resize-none"
               placeholder="Observacoes opcionais..."
             />
           </div>
@@ -329,7 +329,7 @@ const EnrollmentListPage = () => {
             <button
               type="submit"
               disabled={createLoading}
-              className="px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition disabled:opacity-50 flex items-center gap-2"
+              className="px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary-700 transition disabled:opacity-50 flex items-center gap-2"
             >
               {createLoading && <Loader2 size={14} className="animate-spin" />}
               Criar Matricula

@@ -77,7 +77,7 @@ const ProfilePage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -172,12 +172,12 @@ const ProfilePage = () => {
                 {user.name}
               </h1>
               {!editing && (
-                <button onClick={() => setEditing(true)} className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-indigo-600 transition">
+                <button onClick={() => setEditing(true)} className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-primary transition">
                   <Pencil size={14} />
                 </button>
               )}
             </div>
-            <span className="inline-block mt-1 px-3 py-1 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-bold">
+            <span className="inline-block mt-1 px-3 py-1 bg-primary-50 dark:bg-primary-950/40 text-primary dark:text-primary-400 rounded-full text-xs font-bold">
               {roleLabels[user.role] || user.role}
             </span>
             {profile.school && (
@@ -209,7 +209,7 @@ const ProfilePage = () => {
               <input
                 value={editForm.name}
                 onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))}
-                className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             {entity && (
@@ -219,7 +219,7 @@ const ProfilePage = () => {
                   <input
                     value={editForm.phone}
                     onChange={(e) => setEditForm((f) => ({ ...f, phone: e.target.value }))}
-                    className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -227,7 +227,7 @@ const ProfilePage = () => {
                   <input
                     value={editForm.address}
                     onChange={(e) => setEditForm((f) => ({ ...f, address: e.target.value }))}
-                    className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
               </>
@@ -239,7 +239,7 @@ const ProfilePage = () => {
                   <select
                     value={editForm.gender}
                     onChange={(e) => setEditForm((f) => ({ ...f, gender: e.target.value }))}
-                    className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">Selecione</option>
                     <option value="masculino">Masculino</option>
@@ -252,7 +252,7 @@ const ProfilePage = () => {
                     type="date"
                     value={editForm.dateOfBirth}
                     onChange={(e) => setEditForm((f) => ({ ...f, dateOfBirth: e.target.value }))}
-                    className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
               </>
@@ -262,7 +262,7 @@ const ProfilePage = () => {
             <button onClick={() => setEditing(false)} className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
               <X size={14} /> Cancelar
             </button>
-            <button onClick={handleSave} disabled={saving} className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition disabled:opacity-50">
+            <button onClick={handleSave} disabled={saving} className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-700 transition disabled:opacity-50">
               {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
               Salvar
             </button>
@@ -277,23 +277,23 @@ const ProfilePage = () => {
           <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-4 uppercase tracking-wider">Contacto</h2>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center">
-                <Mail className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center">
+                <Mail className="w-4 h-4 text-primary dark:text-primary-400" />
               </div>
               <span className="text-sm text-zinc-600 dark:text-zinc-400">{user.email}</span>
             </div>
             {phone && (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center">
+                  <Phone className="w-4 h-4 text-primary dark:text-primary-400" />
                 </div>
                 <span className="text-sm text-zinc-600 dark:text-zinc-400">{phone}</span>
               </div>
             )}
             {address && (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center">
-                  <MapPin className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-primary dark:text-primary-400" />
                 </div>
                 <span className="text-sm text-zinc-600 dark:text-zinc-400">{address}</span>
               </div>
@@ -325,8 +325,8 @@ const ProfilePage = () => {
               <>
                 {profile.student.gender && (
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center">
-                      <Users className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center">
+                      <Users className="w-4 h-4 text-primary dark:text-primary-400" />
                     </div>
                     <span className="text-sm text-zinc-600 dark:text-zinc-400 capitalize">{profile.student.gender}</span>
                   </div>
@@ -340,7 +340,7 @@ const ProfilePage = () => {
                 <SummaryItem icon={Users} color="amber" value={profile.parent.students.length} label={`Educando${profile.parent.students.length !== 1 ? "s" : ""}`} />
                 {profile.parent.students.map((s: any) => (
                   <div key={s.id} className="flex items-center gap-3 pl-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary-400" />
                     <span className="text-sm text-zinc-600 dark:text-zinc-400">{s.name}{s.className ? ` (${s.className})` : ""}</span>
                   </div>
                 ))}
@@ -358,13 +358,13 @@ function SummaryItem({ icon: Icon, color, value, label }: { icon: React.ElementT
     emerald: "bg-emerald-50 dark:bg-emerald-950/40",
     amber: "bg-amber-50 dark:bg-amber-950/40",
     rose: "bg-rose-50 dark:bg-rose-950/40",
-    indigo: "bg-indigo-50 dark:bg-indigo-950/40",
+    indigo: "bg-primary-50 dark:bg-primary-950/40",
   }
   const textMap: Record<string, string> = {
     emerald: "text-emerald-600 dark:text-emerald-400",
     amber: "text-amber-600 dark:text-amber-400",
     rose: "text-rose-600 dark:text-rose-400",
-    indigo: "text-indigo-600 dark:text-indigo-400",
+    indigo: "text-primary dark:text-primary-400",
   }
   return (
     <div className="flex items-center gap-3">
