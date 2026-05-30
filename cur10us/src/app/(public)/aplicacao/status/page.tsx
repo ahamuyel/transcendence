@@ -96,12 +96,12 @@ function StatusPageContent() {
           placeholder="Código de acompanhamento"
           value={token}
           onChange={(e) => setToken(e.target.value)}
-          className="flex-1 px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          className="flex-1 px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition"
         />
         <button
           type="submit"
           disabled={loading || !token.trim()}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition disabled:opacity-50"
         >
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
         </button>
@@ -150,14 +150,14 @@ function StatusPageContent() {
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                           isCompleted
-                            ? "bg-indigo-600 text-white"
+                            ? "bg-primary text-white"
                             : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400"
-                        } ${isCurrent ? "ring-2 ring-indigo-300 dark:ring-indigo-700" : ""}`}
+                        } ${isCurrent ? "ring-2 ring-primary-300 dark:ring-primary-700" : ""}`}
                       >
                         <Icon className="w-4 h-4" />
                       </div>
                       {i < statusTimeline.length - 1 && (
-                        <div className={`w-0.5 h-8 ${isCompleted && currentStep > stepIndex ? "bg-indigo-600" : "bg-zinc-200 dark:bg-zinc-700"}`} />
+                        <div className={`w-0.5 h-8 ${isCompleted && currentStep > stepIndex ? "bg-primary" : "bg-zinc-200 dark:bg-zinc-700"}`} />
                       )}
                     </div>
                     <div className="pt-1 pb-4">
@@ -176,7 +176,7 @@ function StatusPageContent() {
               <p className="text-emerald-700 dark:text-emerald-400">
                 Sua matrícula foi confirmada! Acesse a plataforma com o e-mail <strong>{data.email}</strong>.
               </p>
-              <Link href="/signin" className="inline-block mt-2 text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
+              <Link href="/signin" className="inline-block mt-2 text-primary dark:text-primary-400 font-medium hover:underline">
                 Acessar plataforma
               </Link>
             </div>
@@ -186,7 +186,7 @@ function StatusPageContent() {
 
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-8">
         Ainda não enviou sua solicitação?{" "}
-        <Link href="/aplicacao" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
+        <Link href="/aplicacao" className="text-primary dark:text-primary-400 font-medium hover:underline">
           Solicitar matrícula
         </Link>
       </p>

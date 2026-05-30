@@ -24,6 +24,7 @@ import SessionGuard from "@/components/layout/SessionGuard"
 import TwoFactorGate from "@/components/layout/TwoFactorGate"
 import { SidebarProvider, useSidebar } from "@/hooks/useSidebar"
 import { cn } from "@/lib/utils"
+import { usePlatformBranding } from "@/provider/platform-branding"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -32,6 +33,30 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip"
+
+function AdminBrand({ collapsed }: { collapsed?: boolean }) {
+  const { name } = usePlatformBranding()
+  if (name === "Cur10usX") {
+    if (collapsed) {
+      return <>C<span className="text-primary dark:text-primary-400">X</span></>
+    }
+    return (
+      <>Cur10us<span className="text-primary dark:text-primary-400">X</span></>
+    )
+  }
+  if (collapsed) {
+    return <>{name.charAt(0)}</>
+  }
+  return <>{name}</>
+}
+
+function AdminMiniBrand() {
+  const { name } = usePlatformBranding()
+  if (name === "Cur10usX") {
+    return <>Cur10us<span className="text-primary dark:text-primary-400">X</span></>
+  }
+  return <>{name}</>
+}
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
@@ -75,18 +100,10 @@ function AdminSidebar() {
                 "text-zinc-900 dark:text-zinc-100 shrink-0"
               )}
             >
-              {collapsed ? (
-                <>
-                  C<span className="text-indigo-600 dark:text-indigo-400">X</span>
-                </>
-              ) : (
-                <>
-                  Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
-                </>
-              )}
+              <AdminBrand collapsed={collapsed} />
             </span>
             {!collapsed && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-medium">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary-100 dark:bg-primary-950 text-primary dark:text-primary-400 font-medium">
                 Admin
               </span>
             )}
@@ -140,7 +157,7 @@ function AdminSidebar() {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
                   isActive
-                    ? "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400"
+                    ? "bg-primary-50 dark:bg-primary-950/40 text-primary dark:text-primary-400"
                     : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/40"
                 )}
               >
@@ -184,7 +201,7 @@ function AdminSidebar() {
             <div className="flex items-center gap-2 px-2 py-1.5">
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <Avatar className="h-7 w-7 border border-zinc-200 dark:border-zinc-700">
-                  <AvatarFallback className="text-[9px] font-semibold bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
+                  <AvatarFallback className="text-[9px] font-semibold bg-primary-100 dark:bg-primary-950 text-primary dark:text-primary-400">
                     {session?.user?.name?.charAt(0)?.toUpperCase() || "A"}
                   </AvatarFallback>
                 </Avatar>
@@ -241,8 +258,8 @@ function AdminMobileHeader() {
       >
         <div className="flex items-center justify-between h-14 px-4 border-b border-zinc-200 dark:border-zinc-800">
           <Link href="/admin" className="font-bold text-zinc-900 dark:text-zinc-100">
-            Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
-            <span className="text-[10px] ml-1.5 px-1.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-medium">
+            <AdminMiniBrand />
+            <span className="text-[10px] ml-1.5 px-1.5 py-0.5 rounded-full bg-primary-100 dark:bg-primary-950 text-primary dark:text-primary-400 font-medium">
               Admin
             </span>
           </Link>
@@ -267,7 +284,7 @@ function AdminMobileHeader() {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
                   isActive
-                    ? "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400"
+                    ? "bg-primary-50 dark:bg-primary-950/40 text-primary dark:text-primary-400"
                     : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-200"
                 )}
               >
@@ -298,7 +315,7 @@ function AdminMobileHeader() {
             <PanelLeft size={18} />
           </button>
           <span className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">
-            Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
+            <AdminMiniBrand />
           </span>
           <span className="text-zinc-300 dark:text-zinc-700">|</span>
           <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{getPageTitle(pathname)}</span>
@@ -327,7 +344,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (status === "loading" || session?.user?.role !== "super_admin") {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }

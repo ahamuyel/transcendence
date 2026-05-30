@@ -31,7 +31,7 @@ const plans = [
     icon: Zap,
     monthlyPrice: 35_000,
     yearlyPrice: 350_000,
-    gradient: "from-indigo-600 to-violet-600",
+    gradient: "from-primary-600 to-primary-600",
     popular: true,
     cta: "Começar agora",
     ctaHref: "/registar-escola",
@@ -79,17 +79,17 @@ export default function PricingSection() {
   return (
     <section id="precos" className="py-28 px-6 relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[30%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-indigo-400/5 dark:bg-indigo-600/5 blur-[120px]" />
+        <div className="absolute top-[30%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-primary-400/5 dark:bg-primary/5 blur-[120px]" />
       </div>
 
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <span className="inline-block text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/50 px-4 py-1.5 rounded-full border border-indigo-200/50 dark:border-indigo-800/50 mb-6">
+          <span className="inline-block text-sm font-medium text-primary dark:text-primary-400 bg-primary-50/80 dark:bg-primary-950/50 px-4 py-1.5 rounded-full border border-primary-200/50 dark:border-primary-800/50 mb-6">
             Preços acessíveis
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mb-5 tracking-tight">
             Planos pensados para{" "}
-            <span className="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-600 to-primary-600 dark:from-primary-400 dark:to-primary-400 bg-clip-text text-transparent">
               escolas angolanas
             </span>
           </h2>
@@ -105,7 +105,7 @@ export default function PricingSection() {
             <button
               onClick={() => setYearly(!yearly)}
               className={`relative w-12 h-7 rounded-full transition-colors ${
-                yearly ? "bg-indigo-600" : "bg-zinc-300 dark:bg-zinc-700"
+                yearly ? "bg-primary" : "bg-zinc-300 dark:bg-zinc-700"
               }`}
             >
               <div
@@ -133,12 +133,12 @@ export default function PricingSection() {
                 <div
                   className={`relative rounded-3xl p-[1px] transition-all duration-300 ${
                     plan.popular
-                      ? "bg-gradient-to-b from-indigo-500 to-violet-600 shadow-xl shadow-indigo-600/20"
+                      ? "bg-gradient-to-b from-primary-500 to-primary-600 shadow-xl shadow-primary/20"
                       : ""
                   }`}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-1.5 rounded-full shadow-lg">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs font-bold text-white bg-gradient-to-r from-primary-600 to-primary-600 px-4 py-1.5 rounded-full shadow-lg">
                       Mais popular
                     </div>
                   )}
@@ -187,7 +187,7 @@ export default function PricingSection() {
                           <CheckCircle2
                             className={`w-4 h-4 mt-0.5 shrink-0 ${
                               plan.popular
-                                ? "text-indigo-600 dark:text-indigo-400"
+                                ? "text-primary dark:text-primary-400"
                                 : "text-zinc-400 dark:text-zinc-500"
                             }`}
                           />
@@ -200,7 +200,7 @@ export default function PricingSection() {
                       href={plan.ctaHref}
                       className={`group flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] ${
                         plan.popular
-                          ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/30"
+                          ? "bg-gradient-to-r from-primary-600 to-primary-600 text-white shadow-lg shadow-primary/20 hover:shadow-primary/30"
                           : "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                       }`}
                     >

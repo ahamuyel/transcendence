@@ -123,8 +123,8 @@ export default function ApplicationReviewForm({ application, onClose, onRefresh 
             <span className="font-medium text-zinc-900 dark:text-zinc-100">{roleLabels[application.role] || application.role}</span>
           </div>
           {isStudent && (application.documentType || application.documentNumber || application.dateOfBirth || application.desiredGrade || application.desiredCourseId) && (
-            <div className="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 space-y-2">
-              <span className="text-indigo-600 dark:text-indigo-400 font-medium text-xs uppercase tracking-wide">Dados do aluno</span>
+            <div className="p-3 rounded-xl bg-primary-50 dark:bg-primary-950/30 border border-primary-200 dark:border-primary-800 space-y-2">
+              <span className="text-primary dark:text-primary-400 font-medium text-xs uppercase tracking-wide">Dados do aluno</span>
               {(application.documentType || application.documentNumber) && (
                 <div>
                   <span className="text-zinc-500">Documento:</span>{" "}
@@ -186,7 +186,7 @@ export default function ApplicationReviewForm({ application, onClose, onRefresh 
                 id="classSelect"
                 value={selectedClassId}
                 onChange={(e) => setSelectedClassId(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition appearance-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
               >
                 <option value="">Selecione a turma (opcional)</option>
                 {classes.map((c) => (
@@ -258,7 +258,7 @@ export default function ApplicationReviewForm({ application, onClose, onRefresh 
             <button
               onClick={() => handleAction("enroll")}
               disabled={!!loading}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition disabled:opacity-50"
             >
               {loading === "enroll" ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
               Matricular

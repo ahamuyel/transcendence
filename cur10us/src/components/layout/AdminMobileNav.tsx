@@ -55,7 +55,7 @@ const AdminMobileNav = () => {
                     key={item.label}
                     href={item.href}
                     onClick={() => setShowMore(false)}
-                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-primary-50 dark:hover:bg-primary-950/50 hover:text-primary dark:hover:text-primary-400 transition-colors"
                   >
                     <Icon size={16} className="shrink-0" />
                     {item.label}
@@ -89,7 +89,7 @@ const AdminMobileNav = () => {
                 href={item.href}
                 className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-colors min-w-[56px] ${
                   isActive
-                    ? "text-indigo-600 dark:text-indigo-400"
+                    ? "text-primary dark:text-primary-400"
                     : "text-zinc-400 dark:text-zinc-500"
                 }`}
               >
@@ -102,7 +102,7 @@ const AdminMobileNav = () => {
             onClick={() => setShowMore(!showMore)}
             className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-colors min-w-[56px] ${
               showMore
-                ? "text-indigo-600 dark:text-indigo-400"
+                ? "text-primary dark:text-primary-400"
                 : "text-zinc-400 dark:text-zinc-500"
             }`}
           >

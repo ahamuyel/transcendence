@@ -124,7 +124,7 @@ export default function ApplicationPage() {
         </div>
         <Link
           href={`/aplicacao/status?token=${success}`}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-medium hover:bg-primary-700 transition"
         >
           Acompanhar status
         </Link>
@@ -163,7 +163,7 @@ export default function ApplicationPage() {
               onChange={(e) => setSchoolId(e.target.value)}
               required
               disabled={loading}
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition appearance-none"
+              className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
             >
               <option value="">Selecione a escola</option>
               {schools.map((s) => (
@@ -179,7 +179,7 @@ export default function ApplicationPage() {
           </label>
           <input
             id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} required disabled={loading}
-            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition"
           />
         </div>
 
@@ -189,7 +189,7 @@ export default function ApplicationPage() {
           </label>
           <input
             id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={loading}
-            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition"
           />
         </div>
 
@@ -199,7 +199,7 @@ export default function ApplicationPage() {
           </label>
           <input
             id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required disabled={loading}
-            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition"
           />
         </div>
 
@@ -209,7 +209,7 @@ export default function ApplicationPage() {
           </label>
           <select
             id="role" value={role} onChange={(e) => setRole(e.target.value)} required disabled={loading}
-            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition appearance-none"
+            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
           >
             <option value="">Selecione</option>
             <option value="teacher">Professor(a)</option>
@@ -229,7 +229,7 @@ export default function ApplicationPage() {
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
                 disabled={loading}
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition appearance-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
               >
                 <option value="">Selecione</option>
                 <option value="masculino">Masculino</option>
@@ -247,7 +247,7 @@ export default function ApplicationPage() {
                   value={documentType}
                   onChange={(e) => setDocumentType(e.target.value)}
                   disabled={loading}
-                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition appearance-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
                 >
                   <option value="">Selecione</option>
                   <option value="BI">BI</option>
@@ -264,7 +264,7 @@ export default function ApplicationPage() {
                   value={documentNumber}
                   onChange={(e) => setDocumentNumber(e.target.value)}
                   disabled={loading}
-                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition"
                 />
               </div>
             </div>
@@ -279,7 +279,7 @@ export default function ApplicationPage() {
                 value={dateOfBirth}
                 onChange={(e) => setDateOfBirth(e.target.value)}
                 disabled={loading}
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition"
               />
             </div>
 
@@ -292,7 +292,7 @@ export default function ApplicationPage() {
                 value={desiredGrade}
                 onChange={(e) => setDesiredGrade(e.target.value)}
                 disabled={loading}
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition appearance-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
               >
                 <option value="">Selecione a classe</option>
                 {Array.from({ length: 13 }, (_, i) => i + 1).map((g) => (
@@ -316,7 +316,7 @@ export default function ApplicationPage() {
                     value={desiredCourseId}
                     onChange={(e) => setDesiredCourseId(e.target.value)}
                     disabled={loading}
-                    className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition appearance-none"
+                    className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
                   >
                     <option value="">Selecione o curso</option>
                     {courses.map((c) => (
@@ -339,13 +339,13 @@ export default function ApplicationPage() {
             id="message" value={message} onChange={(e) => setMessage(e.target.value)} disabled={loading}
             placeholder="Informações adicionais..."
             rows={3}
-            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
+            className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition resize-none"
           />
         </div>
 
         <button
           type="submit" disabled={loading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 shadow-lg shadow-indigo-600/25 transition disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-medium text-sm hover:bg-primary-700 shadow-lg shadow-primary/25 transition disabled:opacity-50"
         >
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           {loading ? "Enviando..." : "Enviar solicitação"}
@@ -354,7 +354,7 @@ export default function ApplicationPage() {
 
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
         Já tem um código?{" "}
-        <Link href="/aplicacao/status" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
+        <Link href="/aplicacao/status" className="text-primary dark:text-primary-400 font-medium hover:underline">
           Acompanhar status
         </Link>
       </p>

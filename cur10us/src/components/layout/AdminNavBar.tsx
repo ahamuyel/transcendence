@@ -30,7 +30,7 @@ const AdminNavBar = () => {
       <div className="flex items-center gap-3">
         <Link href="/admin" className="flex items-center gap-1.5">
           <span className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">
-            Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
+            Cur10us<span className="text-primary dark:text-primary-400">X</span>
           </span>
         </Link>
         <span className="text-zinc-300 dark:text-zinc-700">|</span>

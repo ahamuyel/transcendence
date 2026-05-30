@@ -148,7 +148,7 @@ const MobileNav = () => {
       >
         <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
           <Link href="/" onClick={() => setDrawerOpen(false)} className="font-bold text-zinc-900 dark:text-zinc-100">
-            Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
+            Cur10us<span className="text-primary dark:text-primary-400">X</span>
           </Link>
           <button
             onClick={() => setDrawerOpen(false)}
@@ -175,7 +175,7 @@ const MobileNav = () => {
                     href={href}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400"
+                        ? "bg-primary-50 dark:bg-primary-950/50 text-primary dark:text-primary-400"
                         : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-200"
                     }`}
                   >
@@ -212,7 +212,7 @@ const MobileNav = () => {
                 href={href}
                 className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-colors min-w-[56px] ${
                   isActive
-                    ? "text-indigo-600 dark:text-indigo-400"
+                    ? "text-primary dark:text-primary-400"
                     : "text-zinc-400 dark:text-zinc-500"
                 }`}
               >
@@ -227,7 +227,7 @@ const MobileNav = () => {
             href="/list/announcements"
             className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-colors min-w-[56px] relative ${
               pathname.startsWith("/list/announcements")
-                ? "text-indigo-600 dark:text-indigo-400"
+                ? "text-primary dark:text-primary-400"
                 : "text-zinc-400 dark:text-zinc-500"
             }`}
           >
@@ -247,7 +247,7 @@ const MobileNav = () => {
             onClick={() => setDrawerOpen(!drawerOpen)}
             className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-colors min-w-[56px] ${
               drawerOpen
-                ? "text-indigo-600 dark:text-indigo-400"
+                ? "text-primary dark:text-primary-400"
                 : "text-zinc-400 dark:text-zinc-500"
             }`}
           >

@@ -75,7 +75,7 @@ export default function SchoolForm({ initialData, onSubmit, onCancel }: SchoolFo
               defaultValue={initialData?.[f.name as keyof typeof initialData] || ""}
               placeholder={f.placeholder}
               disabled={loading}
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
             />
           </div>
         ))}
@@ -93,7 +93,7 @@ export default function SchoolForm({ initialData, onSubmit, onCancel }: SchoolFo
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition disabled:opacity-50"
         >
           {loading && <Loader2 className="w-4 h-4 animate-spin" />}
           {initialData ? "Salvar" : "Criar escola"}

@@ -196,6 +196,17 @@ function applyColors(primary: string | null, secondary: string | null) {
     doc.style.setProperty("--school-primary", primary)
     try {
       const { h, s, l } = hexToHSL(primary)
+      doc.style.setProperty("--school-primary-50", `hsl(${h}, ${s}%, ${Math.min(l + 45, 97)}%)`)
+      doc.style.setProperty("--school-primary-100", `hsl(${h}, ${s}%, ${Math.min(l + 40, 95)}%)`)
+      doc.style.setProperty("--school-primary-200", `hsl(${h}, ${s}%, ${Math.min(l + 30, 85)}%)`)
+      doc.style.setProperty("--school-primary-300", `hsl(${h}, ${s}%, ${Math.min(l + 20, 75)}%)`)
+      doc.style.setProperty("--school-primary-400", `hsl(${h}, ${s}%, ${Math.min(l + 10, 65)}%)`)
+      doc.style.setProperty("--school-primary-500", `hsl(${h}, ${s}%, ${l}%)`)
+      doc.style.setProperty("--school-primary-600", `hsl(${h}, ${s}%, ${Math.max(l - 8, 30)}%)`)
+      doc.style.setProperty("--school-primary-700", `hsl(${h}, ${s}%, ${Math.max(l - 15, 22)}%)`)
+      doc.style.setProperty("--school-primary-800", `hsl(${h}, ${s}%, ${Math.max(l - 22, 15)}%)`)
+      doc.style.setProperty("--school-primary-900", `hsl(${h}, ${s}%, ${Math.max(l - 30, 10)}%)`)
+      doc.style.setProperty("--school-primary-950", `hsl(${h}, ${s}%, ${Math.max(l - 40, 5)}%)`)
       doc.style.setProperty("--school-primary-light", `hsl(${h}, ${s}%, ${Math.min(l + 40, 95)}%)`)
       doc.style.setProperty("--school-primary-dark", `hsl(${h}, ${s}%, ${Math.max(l - 30, 10)}%)`)
     } catch { /* ignore */ }

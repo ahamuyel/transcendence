@@ -5,9 +5,9 @@ const profiles = [
   {
     icon: LayoutDashboard,
     role: "Gestores Escolares",
-    gradient: "from-indigo-500 to-indigo-600",
-    accent: "text-indigo-600 dark:text-indigo-400",
-    border: "hover:border-indigo-300 dark:hover:border-indigo-800",
+    gradient: "from-primary-500 to-primary-600",
+    accent: "text-primary dark:text-primary-400",
+    border: "hover:border-primary-300 dark:hover:border-primary-800",
     benefits: [
       "Visão geral da escola em tempo real",
       "Relatórios de desempenho e assiduidade",
@@ -64,12 +64,12 @@ export default function ProfilesSection() {
 
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-20">
-          <span className="inline-block text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/50 px-4 py-1.5 rounded-full border border-indigo-200/50 dark:border-indigo-800/50 mb-6">
+          <span className="inline-block text-sm font-medium text-primary dark:text-primary-400 bg-primary-50/80 dark:bg-primary-950/50 px-4 py-1.5 rounded-full border border-primary-200/50 dark:border-primary-800/50 mb-6">
             Para toda a comunidade
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mb-5 tracking-tight">
             Uma experiência para{" "}
-            <span className="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-600 to-primary-600 dark:from-primary-400 dark:to-primary-400 bg-clip-text text-transparent">
               cada perfil
             </span>
           </h2>

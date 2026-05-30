@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import { getDashboardPath } from "@/lib/routes"
 import { isFeatureEnabled, menuFeatureMap } from "@/lib/features"
 import { useSchoolBranding } from "@/provider/school-branding"
+import { usePlatformBranding } from "@/provider/platform-branding"
 import { useSidebar } from "@/hooks/useSidebar"
 import { navGroups, type NavItem } from "@/lib/routes.config"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
@@ -140,6 +141,7 @@ export default function AppSidebar() {
   const { collapsed, setCollapsed } = useSidebar()
   const { isVisible } = useNavFilter()
   const { name, logo } = useSchoolBranding()
+  const platform = usePlatformBranding()
   const homePath = getDashboardPath(session?.user?.id)
 
   const userName = session?.user?.name || "Utilizador"
@@ -187,21 +189,13 @@ export default function AppSidebar() {
                 alt={name || "Logo"}
                 className="w-7 h-7 rounded-lg object-contain shrink-0"
               />
-            ) : (
-              <span className="font-bold text-lg text-zinc-900 dark:text-zinc-100 shrink-0">
-                {collapsed ? (
-                  <>
-                    C<span className="text-primary">X</span>
-                  </>
-                ) : (
-                  <>
-                    Cur10us<span className="text-primary">X</span>
-                  </>
-                )}
+            ) : name ? (
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-primary/10 text-primary text-[11px] font-bold shrink-0">
+                {name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
               </span>
-            )}
+            ) : null}
             {!collapsed && name && (
-              <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate opacity-100 transition-opacity duration-200">
+              <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">
                 {name}
               </span>
             )}
@@ -309,6 +303,15 @@ export default function AppSidebar() {
             )
           })}
         </nav>
+
+        {/* Platform Name — after menu, before user */}
+        {!collapsed && (
+          <div className="px-4 py-2 shrink-0">
+            <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              {platform.name}
+            </p>
+          </div>
+        )}
 
         {/* User Section — always at bottom */}
         <div className="border-t border-zinc-200 dark:border-zinc-800 p-2 shrink-0">

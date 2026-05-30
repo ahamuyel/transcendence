@@ -103,7 +103,7 @@ const ParentListPage = () => {
         <div className="flex items-center gap-1 justify-end">
           <button
             onClick={() => setEditItem(item)}
-            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-indigo-600 hover:text-white transition-all active:scale-90"
+            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-primary hover:text-white transition-all active:scale-90"
           >
             <Pencil size={13} />
           </button>
@@ -153,7 +153,7 @@ const ParentListPage = () => {
             {isAdmin && (
               <button
                 onClick={() => setCreateOpen(true)}
-                className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-xs sm:text-sm active:scale-95 shadow-lg shadow-indigo-600/20 transition"
+                className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-primary text-white font-semibold text-xs sm:text-sm active:scale-95 shadow-lg shadow-primary/20 transition"
               >
                 <UserPlus size={16} />
                 <span className="hidden sm:inline">Adicionar</span>
@@ -166,7 +166,7 @@ const ParentListPage = () => {
       <div className="overflow-x-auto -mx-2.5 px-2.5 sm:-mx-4 sm:px-4 md:mx-0 md:px-0">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 size={24} className="animate-spin text-indigo-500" />
+            <Loader2 size={24} className="animate-spin text-primary" />
           </div>
         ) : data.length === 0 ? (
           <div className="text-center py-12 text-zinc-400 text-sm">Nenhum encarregado encontrado</div>

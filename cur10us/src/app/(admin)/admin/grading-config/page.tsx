@@ -110,7 +110,7 @@ export default function GradingConfigPage() {
   const [formLoading, setFormLoading] = useState(false)
 
   const inputClass =
-    "w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-zinc-900 dark:text-zinc-100"
+    "w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition text-zinc-900 dark:text-zinc-100"
 
   const fetchConfigs = useCallback(async () => {
     setLoading(true)
@@ -362,7 +362,7 @@ export default function GradingConfigPage() {
             type="checkbox"
             checked={form.recursoAllowed}
             onChange={(e) => setForm((f) => ({ ...f, recursoAllowed: e.target.checked }))}
-            className="w-4 h-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+            className="w-4 h-4 rounded border-zinc-300 text-primary focus:ring-primary"
           />
           <div>
             <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Recurso permitido</span>
@@ -375,7 +375,7 @@ export default function GradingConfigPage() {
             type="checkbox"
             checked={form.active}
             onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))}
-            className="w-4 h-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+            className="w-4 h-4 rounded border-zinc-300 text-primary focus:ring-primary"
           />
           <div>
             <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Activa</span>
@@ -399,7 +399,7 @@ export default function GradingConfigPage() {
         <button
           type="submit"
           disabled={formLoading}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20"
         >
           {formLoading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -419,7 +419,7 @@ export default function GradingConfigPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <Settings2 className="w-6 h-6 text-indigo-500" />
+            <Settings2 className="w-6 h-6 text-primary" />
             Configuracoes de Avaliacao
           </h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
@@ -428,7 +428,7 @@ export default function GradingConfigPage() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary-700 transition shadow-lg shadow-primary/20"
         >
           <Plus size={16} />
           Nova Configuracao
@@ -445,7 +445,7 @@ export default function GradingConfigPage() {
       {/* Loading */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 size={24} className="animate-spin text-indigo-500" />
+          <Loader2 size={24} className="animate-spin text-primary" />
         </div>
       ) : configs.length === 0 ? (
         <div className="text-center py-16 text-zinc-400 text-sm">
@@ -462,8 +462,8 @@ export default function GradingConfigPage() {
               {/* Card header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center">
-                    <Shield size={16} className="text-indigo-600 dark:text-indigo-400" />
+                  <div className="w-9 h-9 rounded-xl bg-primary-100 dark:bg-primary-950/40 flex items-center justify-center">
+                    <Shield size={16} className="text-primary dark:text-primary-400" />
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
@@ -483,7 +483,7 @@ export default function GradingConfigPage() {
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => openEdit(c)}
-                    className="p-2 rounded-lg text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition"
+                    className="p-2 rounded-lg text-zinc-400 hover:text-primary hover:bg-primary-50 dark:hover:bg-primary-950/30 transition"
                     title="Editar"
                   >
                     <Pencil size={15} />

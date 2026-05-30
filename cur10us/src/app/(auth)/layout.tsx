@@ -1,6 +1,24 @@
 import Link from "next/link"
+import { getPlatformConfig } from "@/lib/platform-config"
 
-export default function AuthLayout({
+async function PlatformName({ small }: { small?: boolean }) {
+  const config = await getPlatformConfig()
+  const name = config.name
+  const cls = small ? "text-xs" : "text-2xl font-bold tracking-tight"
+  if (name === "Cur10usX") {
+    return (
+      <span className={cls}>
+        Cur10us
+        <span className={small ? "" : "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"}>
+          X
+        </span>
+      </span>
+    )
+  }
+  return <span className={cls}>{name}</span>
+}
+
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode
@@ -18,12 +36,7 @@ export default function AuthLayout({
         <div className="w-full max-w-sm mb-6 sm:mb-8">
           <div className="flex justify-center">
             <Link href="/" className="flex items-center gap-2.5">
-              <span className="text-2xl font-bold tracking-tight">
-                Cur10us
-                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  X
-                </span>
-              </span>
+              <PlatformName />
             </Link>
           </div>
         </div>
@@ -36,7 +49,7 @@ export default function AuthLayout({
         {/* Footer */}
         <div className="w-full max-w-sm mt-6 sm:mt-8">
           <p className="text-center text-xs text-zinc-400 dark:text-zinc-500">
-            &copy; {new Date().getFullYear()} Cur10usX. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} <PlatformName small />. Todos os direitos reservados.
           </p>
         </div>
       </div>

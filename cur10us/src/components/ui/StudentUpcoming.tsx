@@ -34,7 +34,7 @@ export default function StudentUpcoming({ exams, assignments }: Props) {
   return (
     <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 shadow-sm">
       <div className="flex items-center gap-2 mb-4">
-        <Calendar className="w-4 h-4 text-indigo-500" />
+        <Calendar className="w-4 h-4 text-primary" />
         <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Próximos Eventos</h3>
       </div>
 
@@ -55,7 +55,7 @@ export default function StudentUpcoming({ exams, assignments }: Props) {
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                   item.kind === "exam"
                     ? "bg-rose-100 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
-                    : "bg-indigo-100 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400"
+                    : "bg-primary-100 dark:bg-primary-950/30 text-primary dark:text-primary-400"
                 }`}>
                   {item.kind === "exam" ? <FileText size={14} /> : <ClipboardList size={14} />}
                 </div>

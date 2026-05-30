@@ -64,7 +64,7 @@ const LEVEL_LABELS: Record<string, string> = {
 const LEVEL_OPTIONS = Object.entries(LEVEL_LABELS)
 
 const inputClass =
-  "w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-zinc-900 dark:text-zinc-100"
+  "w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition text-zinc-900 dark:text-zinc-100"
 
 const selectClass = inputClass + " appearance-none"
 
@@ -190,7 +190,7 @@ function SubjectsTab() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition shadow-lg shadow-primary/20"
         >
           <Plus size={16} /> Nova Disciplina
         </button>
@@ -200,7 +200,7 @@ function SubjectsTab() {
       <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
+            <Loader2 className="w-5 h-5 animate-spin text-primary" />
           </div>
         ) : items.length === 0 ? (
           <div className="text-center py-16 text-sm text-zinc-400">Nenhuma disciplina encontrada</div>
@@ -229,7 +229,7 @@ function SubjectsTab() {
                     <td className="px-4 py-3 text-zinc-500">{s._count.schoolSubjects}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition">
+                        <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-zinc-400 hover:text-primary hover:bg-primary-50 dark:hover:bg-primary-950/30 transition">
                           <Pencil size={15} />
                         </button>
                         <button onClick={() => setDeleteTarget(s)} className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition">
@@ -254,7 +254,7 @@ function SubjectsTab() {
               onClick={() => setPage(p)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
                 p === page
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-primary text-white"
                   : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
               }`}
             >
@@ -280,7 +280,7 @@ function SubjectsTab() {
             <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
               Cancelar
             </button>
-            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20">
+            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {saving ? "A guardar..." : "Guardar"}
             </button>
@@ -406,7 +406,7 @@ function CoursesTab() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition shadow-lg shadow-primary/20"
         >
           <Plus size={16} /> Novo Curso
         </button>
@@ -415,7 +415,7 @@ function CoursesTab() {
       <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
+            <Loader2 className="w-5 h-5 animate-spin text-primary" />
           </div>
         ) : items.length === 0 ? (
           <div className="text-center py-16 text-sm text-zinc-400">Nenhum curso encontrado</div>
@@ -444,7 +444,7 @@ function CoursesTab() {
                     <td className="px-4 py-3 text-zinc-500">{c._count.schoolCourses}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(c)} className="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition">
+                        <button onClick={() => openEdit(c)} className="p-1.5 rounded-lg text-zinc-400 hover:text-primary hover:bg-primary-50 dark:hover:bg-primary-950/30 transition">
                           <Pencil size={15} />
                         </button>
                         <button onClick={() => setDeleteTarget(c)} className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition">
@@ -468,7 +468,7 @@ function CoursesTab() {
               onClick={() => setPage(p)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
                 p === page
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-primary text-white"
                   : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
               }`}
             >
@@ -493,7 +493,7 @@ function CoursesTab() {
             <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
               Cancelar
             </button>
-            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20">
+            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {saving ? "A guardar..." : "Guardar"}
             </button>
@@ -624,7 +624,7 @@ function ClassesTab() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20 shrink-0"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition shadow-lg shadow-primary/20 shrink-0"
         >
           <Plus size={16} /> Nova Classe
         </button>
@@ -633,7 +633,7 @@ function ClassesTab() {
       <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
+            <Loader2 className="w-5 h-5 animate-spin text-primary" />
           </div>
         ) : items.length === 0 ? (
           <div className="text-center py-16 text-sm text-zinc-400">Nenhuma classe encontrada</div>
@@ -664,7 +664,7 @@ function ClassesTab() {
                     <td className="px-4 py-3 text-zinc-500">{c._count.schoolClasses}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(c)} className="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition">
+                        <button onClick={() => openEdit(c)} className="p-1.5 rounded-lg text-zinc-400 hover:text-primary hover:bg-primary-50 dark:hover:bg-primary-950/30 transition">
                           <Pencil size={15} />
                         </button>
                         <button onClick={() => setDeleteTarget(c)} className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition">
@@ -704,7 +704,7 @@ function ClassesTab() {
             <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
               Cancelar
             </button>
-            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20">
+            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {saving ? "A guardar..." : "Guardar"}
             </button>
@@ -827,7 +827,7 @@ function CyclesTab() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20 shrink-0"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition shadow-lg shadow-primary/20 shrink-0"
         >
           <Plus size={16} /> Novo Ciclo
         </button>
@@ -836,7 +836,7 @@ function CyclesTab() {
       <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
+            <Loader2 className="w-5 h-5 animate-spin text-primary" />
           </div>
         ) : items.length === 0 ? (
           <div className="text-center py-16 text-sm text-zinc-400">Nenhum ciclo encontrado</div>
@@ -867,7 +867,7 @@ function CyclesTab() {
                     <td className="px-4 py-3 text-zinc-500">{cy._count.globalClasses}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(cy)} className="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition">
+                        <button onClick={() => openEdit(cy)} className="p-1.5 rounded-lg text-zinc-400 hover:text-primary hover:bg-primary-50 dark:hover:bg-primary-950/30 transition">
                           <Pencil size={15} />
                         </button>
                         <button onClick={() => setDeleteTarget(cy)} className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition">
@@ -912,7 +912,7 @@ function CyclesTab() {
             <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
               Cancelar
             </button>
-            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20">
+            <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {saving ? "A guardar..." : "Guardar"}
             </button>
@@ -957,7 +957,7 @@ export default function AdminCatalogPage() {
             onClick={() => setActiveTab(key)}
             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition ${
               activeTab === key
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                ? "bg-primary text-white shadow-lg shadow-primary/20"
                 : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
             }`}
           >

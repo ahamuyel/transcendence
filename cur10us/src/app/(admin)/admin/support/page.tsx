@@ -80,7 +80,7 @@ export default function AdminSupportPage() {
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}
-            className="px-2 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="px-2 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition"
           >
             <option value="">Todos os estados</option>
             <option value="aberto">Aberto</option>
@@ -91,7 +91,7 @@ export default function AdminSupportPage() {
           <select
             value={priorityFilter}
             onChange={(e) => { setPriorityFilter(e.target.value); setPage(1) }}
-            className="px-2 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="px-2 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm border-0 outline-none focus:ring-2 focus:ring-primary transition"
           >
             <option value="">Todas as prioridades</option>
             <option value="baixa">Baixa</option>
@@ -104,7 +104,7 @@ export default function AdminSupportPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 size={24} className="animate-spin text-indigo-500" />
+          <Loader2 size={24} className="animate-spin text-primary" />
         </div>
       ) : tickets.length === 0 ? (
         <div className="text-center py-12">

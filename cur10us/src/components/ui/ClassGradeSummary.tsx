@@ -32,14 +32,14 @@ const ClassGradeSummary = ({ classId, trimester, academicYear }: Props) => {
       .finally(() => setLoading(false))
   }, [classId, trimester, academicYear])
 
-  if (loading) return <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin text-indigo-500" /></div>
+  if (loading) return <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin text-primary" /></div>
   if (!data) return <div className="text-sm text-zinc-400 text-center py-4">Sem dados</div>
 
   return (
     <div className="flex flex-col gap-4">
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-900 text-center">
+        <div className="p-3 rounded-xl bg-primary-50 dark:bg-primary-950/20 border border-primary-200 dark:border-primary-900 text-center">
           <p className="text-[10px] text-zinc-500 uppercase font-bold">Média da Turma</p>
           <p className={`text-lg font-bold ${scoreColor(data.classAverage)}`}>{data.classAverage ?? "—"}</p>
         </div>

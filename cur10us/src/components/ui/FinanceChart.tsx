@@ -66,7 +66,7 @@ const FinanceChart = () => {
       {data.length > 0 && (
       <div className="flex justify-center gap-4 sm:gap-6 mt-2 sm:mt-4 text-xs sm:text-sm text-zinc-700 dark:text-zinc-300">
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-indigo-600" />
+          <span className="w-3 h-3 rounded-full bg-primary" />
           <span>Receita</span>
         </div>
         <div className="flex items-center gap-1.5">

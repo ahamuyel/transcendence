@@ -17,7 +17,7 @@ type Props = {
   onCancel: () => void
 }
 
-const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary transition"
 
 const EvaluateSubmissionForm = ({ submission, maxScore, onSuccess, onCancel }: Props) => {
   const [score, setScore] = useState("")
@@ -65,7 +65,7 @@ const EvaluateSubmissionForm = ({ submission, maxScore, onSuccess, onCancel }: P
         <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{submission.student?.name}</p>
         {submission.content && <p className="text-xs text-zinc-500 mt-1">{submission.content}</p>}
         {submission.attachmentUrl && (
-          <a href={submission.attachmentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-600 hover:underline mt-1 block">
+          <a href={submission.attachmentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline mt-1 block">
             Ver anexo
           </a>
         )}
@@ -98,7 +98,7 @@ const EvaluateSubmissionForm = ({ submission, maxScore, onSuccess, onCancel }: P
         <button type="button" onClick={onCancel} className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
           Cancelar
         </button>
-        <button type="submit" disabled={loading} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20">
+        <button type="submit" disabled={loading} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20">
           {loading ? "Avaliando..." : "Avaliar"}
         </button>
       </div>

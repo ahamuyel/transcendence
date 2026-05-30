@@ -24,7 +24,7 @@ export default function DashboardHub() {
 
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
-      <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+      <Loader2 className="w-6 h-6 animate-spin text-primary" />
     </div>
   )
 }

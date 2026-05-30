@@ -6,7 +6,7 @@ export default function CTASection() {
     <section className="py-28 px-6 relative overflow-hidden">
       <div className="max-w-4xl mx-auto relative">
         {/* Background card */}
-        <div className="relative rounded-[2rem] bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 p-12 sm:p-16 text-center overflow-hidden">
+        <div className="relative rounded-[2rem] bg-gradient-to-br from-primary-600 via-primary-600 to-primary-700 p-12 sm:p-16 text-center overflow-hidden">
           {/* Decorative elements */}
           <div className="absolute inset-0">
             <div className="absolute top-[-50%] left-[-20%] w-[500px] h-[500px] rounded-full bg-white/10 blur-3xl" />
@@ -15,7 +15,7 @@ export default function CTASection() {
           </div>
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 text-sm font-medium text-indigo-200 bg-white/10 px-4 py-1.5 rounded-full mb-8 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 text-sm font-medium text-primary-200 bg-white/10 px-4 py-1.5 rounded-full mb-8 backdrop-blur-sm">
               <Sparkles className="w-4 h-4" />
               Comece hoje mesmo
             </div>
@@ -25,14 +25,14 @@ export default function CTASection() {
               <br />
               a gestão da sua escola?
             </h2>
-            <p className="text-indigo-100 mb-10 max-w-lg mx-auto text-lg leading-relaxed">
+            <p className="text-primary-100 mb-10 max-w-lg mx-auto text-lg leading-relaxed">
               Registe a sua escola e comece a gerir alunos, professores e resultados de forma moderna e eficiente.
             </p>
 
             <div className="flex gap-4 flex-wrap justify-center">
               <Link
                 href="/signin"
-                className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-white text-indigo-700 font-bold hover:bg-indigo-50 shadow-xl shadow-black/20 transition-all hover:scale-[1.03] active:scale-[0.98]"
+                className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-white text-primary-700 font-bold hover:bg-primary-50 shadow-xl shadow-black/20 transition-all hover:scale-[1.03] active:scale-[0.98]"
               >
                 Entrar na plataforma
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

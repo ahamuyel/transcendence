@@ -47,7 +47,7 @@ export default function StatsPage() {
   if (loading || !data) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -182,8 +182,8 @@ function SectionTitle({ title }: { title: string }) {
 
 const colorMap: Record<string, { iconBg: string; iconText: string }> = {
   indigo: {
-    iconBg: "bg-indigo-50 dark:bg-indigo-950/40",
-    iconText: "text-indigo-600",
+    iconBg: "bg-primary-50 dark:bg-primary-950/40",
+    iconText: "text-primary",
   },
   emerald: {
     iconBg: "bg-emerald-50 dark:bg-emerald-950/40",

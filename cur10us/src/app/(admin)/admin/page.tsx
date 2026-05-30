@@ -72,13 +72,13 @@ export default function AdminDashboard() {
   if (loading || !data) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
 
   const cards = [
-    { icon: School, label: "Escolas ativas", value: data.activeSchools, color: "text-indigo-600 bg-indigo-100 dark:bg-indigo-950 dark:text-indigo-400" },
+    { icon: School, label: "Escolas ativas", value: data.activeSchools, color: "text-primary bg-primary-100 dark:bg-primary-950 dark:text-primary-400" },
     { icon: School, label: "Escolas pendentes", value: data.pendingSchools, color: "text-amber-600 bg-amber-100 dark:bg-amber-950 dark:text-amber-400" },
     { icon: Users, label: "Utilizadores", value: data.totalUsers, color: "text-cyan-600 bg-cyan-100 dark:bg-cyan-950 dark:text-cyan-400" },
     { icon: FileText, label: "Solicitações pendentes", value: data.pendingApplications, color: "text-rose-600 bg-rose-100 dark:bg-rose-950 dark:text-rose-400" },
@@ -202,7 +202,7 @@ export default function AdminDashboard() {
         <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <div className="flex items-center justify-between p-4 sm:px-6 sm:pt-6 sm:pb-3">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Escolas Recentes</h2>
-            <Link href="/admin/schools" className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Link href="/admin/schools" className="text-xs text-primary dark:text-primary-400 hover:underline">
               Ver todas
             </Link>
           </div>
@@ -212,7 +212,7 @@ export default function AdminDashboard() {
                 {data.recentSchools.map((s) => (
                   <tr key={s.id} className="border-t border-zinc-100 dark:border-zinc-800">
                     <td className="px-4 sm:px-6 py-3">
-                      <Link href={`/admin/schools/${s.id}`} className="font-medium text-zinc-900 dark:text-zinc-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                      <Link href={`/admin/schools/${s.id}`} className="font-medium text-zinc-900 dark:text-zinc-100 hover:text-primary dark:hover:text-primary-400 transition">
                         {s.name}
                       </Link>
                       <div className="text-xs text-zinc-400">{s.city}</div>
@@ -236,7 +236,7 @@ export default function AdminDashboard() {
         <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <div className="flex items-center justify-between p-4 sm:px-6 sm:pt-6 sm:pb-3">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Solicitações Recentes</h2>
-            <Link href="/admin/applications" className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Link href="/admin/applications" className="text-xs text-primary dark:text-primary-400 hover:underline">
               Ver todas
             </Link>
           </div>

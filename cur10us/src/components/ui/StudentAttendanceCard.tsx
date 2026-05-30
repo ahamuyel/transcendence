@@ -19,7 +19,7 @@ const StudentAttendanceCard = ({ studentId }: Props) => {
       .finally(() => setLoading(false))
   }, [studentId])
 
-  if (loading) return <div className="flex justify-center py-4"><Loader2 size={16} className="animate-spin text-indigo-500" /></div>
+  if (loading) return <div className="flex justify-center py-4"><Loader2 size={16} className="animate-spin text-primary" /></div>
   if (!data || data.total === 0) return <div className="text-sm text-zinc-400 text-center py-3">Sem registos</div>
 
   const pctColor = data.percentage >= 90 ? "text-emerald-600" : data.percentage >= 75 ? "text-amber-600" : "text-rose-600"

@@ -36,13 +36,13 @@ const StudentGradeSummary = ({ studentId, trimester, academicYear }: Props) => {
       .finally(() => setLoading(false))
   }, [studentId, trimester, academicYear])
 
-  if (loading) return <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin text-indigo-500" /></div>
+  if (loading) return <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin text-primary" /></div>
   if (!data || data.totalResults === 0) return <div className="text-sm text-zinc-400 text-center py-4">Sem resultados disponíveis</div>
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-900">
-        <span className="text-sm font-semibold text-indigo-900 dark:text-indigo-100">Média Geral</span>
+      <div className="flex items-center justify-between p-3 rounded-xl bg-primary-50 dark:bg-primary-950/20 border border-primary-200 dark:border-primary-900">
+        <span className="text-sm font-semibold text-primary-900 dark:text-primary-100">Média Geral</span>
         <span className={`text-lg font-bold ${scoreColor(data.generalAverage)}`}>{data.generalAverage}</span>
       </div>
 

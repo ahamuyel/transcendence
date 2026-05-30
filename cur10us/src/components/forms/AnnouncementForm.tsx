@@ -23,7 +23,7 @@ type Props = {
 
 type Option = { id: string; name: string }
 
-const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+const inputClass = "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary transition"
 
 const AnnouncementForm = ({ mode, initialData, onSuccess, onCancel }: Props) => {
   const [form, setForm] = useState({
@@ -203,7 +203,7 @@ const AnnouncementForm = ({ mode, initialData, onSuccess, onCancel }: Props) => 
         <button
           type="submit"
           disabled={loading}
-          className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20"
+          className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-700 transition disabled:opacity-50 shadow-lg shadow-primary/20"
         >
           {loading ? "Salvando..." : mode === "edit" ? "Salvar" : "Criar"}
         </button>

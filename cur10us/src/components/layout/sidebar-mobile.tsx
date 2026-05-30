@@ -10,6 +10,7 @@ import { getDashboardPath } from "@/lib/routes"
 import { isFeatureEnabled, menuFeatureMap } from "@/lib/features"
 import { navGroups, type NavItem } from "@/lib/routes.config"
 import { useSidebar } from "@/hooks/useSidebar"
+import { usePlatformBranding } from "@/provider/platform-branding"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 
@@ -56,6 +57,17 @@ function useGroupState(groupTitles: string[]) {
   }, [])
 
   return { openGroups, toggleGroup }
+}
+
+function MobilePlatformBrand() {
+  const { name } = usePlatformBranding()
+  return (
+    <div className="px-4 py-2 shrink-0">
+      <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+        {name}
+      </p>
+    </div>
+  )
 }
 
 export default function SidebarMobile() {
@@ -114,7 +126,7 @@ export default function SidebarMobile() {
       >
         <div className="flex items-center justify-between h-14 px-4 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
           <Link href="/dashboard" className="font-bold text-zinc-900 dark:text-zinc-100">
-            Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
+            Dashboard
           </Link>
           <button
             onClick={() => setMobileOpen(false)}
@@ -165,7 +177,7 @@ export default function SidebarMobile() {
                           className={cn(
                             "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
                             isActive
-                              ? "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400"
+                              ? "bg-primary-50 dark:bg-primary-950/40 text-primary dark:text-primary-400"
                               : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-200"
                           )}
                         >
@@ -186,11 +198,14 @@ export default function SidebarMobile() {
           })}
         </div>
 
+        {/* Platform Name */}
+        <MobilePlatformBrand />
+
         <div className="border-t border-zinc-200 dark:border-zinc-800 p-3 shrink-0">
           <div className="flex items-center gap-3 px-2 py-1.5 mb-2">
             <Avatar className="h-9 w-9 border border-zinc-200 dark:border-zinc-700">
               {userImage ? <AvatarImage src={userImage} alt={userName} /> : null}
-              <AvatarFallback className="text-xs font-semibold bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
+              <AvatarFallback className="text-xs font-semibold bg-primary-100 dark:bg-primary-950 text-primary dark:text-primary-400">
                 {userInitials}
               </AvatarFallback>
             </Avatar>

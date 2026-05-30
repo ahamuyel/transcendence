@@ -6,6 +6,19 @@ import { useRouter, usePathname } from "next/navigation"
 import { LogOut, Loader2 } from "lucide-react"
 import ThemeToggle from "@/components/ui/ThemeToggle"
 import { on } from "@/hooks/useWebSocket"
+import { usePlatformBranding } from "@/provider/platform-branding"
+
+function MinhaAreaBrand() {
+  const { name } = usePlatformBranding()
+  if (name === "Cur10usX") {
+    return (
+      <span className="font-bold text-zinc-900 dark:text-zinc-100">
+        Cur10us<span className="text-primary dark:text-primary-400">X</span>
+      </span>
+    )
+  }
+  return <span className="font-bold text-zinc-900 dark:text-zinc-100">{name}</span>
+}
 
 export default function MinhaAreaLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status, update } = useSession()
@@ -54,7 +67,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -67,7 +80,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   )) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -77,9 +90,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
       {/* Top bar */}
       <header className="sticky top-0 z-30 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 h-14">
-          <span className="font-bold text-zinc-900 dark:text-zinc-100">
-            Cur10us<span className="text-indigo-600 dark:text-indigo-400">X</span>
-          </span>
+          <MinhaAreaBrand />
 
           <div className="flex items-center gap-2">
             {session?.user?.name && (

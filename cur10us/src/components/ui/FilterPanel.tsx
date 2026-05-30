@@ -60,13 +60,13 @@ const FilterPanel = ({ config, filters, onChange, onClear, activeCount }: Filter
         onClick={() => setOpen(!open)}
         className={`p-2 sm:p-2.5 rounded-xl transition active:scale-95 relative ${
           activeCount > 0
-            ? "bg-indigo-100 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400"
+            ? "bg-primary-100 dark:bg-primary-950/50 text-primary dark:text-primary-400"
             : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
         }`}
       >
         <SlidersHorizontal size={16} />
         {activeCount > 0 && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-indigo-600 text-white text-[9px] font-bold flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center">
             {activeCount}
           </span>
         )}
@@ -79,7 +79,7 @@ const FilterPanel = ({ config, filters, onChange, onClear, activeCount }: Filter
             {activeCount > 0 && (
               <button
                 onClick={() => { onClear(); setOpen(false) }}
-                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+                className="text-xs text-primary dark:text-primary-400 hover:underline flex items-center gap-1"
               >
                 <X size={12} /> Limpar
               </button>
@@ -95,7 +95,7 @@ const FilterPanel = ({ config, filters, onChange, onClear, activeCount }: Filter
                     <select
                       value={filters[c.key] || ""}
                       onChange={(e) => handleChange(c.key, e.target.value)}
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="">Todos</option>
                       {opts.map((o) => (
@@ -113,7 +113,7 @@ const FilterPanel = ({ config, filters, onChange, onClear, activeCount }: Filter
                       type="date"
                       value={filters[c.key] || ""}
                       onChange={(e) => handleChange(c.key, e.target.value)}
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
                 )
@@ -127,7 +127,7 @@ const FilterPanel = ({ config, filters, onChange, onClear, activeCount }: Filter
                         type="date"
                         value={filters[`${c.key}Start`] || ""}
                         onChange={(e) => handleChange(`${c.key}Start`, e.target.value)}
-                        className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
                     <div className="flex-1">
@@ -136,7 +136,7 @@ const FilterPanel = ({ config, filters, onChange, onClear, activeCount }: Filter
                         type="date"
                         value={filters[`${c.key}End`] || ""}
                         onChange={(e) => handleChange(`${c.key}End`, e.target.value)}
-                        className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
                   </div>
