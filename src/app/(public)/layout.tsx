@@ -2,8 +2,13 @@ import Link from "next/link"
 import { getPlatformConfig } from "@/lib/platform-config"
 
 async function PublicBrand() {
-  const config = await getPlatformConfig()
-  const name = config.name
+  let name = "Cur10usX"
+  try {
+    const config = await getPlatformConfig()
+    name = config.name
+  } catch {
+    /* fallback to default name when DB is unavailable */
+  }
   if (name === "Cur10usX") {
     return (
       <span className="text-lg font-bold tracking-tight">

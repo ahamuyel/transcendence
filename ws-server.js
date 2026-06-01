@@ -4,6 +4,8 @@ const Redis = require("ioredis")
 
 const WS_PORT = parseInt(process.env.WS_PORT, 10) || 3001
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379"
+const APP_HOST = process.env.APP_HOST || "localhost"
+const APP_PORT = parseInt(process.env.APP_PORT, 10) || 3000
 
 const wss = new WebSocketServer({ port: WS_PORT })
 const clients = new Map()
@@ -96,8 +98,8 @@ function verifyToken(token) {
   return new Promise((resolve) => {
     const data = JSON.stringify({ token })
     const options = {
-      hostname: "localhost",
-      port: 3000,
+      hostname: APP_HOST,
+      port: APP_PORT,
       path: "/api/auth/verify-ws",
       method: "POST",
       headers: {
