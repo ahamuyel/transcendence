@@ -18,7 +18,12 @@ const geistMono = Geist_Mono({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const config = await getPlatformConfig();
+  let config
+  try {
+    config = await getPlatformConfig()
+  } catch {
+    config = { name: "Cur10usX", description: "Plataforma de gestão escolar" }
+  }
   return {
     title: config.name,
     description: config.description || "Plataforma de gestão escolar",
