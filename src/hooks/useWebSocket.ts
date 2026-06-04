@@ -2,7 +2,8 @@
 import { useEffect, useRef, useCallback } from "react"
 import { useSession } from "next-auth/react"
 
-type WSEvent = "notification" | "message" | "friend_request" | "friend_accepted" | "online_status" | "session-update" | "chat_message" | "messages-read" | "messages-delivered" | "auth_ok" | "auth_error"
+type WSEvent = "notification" | "message" | "friend_request" | "friend_accepted" | "online_status" | "session-update" | "chat_message" | "messages-read" | "messages-delivered" | "auth_ok" | "auth_error" | "typing" | "message_read"
+
 
 type WSCallback = (payload: unknown) => void
 
@@ -16,6 +17,16 @@ export function on(event: WSEvent, cb: WSCallback) {
 
 export function off(event: WSEvent, cb: WSCallback) {
   listeners.get(event)?.delete(cb)
+}
+
+export function joinRoom(wsRef: React.RefObject<WebSocket | null>, conversationId: string) {
+  wsRef.current?.send(JSON.stringify({ type: "join_room", roomId: conversationId }))
+}
+export function sendTyping(wsRef: React.RefObject<WebSocket | null>, conversationId: string, isTyping: boolean) {
+  wsRef.current?.send(JSON.stringify({ type: "typing", roomId: conversationId, isTyping }))
+}
+export function markRead(wsRef: React.RefObject<WebSocket | null>, messageId: string, senderId: string) {
+  wsRef.current?.send(JSON.stringify({ type: "message_read", messageId, senderId }))
 }
 
 let wsToken: string | null = null
@@ -34,7 +45,7 @@ function scheduleTokenRefresh() {
   if (tokenRefreshTimer) clearTimeout(tokenRefreshTimer)
   tokenRefreshTimer = setTimeout(() => {
     wsToken = null
-    fetchToken().catch(() => {})
+    fetchToken().catch(() => { })
   }, 240000)
 }
 
@@ -54,7 +65,7 @@ export function useWebSocket() {
   const { data: session } = useSession()
   const wsRef = useRef<WebSocket | null>(null)
   const reconnectRef = useRef<ReturnType<typeof setTimeout>>(undefined)
-  const connectRef = useRef<() => void>(() => {})
+  const connectRef = useRef<() => void>(() => { })
 
   const connect = useCallback(() => {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
