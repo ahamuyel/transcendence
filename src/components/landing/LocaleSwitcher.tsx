@@ -6,6 +6,7 @@ import { LOCALE_COOKIE } from "@/lib/i18n"
 const LOCALES = [
   { code: "pt", label: "PT" },
   { code: "en", label: "EN" },
+  { code: "fr", label: "FR" },
 ] as const
 
 export default function LocaleSwitcher({

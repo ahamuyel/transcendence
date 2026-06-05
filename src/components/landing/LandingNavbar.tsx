@@ -57,7 +57,6 @@ export default function LandingNavbar({
   const navLinks = [
     { label: t("landing.nav.problems"), href: "#problems" },
     { label: t("landing.nav.transformation"), href: "#transformation" },
-    { label: t("landing.nav.ecosystem"), href: "#ecosystem" },
     { label: t("landing.nav.benefits"), href: "#benefits" },
     { label: t("landing.nav.vision"), href: "#vision" },
     { label: t("landing.nav.trust"), href: "#trust" },

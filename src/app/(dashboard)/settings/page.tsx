@@ -86,6 +86,7 @@ const SettingsPage = () => {
             <option value="pt">Português</option>
             <option value="en">English</option>
             <option value="es">Español</option>
+            <option value="fr">Français</option>
           </select>
         </div>
       </div>

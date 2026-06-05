@@ -1,14 +1,14 @@
 import pt from "./pt"
 import en from "./en"
 import es from "./es"
+import fr from "./fr"
 
-const translations: Record<string, Partial<typeof pt>> = { pt, en, es }
+const translations: Record<string, Partial<typeof pt>> = { pt, en, es, fr }
 
 type NestedKeyOf<T> = T extends object
   ? { [K in keyof T & string]: T[K] extends object ? `${K}.${NestedKeyOf<T[K]>}` : K }[keyof T & string]
   : never
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TranslationKey = NestedKeyOf<typeof pt> | (string & {})
 
 export const LOCALE_COOKIE = "cur10usx_locale"
