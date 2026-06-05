@@ -1,205 +1,264 @@
-"use client";
+"use client"
 
-import { Suspense } from "react";
-import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { CheckCircle, XCircle, Loader2, Mail } from "lucide-react";
-import Link from "next/link";
-import { csrfPost } from "@/lib/csrf-client";
+import { Suspense, useEffect, useState } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
+import { CheckCircle, XCircle, Loader2, Mail, ArrowRight } from "lucide-react"
+import Link from "next/link"
+import { csrfPost } from "@/lib/csrf-client"
+import {
+  AuthCard,
+  AlertBanner,
+} from "@/components/auth"
 
 function VerifyEmailContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const justRegistered = searchParams.get("justRegistered");
-  const [status, setStatus] = useState<
-    "verifying" | "success" | "error" | "resend"
-  >("resend");
-  const [error, setError] = useState("");
-  const [email, setEmail] = useState("");
-  const [resending, setResending] = useState(false);
-  const [resent, setResent] = useState(false);
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get("token")
+  const justRegistered = searchParams.get("justRegistered")
+  const [status, setStatus] = useState<"verifying" | "success" | "error" | "resend">("resend")
+  const [error, setError] = useState("")
+  const [email, setEmail] = useState("")
+  const [resending, setResending] = useState(false)
+  const [resent, setResent] = useState(false)
+  const [emailError, setEmailError] = useState("")
 
   useEffect(() => {
     if (!token) {
-      setStatus("resend");
-      return;
+      setStatus("resend")
+      return
     }
-
-    setStatus("verifying");
+    setStatus("verifying")
 
     async function verify() {
       try {
         const res = await fetch(`/api/auth/verify-email?token=${token}`, {
           method: "POST",
-        });
-
+        })
         if (!res.ok) {
-          const data = await res.json();
-          setError(data.error || "Falha na verificação");
-          setStatus("error");
-          return;
+          const data = await res.json()
+          setError(data.error || "Falha na verificação")
+          setStatus("error")
+          return
         }
-
-        setStatus("success");
+        setStatus("success")
       } catch {
-        setError("Erro de conexão. Tente novamente.");
-        setStatus("error");
+        setError("Erro de conexão. Verifique a sua internet e tente novamente.")
+        setStatus("error")
       }
     }
-
-    verify();
-  }, [token]);
+    verify()
+  }, [token])
 
   async function handleResend() {
-    setResending(true);
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailError("Introduza um e-mail válido")
+      return
+    }
+    setEmailError("")
+    setResending(true)
     try {
-      const res = await csrfPost("/api/auth/verify-email", { email }, "PATCH");
-
+      const res = await csrfPost("/api/auth/verify-email", { email }, "PATCH")
       if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Falha ao reenviar e-mail");
-        return;
+        const data = await res.json()
+        setError(data.error || "Falha ao reenviar e-mail")
+        return
       }
-
-      setResent(true);
+      setResent(true)
     } catch {
-      setError("Erro de conexão. Tente novamente.");
+      setError("Erro de conexão. Verifique a sua internet e tente novamente.")
     } finally {
-      setResending(false);
+      setResending(false)
     }
   }
 
   if (status === "verifying") {
     return (
-      <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-4 text-center">
-        <Loader2 className="w-12 h-12 text-primary dark:text-primary-400 animate-spin" />
-        <h1 className="text-xl font-semibold">A verificar e-mail...</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Aguarde um momento
-        </p>
+      <div className="w-full max-w-sm mx-auto">
+        <AuthCard>
+          <div className="p-8 text-center">
+            <Loader2 className="w-10 h-10 text-primary animate-spin mx-auto mb-4" />
+            <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+              A verificar e-mail...
+            </h1>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+              Aguarde um momento
+            </p>
+          </div>
+        </AuthCard>
       </div>
-    );
+    )
   }
 
   if (status === "success") {
     return (
-      <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-4 text-center">
-        <CheckCircle className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
-        <h1 className="text-xl font-semibold">E-mail verificado!</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          O seu e-mail foi verificado com sucesso. Já pode entrar na sua conta.
-        </p>
-        <Link
-          href="/signin"
-          className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition shadow-lg shadow-primary/20"
-        >
-          Entrar agora
-        </Link>
+      <div className="w-full max-w-sm mx-auto">
+        <AuthCard>
+          <div className="p-8 text-center">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center mx-auto mb-5">
+              <CheckCircle className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
+              E-mail verificado!
+            </h1>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
+              O seu e-mail foi verificado com sucesso. Já pode entrar na sua
+              conta.
+            </p>
+            <Link
+              href="/signin"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-sm font-medium transition"
+            >
+              Entrar agora
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </AuthCard>
       </div>
-    );
+    )
   }
 
   if (status === "error") {
     return (
-      <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-4 text-center">
-        <XCircle className="w-12 h-12 text-red-600 dark:text-red-400" />
-        <h1 className="text-xl font-semibold">Falha na verificação</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">{error}</p>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          O link pode ter expirado. Solicite um novo e-mail de verificação.
-        </p>
+      <div className="w-full max-w-sm mx-auto">
+        <AuthCard>
+          <div className="p-8 text-center">
+            <div className="w-14 h-14 rounded-full bg-red-100 dark:bg-red-950/40 flex items-center justify-center mx-auto mb-5">
+              <XCircle className="w-7 h-7 text-red-600 dark:text-red-400" />
+            </div>
+            <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
+              Falha na verificação
+            </h1>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-2">
+              {error}
+            </p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
+              O link pode ter expirado. Solicite um novo e-mail de verificação.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link
+                href="/signin"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-zinc-300 dark:border-zinc-700 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition"
+              >
+                Voltar ao login
+              </Link>
+              <Link
+                href="/verify-email"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-sm font-medium transition"
+              >
+                Reenviar verificação
+              </Link>
+            </div>
+          </div>
+        </AuthCard>
+      </div>
+    )
+  }
+
+  return (
+    <div className="w-full max-w-sm mx-auto">
+      <AuthCard>
+        <div className="p-6 sm:p-8 text-center">
+          <div className="w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-950/40 flex items-center justify-center mx-auto mb-5">
+            <Mail className="w-7 h-7 text-primary dark:text-primary-400" />
+          </div>
+          <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+            {justRegistered
+              ? "Conta criada com sucesso!"
+              : "Verifique o seu e-mail"}
+          </h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed">
+            {justRegistered
+              ? "Enviamos um e-mail de verificação para a sua caixa de entrada. Verifique também a pasta de spam."
+              : "Insira o seu e-mail para receber um link de verificação"}
+          </p>
+
+          {error && (
+            <AlertBanner variant="error" className="mb-5 text-left">
+              {error}
+            </AlertBanner>
+          )}
+
+          {resent && (
+            <AlertBanner variant="success" className="mb-5">
+              E-mail de verificação enviado com sucesso!
+            </AlertBanner>
+          )}
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              handleResend()
+            }}
+            className="flex flex-col gap-3"
+          >
+            <div className="text-left">
+              <label
+                htmlFor="verify-email-input"
+                className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5 text-left"
+              >
+                E-mail
+              </label>
+              <input
+                id="verify-email-input"
+                type="email"
+                placeholder="seu@email.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  if (emailError) setEmailError("")
+                }}
+                disabled={resending}
+                className={`w-full h-10 px-3 rounded-lg border text-sm bg-transparent placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition disabled:opacity-50 ${
+                  emailError
+                    ? "border-red-400 dark:border-red-600"
+                    : "border-zinc-300 dark:border-zinc-700"
+                }`}
+              />
+              {emailError && (
+                <p className="text-xs text-red-600 dark:text-red-400 mt-1.5" role="alert">
+                  {emailError}
+                </p>
+              )}
+            </div>
+            <button
+              type="submit"
+              disabled={resending || !email}
+              className="w-full h-10 flex items-center justify-center gap-2 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {resending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" /> Enviando...
+                </>
+              ) : (
+                "Reenviar link de verificação"
+              )}
+            </button>
+          </form>
+        </div>
+      </AuthCard>
+
+      <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
         <Link
           href="/signin"
-          className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white text-sm font-medium transition"
+          className="text-primary font-medium hover:underline"
         >
           Voltar ao login
         </Link>
-      </div>
-    );
-  }
-
-  // Resend state — no token provided
-  return (
-    <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-6 text-center">
-      <Mail className="w-12 h-12 text-primary dark:text-primary-400" />
-      <div>
-        <h1 className="text-xl font-semibold">
-          {justRegistered
-            ? "Conta criada com sucesso!"
-            : "Verifique o seu e-mail"}
-        </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2">
-          {justRegistered
-            ? "Enviamos um e-mail de verificação para a sua caixa de entrada. Verifique também o spam."
-            : "Insira o seu e-mail para receber um link de verificação"}
-        </p>
-      </div>
-
-      {error && (
-        <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400 w-full max-w-sm">
-          {error}
-        </div>
-      )}
-
-      {resent && (
-        <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-sm text-emerald-600 dark:text-emerald-400 w-full max-w-sm">
-          E-mail de verificação enviado com sucesso!
-        </div>
-      )}
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleResend();
-        }}
-        className="flex flex-col gap-3 w-full max-w-sm"
-      >
-        <input
-          type="email"
-          placeholder="seu@email.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={resending}
-          className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition disabled:opacity-50"
-        />
-        <button
-          type="submit"
-          disabled={resending || !email}
-          className="w-full h-10 flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {resending ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Enviando...
-            </>
-          ) : (
-            "Enviar link de verificação"
-          )}
-        </button>
-      </form>
-
-      <Link
-        href="/signin"
-        className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
-      >
-        Voltar ao login
-      </Link>
+      </p>
     </div>
-  );
+  )
 }
 
 export default function VerifyEmailPage() {
   return (
     <Suspense
       fallback={
-        <div className="w-full max-w-sm mx-auto flex flex-col items-center gap-4 text-center">
-          <Loader2 className="w-12 h-12 text-primary dark:text-primary-400 animate-spin" />
-          <h1 className="text-xl font-semibold">A carregar...</h1>
+        <div className="w-full max-w-sm mx-auto flex items-center justify-center min-h-[200px]">
+          <Loader2 className="w-6 h-6 text-primary animate-spin" />
         </div>
       }
     >
       <VerifyEmailContent />
     </Suspense>
-  );
+  )
 }

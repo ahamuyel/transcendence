@@ -3,6 +3,17 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { comparePassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
+
+const loginLimiter = rateLimit({ maxRequests: 10, windowMs: 5 * 60 * 1000 }) // 10 per 5 min
+
+function getIp(req: Request): string {
+  return (
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown"
+  )
+}
 
 const PERMISSION_KEYS = [
   "canManageApplications",
@@ -79,12 +90,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: {},
         password: {},
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         try {
           const email = credentials.email as string;
           const password = credentials.password as string;
 
           if (!email || !password) return null;
+
+          // Rate limiting by IP
+          const ip = getIp(request!)
+          const limit = await loginLimiter(ip)
+          if (!limit.success) {
+            const resetSec = Math.ceil((limit.resetAt.getTime() - Date.now()) / 1000)
+            console.warn(`[RateLimit] Login blocked for IP ${ip} — retry in ${resetSec}s`)
+            return null
+          }
 
           const user = await prisma.user.findUnique({
             where: { email },

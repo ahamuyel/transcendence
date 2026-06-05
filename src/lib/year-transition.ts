@@ -18,6 +18,7 @@ export interface TransitionPreview {
   pendingRecurso: { studentId: string; studentName: string; grade: number }[]
   cycleComplete: { studentId: string; studentName: string; grade: number; cycleName: string }[]
   totalStudents: number
+  capacityWarnings: { grade: number; needed: number; available: number }[]
 }
 
 // Cycle end grades
@@ -50,6 +51,9 @@ export async function previewTransition(
   const pendingRecurso: TransitionPreview["pendingRecurso"] = []
   const cycleComplete: TransitionPreview["cycleComplete"] = []
 
+  // Group promoted by target grade for capacity check
+  const promotedByGrade: Record<number, number> = {}
+
   for (const enrollment of enrollments) {
     const grade = enrollment.class.grade
     const student = { studentId: enrollment.studentId, studentName: enrollment.student.name }
@@ -73,6 +77,22 @@ export async function previewTransition(
       })
     } else {
       promoted.push({ ...student, fromGrade: grade, toGrade: grade + 1 })
+      promotedByGrade[grade + 1] = (promotedByGrade[grade + 1] || 0) + 1
+    }
+  }
+
+  // Check capacity for target grades
+  const capacityWarnings: TransitionPreview["capacityWarnings"] = []
+  const currentClasses = await prisma.class.findMany({
+    where: { schoolId, academicYearId: closedYearId },
+    select: { grade: true, capacity: true },
+  })
+  for (const [gradeStr, needed] of Object.entries(promotedByGrade)) {
+    const targetGrade = parseInt(gradeStr)
+    const existingClass = currentClasses.find((c) => c.grade === targetGrade)
+    const available = existingClass?.capacity ?? 40
+    if (needed > available) {
+      capacityWarnings.push({ grade: targetGrade, needed, available })
     }
   }
 
@@ -82,6 +102,7 @@ export async function previewTransition(
     pendingRecurso,
     cycleComplete,
     totalStudents: enrollments.length,
+    capacityWarnings,
   }
 }
 
@@ -112,113 +133,143 @@ export async function executeTransition(
     },
   })
 
-  let promotedCount = 0
-  let retainedCount = 0
-  let cycleCompleteCount = 0
-  let certificatesGenerated = 0
-
+  // Pre-check capacity: group promoted students by target grade
+  const neededByGrade: Record<string, { grade: number; courseId: string | null; count: number }> = {}
   for (const enrollment of enrollments) {
-    const grade = enrollment.class.grade
+    if (enrollment.status !== "aprovada" || CYCLE_END_GRADES[enrollment.class.grade]) continue
+    const targetGrade = enrollment.class.grade + 1
     const courseId = enrollment.class.courseId
+    const key = `${targetGrade}-${courseId || "none"}`
+    if (!neededByGrade[key]) {
+      neededByGrade[key] = { grade: targetGrade, courseId, count: 0 }
+    }
+    neededByGrade[key].count++
+  }
 
-    if (enrollment.status === "aprovada" && CYCLE_END_GRADES[grade]) {
-      // Cycle complete — generate certificate
-      cycleCompleteCount++
-      const cycleInfo = CYCLE_END_GRADES[grade]
+  // Check existing classes in new year for capacity
+  for (const key of Object.keys(neededByGrade)) {
+    const { grade, courseId, count } = neededByGrade[key]
+    const existingClass = await prisma.class.findFirst({
+      where: { schoolId, academicYearId: newYearId, grade, ...(courseId ? { courseId } : {}) },
+      select: { id: true, capacity: true, _count: { select: { enrollments: true } } },
+    })
+    const enrolled = existingClass?._count?.enrollments ?? 0
+    const available = (existingClass?.capacity ?? 40) - enrolled
+    if (count > available) {
+      throw new Error(
+        `Capacidade insuficiente para a ${grade}ª classe${courseId ? ` (curso ${courseId})` : ""}: ` +
+        `${count} aluno(s) para ${existingClass ? `${available} vaga(s)` : "40 vagas (turma inexistente)"}. ` +
+        `Crie turmas adicionais antes de executar a transição.`,
+      )
+    }
+  }
 
-      await prisma.cycleCertificate.upsert({
-        where: {
-          studentId_cycleLevel_schoolId: {
+  // Execute everything in a single transaction for atomicity
+  const result = await prisma.$transaction(async (tx) => {
+    let promotedCount = 0
+    let retainedCount = 0
+    let cycleCompleteCount = 0
+    let certificatesGenerated = 0
+
+    for (const enrollment of enrollments) {
+      const grade = enrollment.class.grade
+      const courseId = enrollment.class.courseId
+
+      if (enrollment.status === "aprovada" && CYCLE_END_GRADES[grade]) {
+        cycleCompleteCount++
+        const cycleInfo = CYCLE_END_GRADES[grade]
+
+        await tx.cycleCertificate.upsert({
+          where: {
+            studentId_cycleLevel_schoolId: {
+              studentId: enrollment.studentId,
+              cycleLevel: cycleInfo.level,
+              schoolId,
+            },
+          },
+          update: {
+            finalAverage: enrollment.finalAverage || 0,
+            completionDate: new Date(),
+            academicYearId: closedYearId,
+            certificateData: { grade, courseName: enrollment.class.name },
+          },
+          create: {
             studentId: enrollment.studentId,
-            cycleLevel: cycleInfo.level,
             schoolId,
+            cycleLevel: cycleInfo.level,
+            cycleName: cycleInfo.name,
+            completionGrade: grade,
+            finalAverage: enrollment.finalAverage || 0,
+            completionDate: new Date(),
+            academicYearId: closedYearId,
+            certificateData: { grade, courseName: enrollment.class.name },
+          },
+        })
+        certificatesGenerated++
+
+        await tx.enrollment.update({
+          where: { id: enrollment.id },
+          data: { status: "concluida" },
+        })
+        continue
+      }
+
+      const targetGrade = enrollment.status === "aprovada" ? grade + 1 : grade
+
+      if (enrollment.status === "aprovada") promotedCount++
+      else retainedCount++
+
+      let targetClass = await tx.class.findFirst({
+        where: {
+          schoolId,
+          academicYearId: newYearId,
+          grade: targetGrade,
+          ...(courseId ? { courseId } : {}),
+        },
+      })
+
+      if (!targetClass) {
+        targetClass = await tx.class.create({
+          data: {
+            name: `${targetGrade}ª Classe`,
+            grade: targetGrade,
+            capacity: enrollment.class.capacity || 40,
+            period: enrollment.class.period,
+            courseId,
+            academicYearId: newYearId,
+            schoolId,
+          },
+        })
+      }
+
+      await tx.enrollment.upsert({
+        where: {
+          studentId_academicYearId: {
+            studentId: enrollment.studentId,
+            academicYearId: newYearId,
           },
         },
         update: {
-          finalAverage: enrollment.finalAverage || 0,
-          completionDate: new Date(),
-          academicYearId: closedYearId,
-          certificateData: { grade, courseName: enrollment.class.name },
+          classId: targetClass.id,
+          status: "ativa",
         },
         create: {
           studentId: enrollment.studentId,
-          schoolId,
-          cycleLevel: cycleInfo.level,
-          cycleName: cycleInfo.name,
-          completionGrade: grade,
-          finalAverage: enrollment.finalAverage || 0,
-          completionDate: new Date(),
-          academicYearId: closedYearId,
-          certificateData: { grade, courseName: enrollment.class.name },
-        },
-      })
-      certificatesGenerated++
-
-      // Update enrollment to concluida
-      await prisma.enrollment.update({
-        where: { id: enrollment.id },
-        data: { status: "concluida" },
-      })
-      continue
-    }
-
-    // Determine target grade
-    const targetGrade = enrollment.status === "aprovada" ? grade + 1 : grade
-
-    if (enrollment.status === "aprovada") promotedCount++
-    else retainedCount++
-
-    // Find or create class in new year
-    let targetClass = await prisma.class.findFirst({
-      where: {
-        schoolId,
-        academicYearId: newYearId,
-        grade: targetGrade,
-        ...(courseId ? { courseId } : {}),
-      },
-    })
-
-    if (!targetClass) {
-      targetClass = await prisma.class.create({
-        data: {
-          name: `${targetGrade}ª Classe`,
-          grade: targetGrade,
-          capacity: enrollment.class.capacity || 40,
-          period: enrollment.class.period,
-          courseId,
+          classId: targetClass.id,
           academicYearId: newYearId,
           schoolId,
+          status: "ativa",
         },
+      })
+
+      await tx.student.update({
+        where: { id: enrollment.studentId },
+        data: { classId: targetClass.id },
       })
     }
 
-    // Create new enrollment
-    await prisma.enrollment.upsert({
-      where: {
-        studentId_academicYearId: {
-          studentId: enrollment.studentId,
-          academicYearId: newYearId,
-        },
-      },
-      update: {
-        classId: targetClass.id,
-        status: "ativa",
-      },
-      create: {
-        studentId: enrollment.studentId,
-        classId: targetClass.id,
-        academicYearId: newYearId,
-        schoolId,
-        status: "ativa",
-      },
-    })
+    return { promoted: promotedCount, retained: retainedCount, cycleComplete: cycleCompleteCount, certificatesGenerated }
+  })
 
-    // Update student's current class
-    await prisma.student.update({
-      where: { id: enrollment.studentId },
-      data: { classId: targetClass.id },
-    })
-  }
-
-  return { promoted: promotedCount, retained: retainedCount, cycleComplete: cycleCompleteCount, certificatesGenerated }
+  return result
 }

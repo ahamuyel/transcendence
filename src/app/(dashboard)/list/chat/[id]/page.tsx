@@ -59,7 +59,8 @@ export default function ChatConversationPage() {
     ]).then(([convJson, msgJson]) => {
       const conv = convJson.data?.find((c: Conversation) => c.id === id)
       setConversation(conv || null)
-      setMessages(msgJson.data || [])
+      const initial = (msgJson.data || []) as Message[]
+      setMessages(initial.filter((m, i, a) => a.findIndex((x) => x.id === m.id) === i))
       setNextCursor(msgJson.nextCursor)
     }).finally(() => setLoading(false))
   }, [id, fetchMessages])
@@ -72,7 +73,7 @@ export default function ChatConversationPage() {
     const unsubMsg = on("chat_message", (payload: unknown) => {
       const data = payload as { conversationId: string; message: Message }
       if (data.conversationId === id) {
-        setMessages((prev) => [...prev, data.message])
+        setMessages((prev) => prev.some((m) => m.id === data.message.id) ? prev : [...prev, data.message])
       }
     })
 
@@ -97,7 +98,10 @@ export default function ChatConversationPage() {
     if (!nextCursor || loadingMore) return
     setLoadingMore(true)
     const json = await fetchMessages(nextCursor)
-    setMessages((prev) => [...(json.data || []), ...prev])
+    setMessages((prev) => {
+      const existing = new Set(prev.map((m) => m.id))
+      return [...(json.data || []).filter((m: Message) => !existing.has(m.id)), ...prev]
+    })
     setNextCursor(json.nextCursor)
     setLoadingMore(false)
   }
@@ -124,7 +128,7 @@ export default function ChatConversationPage() {
       })
       if (res.ok) {
         const json = await res.json()
-        setMessages((prev) => [...prev, json.data])
+        setMessages((prev) => prev.some((m) => m.id === json.data.id) ? prev : [...prev, json.data])
         setInput("")
       }
     } catch {

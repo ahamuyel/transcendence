@@ -1,124 +1,128 @@
 "use client"
 
 import Link from "next/link"
-import { Mail, ArrowLeft, CheckCircle2, Loader2 } from "lucide-react"
+import { ArrowLeft, Mail, CheckCircle2 } from "lucide-react"
 import { useState } from "react"
 import { forgotPasswordSchema } from "@/lib/validations/auth"
 import { csrfPost } from "@/lib/csrf-client"
+import {
+  AuthCard,
+  AuthHeader,
+  FormInput,
+  SubmitButton,
+  AlertBanner,
+} from "@/components/auth"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState("")
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
 
-  if (submitted) {
-    return (
-      <div className="w-full max-w-md mx-auto">
-        <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-8 text-center">
-          <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
-          </div>
-          <h1 className="text-2xl font-bold mb-2">E-mail enviado</h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed">
-            Se o e-mail informado estiver registado, receberá um link para
-            redefinir a sua palavra-passe em alguns minutos.
-          </p>
-          <Link
-            href="/signin"
-            className="inline-flex items-center gap-2 text-sm text-primary dark:text-primary-400 font-medium hover:underline"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Voltar para o login
-          </Link>
-        </div>
-      </div>
-    )
+  function validate() {
+    const e: Record<string, string> = {}
+    const parsed = forgotPasswordSchema.safeParse({ email })
+    if (!parsed.success) {
+      parsed.error.issues.forEach((i) => {
+        e[i.path[0] as string] = i.message
+      })
+    }
+    setErrors(e)
+    return Object.keys(e).length === 0
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError("")
-
-    const parsed = forgotPasswordSchema.safeParse({ email })
-    if (!parsed.success) {
-      setError(parsed.error.issues[0].message)
-      return
-    }
-
+    if (!validate()) return
     setLoading(true)
     try {
-      await csrfPost("/api/auth/forgot-password", { email })
-
-      // Always show success to prevent email enumeration
+      const res = await csrfPost("/api/auth/forgot-password", { email })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || "Erro ao enviar link de recuperação")
+        return
+      }
       setSubmitted(true)
     } catch {
-      setError("Erro de conexão. Tente novamente.")
+      setError("Erro de conexão. Verifique a sua internet e tente novamente.")
     } finally {
       setLoading(false)
     }
   }
 
-  return (
-    <div className="w-full max-w-md">
-      <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-8">
-        <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-950 flex items-center justify-center mx-auto mb-4">
-            <Mail className="w-7 h-7 text-primary dark:text-primary-400" />
-          </div>
-          <h1 className="text-2xl font-bold mb-2">Recuperar palavra-passe</h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-            Introduza o seu e-mail e enviaremos um link para redefinir a sua palavra-passe.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
-              {error}
+  if (submitted) {
+    return (
+      <div className="w-full max-w-sm mx-auto">
+        <AuthCard>
+          <div className="p-6 sm:p-8 text-center">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center mx-auto mb-5">
+              <CheckCircle2 className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
             </div>
-          )}
-
-          {/* Email */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300"
+            <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
+              E-mail enviado
+            </h1>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed">
+              Se o e-mail{" "}
+              <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                {email}
+              </span>{" "}
+              estiver registado, receberá um link para redefinir a sua
+              palavra-passe em alguns minutos.
+            </p>
+            <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-xs text-amber-700 dark:text-amber-300 mb-6 text-left">
+              <strong>Dica:</strong> Verifique também a pasta de spam ou lixo
+              eletrónico.
+            </div>
+            <Link
+              href="/signin"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-sm font-medium transition"
             >
-              E-mail
-            </label>
-            <input
+              Voltar para o login
+            </Link>
+          </div>
+        </AuthCard>
+      </div>
+    )
+  }
+
+  return (
+    <div className="w-full max-w-sm mx-auto">
+      <AuthCard>
+        <div className="p-6 sm:p-8">
+          <AuthHeader
+            icon={Mail}
+            title="Recuperar palavra-passe"
+            subtitle="Introduza o seu e-mail e enviaremos um link para redefinir a sua palavra-passe."
+          />
+
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            {error && <AlertBanner variant="error">{error}</AlertBanner>}
+
+            <FormInput
               id="email"
+              label="E-mail"
               type="email"
+              autoComplete="email"
               placeholder="seu@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              error={errors.email}
               disabled={loading}
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
             />
-          </div>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-medium text-sm hover:bg-primary-700 shadow-lg shadow-primary/25 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Mail className="w-4 h-4" />
-            )}
-            {loading ? "Enviando..." : "Enviar link de recuperação"}
-          </button>
-        </form>
-      </div>
+            <SubmitButton loading={loading} loadingText="A enviar...">
+              Enviar link de recuperação
+            </SubmitButton>
+          </form>
+        </div>
+      </AuthCard>
 
-      {/* Footer link */}
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
         <Link
           href="/signin"
-          className="inline-flex items-center gap-1 text-primary dark:text-primary-400 font-medium hover:underline"
+          className="inline-flex items-center gap-1.5 text-primary font-medium hover:underline"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Voltar para o login

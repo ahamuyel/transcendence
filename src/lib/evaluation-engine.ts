@@ -508,23 +508,143 @@ export async function evaluateStudent(
   }
 }
 
-// ─── Evaluate Entire Class ──────────────────────────────────────
+// ─── Evaluate Entire Class (optimized: batch queries) ──────────
 
 export async function evaluateClass(
   classId: string,
   academicYearId: string,
   schoolId: string
 ): Promise<StudentEvaluation[]> {
+  // 1. Fetch all enrollments with student and class info (1 query)
   const enrollments = await prisma.enrollment.findMany({
     where: { classId, academicYearId, schoolId, status: "ativa" },
-    select: { studentId: true },
+    include: {
+      student: { select: { id: true, name: true } },
+      class: { select: { id: true, grade: true, courseId: true } },
+    },
   })
 
-  const evaluations: StudentEvaluation[] = []
-  for (const enrollment of enrollments) {
-    const result = await evaluateStudent(enrollment.studentId, academicYearId, schoolId)
-    if (result) evaluations.push(result)
+  if (enrollments.length === 0) return []
+
+  const studentIds = enrollments.map((e) => e.studentId)
+  const { grade, courseId } = enrollments[0].class
+
+  // 2. Resolve grading config once for the whole class (1-2 queries)
+  const config = await resolveGradingConfig(schoolId, academicYearId, grade, courseId)
+
+  // 3. Fetch ALL results for all students in this class at once (1 query)
+  const allResults = await prisma.result.findMany({
+    where: {
+      studentId: { in: studentIds },
+      academicYearId,
+      schoolId,
+    },
+    include: { subject: { select: { id: true, name: true } } },
+  })
+
+  // Group results by student -> by subject
+  const resultsByStudent: Record<string, Record<string, { name: string; results: typeof allResults }>> = {}
+  for (const r of allResults) {
+    if (!resultsByStudent[r.studentId]) resultsByStudent[r.studentId] = {}
+    if (!resultsByStudent[r.studentId][r.subjectId]) {
+      resultsByStudent[r.studentId][r.subjectId] = { name: r.subject.name, results: [] }
+    }
+    resultsByStudent[r.studentId][r.subjectId].results.push(r)
   }
+
+  // 4. Fetch course subjects once (1 query)
+  const courseSubjects = courseId
+    ? await prisma.courseSubject.findMany({
+        where: { courseId },
+        include: { subject: true },
+      })
+    : []
+
+  const expectedSubjectNames: Record<string, string> = {}
+  for (const cs of courseSubjects) {
+    expectedSubjectNames[cs.subjectId] = cs.subject.name
+  }
+
+  const trimesters: Trimester[] = ["primeiro", "segundo", "terceiro"]
+
+  // 5. Process every student in memory (zero additional queries)
+  const evaluations: StudentEvaluation[] = enrollments.map((enrollment) => {
+    const studentResults = resultsByStudent[enrollment.studentId] || {}
+
+    // Seed expected course subjects that have zero results
+    for (const cs of courseSubjects) {
+      if (!studentResults[cs.subjectId]) {
+        studentResults[cs.subjectId] = { name: cs.subject.name, results: [] }
+      }
+    }
+
+    const subjectResults: SubjectFinalResult[] = Object.entries(studentResults).map(
+      ([subjectId, { name, results }]) => {
+        const trimesterAvgs = trimesters.map((t) => {
+          const tResults = results.filter((r) => r.trimester === t)
+          return calculateTrimesterAverage(tResults, config.trimesterFormula, config.roundingMode, config.roundingScale)
+        }) as [number | null, number | null, number | null]
+
+        const finalAverage = calculateFinalAverage(
+          trimesterAvgs,
+          config.trimesterWeights,
+          config.roundingMode,
+          config.roundingScale,
+        )
+
+        const passed = finalAverage !== null && finalAverage >= config.passingGrade
+        const inRecurso =
+          !passed &&
+          finalAverage !== null &&
+          config.resourceMinGrade !== null &&
+          finalAverage >= config.resourceMinGrade &&
+          finalAverage < config.passingGrade
+
+        return {
+          subjectId,
+          subjectName: name,
+          t1: trimesterAvgs[0],
+          t2: trimesterAvgs[1],
+          t3: trimesterAvgs[2],
+          finalAverage,
+          passed,
+          inRecurso,
+        }
+      },
+    )
+
+    const validFinals = subjectResults
+      .filter((s) => s.finalAverage !== null)
+      .map((s) => s.finalAverage!)
+
+    const generalAverage =
+      validFinals.length > 0
+        ? applyRounding(
+            validFinals.reduce((a, b) => a + b, 0) / validFinals.length,
+            config.roundingMode,
+            config.roundingScale,
+          )
+        : null
+
+    const failedSubjectCount = subjectResults.filter((s) => !s.passed && s.finalAverage !== null).length
+    const recursoSubjectCount = subjectResults.filter((s) => s.inRecurso).length
+
+    const { status, observation } = determineStatus(subjectResults, config)
+
+    return {
+      studentId: enrollment.student.id,
+      studentName: enrollment.student.name,
+      enrollmentId: enrollment.id,
+      classId: enrollment.classId,
+      grade,
+      subjectResults,
+      generalAverage,
+      failedSubjectCount,
+      recursoSubjectCount,
+      status,
+      observation,
+    }
+  })
 
   return evaluations
 }

@@ -2,26 +2,64 @@
 
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Eye, EyeOff, KeyRound, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react"
-import { useState, Suspense } from "react"
+import { KeyRound, CheckCircle2, ArrowLeft, AlertCircle } from "lucide-react"
+import { useState, Suspense, useMemo } from "react"
 import { csrfPost } from "@/lib/csrf-client"
 import { resetPasswordSchema } from "@/lib/validations/auth"
+import {
+  AuthCard,
+  AuthHeader,
+  PasswordInput,
+  SubmitButton,
+  AlertBanner,
+  AuthSuccess,
+} from "@/components/auth"
 
-const inputClass =
-  "w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10"
+function PasswordRequirements({ password }: { password: string }) {
+  const checks = useMemo(
+    () => [
+      { label: "Mínimo 8 caracteres", met: password.length >= 8 },
+      { label: "Uma letra maiúscula", met: /[A-Z]/.test(password) },
+      { label: "Uma letra minúscula", met: /[a-z]/.test(password) },
+      { label: "Um número", met: /[0-9]/.test(password) },
+    ],
+    [password],
+  )
 
-function PasswordInput({ value, onChange, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
-  const [show, setShow] = useState(false)
+  if (!password) return null
+
   return (
-    <div className="relative">
-      <input {...props} type={show ? "text" : "password"} className={inputClass} value={value} onChange={onChange} />
-      <button
-        type="button"
-        onClick={() => setShow(!show)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-      >
-        {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-      </button>
+    <div className="mt-2 space-y-1">
+      {checks.map((check) => (
+        <div
+          key={check.label}
+          className={`flex items-center gap-1.5 text-xs transition-colors ${
+            check.met
+              ? "text-emerald-600 dark:text-emerald-400"
+              : "text-zinc-400 dark:text-zinc-500"
+          }`}
+        >
+          <svg
+            className="w-3 h-3 shrink-0"
+            viewBox="0 0 12 12"
+            fill="none"
+            aria-hidden="true"
+          >
+            {check.met ? (
+              <path
+                d="M3 6l2 2 4-4"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ) : (
+              <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1" />
+            )}
+          </svg>
+          <span>{check.label}</span>
+        </div>
+      ))}
     </div>
   )
 }
@@ -38,53 +76,51 @@ function ResetPasswordForm() {
 
   if (!token) {
     return (
-      <div className="w-full max-w-md mx-auto">
-        <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-8 text-center">
-          <h1 className="text-2xl font-bold mb-2">Link inválido</h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-            Este link de redefinição é inválido ou expirou.
-          </p>
-          <Link
-            href="/forgot-password"
-            className="inline-flex items-center gap-2 text-sm text-primary dark:text-primary-400 font-medium hover:underline"
-          >
-            Solicitar novo link
-          </Link>
-        </div>
+      <div className="w-full max-w-sm mx-auto">
+        <AuthCard>
+          <div className="p-8 text-center">
+            <div className="w-14 h-14 rounded-full bg-red-100 dark:bg-red-950/40 flex items-center justify-center mx-auto mb-5">
+              <AlertCircle className="w-7 h-7 text-red-600 dark:text-red-400" />
+            </div>
+            <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
+              Link inválido
+            </h1>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
+              Este link de redefinição é inválido ou expirou. Solicite um novo
+              link.
+            </p>
+            <Link
+              href="/forgot-password"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-sm font-medium transition"
+            >
+              Solicitar novo link
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
+          </div>
+        </AuthCard>
       </div>
     )
   }
 
   if (success) {
     return (
-      <div className="w-full max-w-md mx-auto">
-        <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-8 text-center">
-          <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
-          </div>
-          <h1 className="text-2xl font-bold mb-2">Palavra-passe redefinida</h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-            A sua palavra-passe foi actualizada com sucesso.
-          </p>
-          <Link
-            href="/signin"
-            className="inline-flex items-center gap-2 text-sm text-primary dark:text-primary-400 font-medium hover:underline"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Ir para o login
-          </Link>
-        </div>
-      </div>
+      <AuthSuccess
+        icon={CheckCircle2}
+        title="Palavra-passe redefinida"
+        actionLabel="Ir para o login"
+        actionHref="/signin"
+      >
+        <p>A sua palavra-passe foi actualizada com sucesso.</p>
+        <p>Pode agora entrar na sua conta com a nova palavra-passe.</p>
+      </AuthSuccess>
     )
   }
 
   function validate() {
     const e: Record<string, string> = {}
-
     if (password !== confirmPassword) {
       e.confirmPassword = "As palavras-passe não coincidem"
     }
-
     const parsed = resetPasswordSchema.safeParse({ token, password })
     if (!parsed.success) {
       parsed.error.issues.forEach((i) => {
@@ -92,7 +128,6 @@ function ResetPasswordForm() {
         if (field === "password") e.password = i.message
       })
     }
-
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -100,95 +135,75 @@ function ResetPasswordForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setErrors({})
-
     if (!validate()) return
-
     setLoading(true)
     try {
       const res = await csrfPost("/api/auth/reset-password", { token, password })
       const data = await res.json()
-
       if (!res.ok) {
         setErrors({ general: data.error || "Erro ao redefinir palavra-passe" })
         return
       }
-
       setSuccess(true)
     } catch {
-      setErrors({ general: "Erro de conexão. Tente novamente." })
+      setErrors({
+        general: "Erro de conexão. Verifique a sua internet e tente novamente.",
+      })
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-8">
-        <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-950 flex items-center justify-center mx-auto mb-4">
-            <KeyRound className="w-7 h-7 text-primary dark:text-primary-400" />
-          </div>
-          <h1 className="text-2xl font-bold mb-2">Nova palavra-passe</h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-            Introduza a sua nova palavra-passe abaixo.
-          </p>
-        </div>
+    <div className="w-full max-w-sm mx-auto">
+      <AuthCard>
+        <div className="p-6 sm:p-8">
+          <AuthHeader
+            icon={KeyRound}
+            title="Nova palavra-passe"
+            subtitle="Escolha uma nova palavra-passe para a sua conta."
+          />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {errors.general && (
-            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
-              {errors.general}
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            {errors.general && (
+              <AlertBanner variant="error">{errors.general}</AlertBanner>
+            )}
+
+            <div>
+              <PasswordInput
+                id="password"
+                label="Nova palavra-passe"
+                placeholder="Mín. 8 caracteres"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                error={errors.password}
+                disabled={loading}
+              />
+              <PasswordRequirements password={password} />
             </div>
-          )}
 
-          <div>
-            <label className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-              Nova palavra-passe
-            </label>
             <PasswordInput
-              id="password"
-              placeholder="Mín. 8 caracteres, 1 maiúscula, 1 minúscula, 1 número"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
-              required
-            />
-            {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password}</p>}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-              Confirmar nova palavra-passe
-            </label>
-            <PasswordInput
+              id="confirmPassword"
+              label="Confirmar nova palavra-passe"
               placeholder="Repita a palavra-passe"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              error={errors.confirmPassword}
               disabled={loading}
-              required
             />
-            {errors.confirmPassword && <p className="text-xs text-red-500 mt-1">{errors.confirmPassword}</p>}
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-medium text-sm hover:bg-primary-700 shadow-lg shadow-primary/25 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
+            <SubmitButton loading={loading} loadingText="A redefinir...">
               <KeyRound className="w-4 h-4" />
-            )}
-            {loading ? "A redefinir..." : "Redefinir palavra-passe"}
-          </button>
-        </form>
-      </div>
+              Redefinir palavra-passe
+            </SubmitButton>
+          </form>
+        </div>
+      </AuthCard>
 
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
         <Link
           href="/signin"
-          className="inline-flex items-center gap-1 text-primary dark:text-primary-400 font-medium hover:underline"
+          className="inline-flex items-center gap-1.5 text-primary font-medium hover:underline"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Voltar para o login
@@ -200,7 +215,11 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh]"><div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+    <Suspense
+      fallback={
+        <div className="w-full max-w-sm mx-auto flex items-center justify-center min-h-[200px]" />
+      }
+    >
       <ResetPasswordForm />
     </Suspense>
   )

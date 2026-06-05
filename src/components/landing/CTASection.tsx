@@ -1,50 +1,34 @@
-import Link from "next/link"
-import { ArrowRight, Sparkles } from "lucide-react"
+"use client"
 
-export default function CTASection() {
+import { useTranslation } from "@/lib/i18n"
+
+type Props = {
+  locale?: string
+  onRequestDemo?: () => void
+}
+
+export default function CTASection({ locale = "pt", onRequestDemo }: Props) {
+  const { t } = useTranslation(locale)
+
   return (
-    <section className="py-28 px-6 relative overflow-hidden">
-      <div className="max-w-4xl mx-auto relative">
-        {/* Background card */}
-        <div className="relative rounded-[2rem] bg-gradient-to-br from-primary-600 via-primary-600 to-primary-700 p-12 sm:p-16 text-center overflow-hidden">
-          {/* Decorative elements */}
-          <div className="absolute inset-0">
-            <div className="absolute top-[-50%] left-[-20%] w-[500px] h-[500px] rounded-full bg-white/10 blur-3xl" />
-            <div className="absolute bottom-[-50%] right-[-20%] w-[400px] h-[400px] rounded-full bg-white/5 blur-3xl" />
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:48px_48px]" />
-          </div>
-
-          <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 text-sm font-medium text-primary-200 bg-white/10 px-4 py-1.5 rounded-full mb-8 backdrop-blur-sm">
-              <Sparkles className="w-4 h-4" />
-              Comece hoje mesmo
-            </div>
-
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5 text-white tracking-tight leading-tight">
-              Pronto para transformar
-              <br />
-              a gestão da sua escola?
-            </h2>
-            <p className="text-primary-100 mb-10 max-w-lg mx-auto text-lg leading-relaxed">
-              Registe a sua escola e comece a gerir alunos, professores e resultados de forma moderna e eficiente.
-            </p>
-
-            <div className="flex gap-4 flex-wrap justify-center">
-              <Link
-                href="/signin"
-                className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-white text-primary-700 font-bold hover:bg-primary-50 shadow-xl shadow-black/20 transition-all hover:scale-[1.03] active:scale-[0.98]"
-              >
-                Entrar na plataforma
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                href="/registar-escola"
-                className="px-8 py-4 rounded-2xl border-2 border-white/30 text-white hover:bg-white/10 transition-all font-bold hover:scale-[1.03] active:scale-[0.98] backdrop-blur-sm"
-              >
-                Registar escola
-              </Link>
-            </div>
-          </div>
+    <section className="py-20 md:py-32 bg-[var(--landing-bg-dark)] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-3xl mx-auto text-center">
+          <span className="text-xs text-[var(--landing-text-dark-secondary)] uppercase tracking-widest block mb-3">
+            {t("landing.cta.tag")}
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--landing-text-dark-primary)] leading-none mb-6">
+            {t("landing.cta.headline")}
+          </h2>
+          <p className="text-[var(--landing-text-dark-secondary)] text-sm md:text-base leading-relaxed max-w-2xl mx-auto mb-10">
+            {t("landing.cta.description")}
+          </p>
+          <button
+            onClick={onRequestDemo}
+            className="inline-flex py-3 px-8 rounded-lg text-sm font-semibold bg-white text-neutral-900 hover:bg-neutral-100 transition-all cursor-pointer"
+          >
+            {t("landing.cta.button")}
+          </button>
         </div>
       </div>
     </section>
