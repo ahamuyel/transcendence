@@ -12,6 +12,7 @@ import { useState, useMemo } from "react"
 import { signIn as nextAuthSignIn } from "next-auth/react"
 import { signUpSchema } from "@/lib/validations/auth"
 import { csrfPost } from "@/lib/csrf-client"
+import { useTranslation } from "@/lib/i18n"
 import {
   AuthCard,
   AuthHeader,
@@ -32,6 +33,7 @@ const ACCOUNT_TYPES = [
 ]
 
 function PasswordRequirements({ password }: { password: string }) {
+  const { tUI } = useTranslation()
   const checks = useMemo(
     () => [
       { label: "Mínimo 8 caracteres", met: password.length >= 8 },
@@ -73,7 +75,7 @@ function PasswordRequirements({ password }: { password: string }) {
               <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1" />
             )}
           </svg>
-          <span>{check.label}</span>
+          <span>{tUI(check.label)}</span>
         </div>
       ))}
     </div>
@@ -82,6 +84,7 @@ function PasswordRequirements({ password }: { password: string }) {
 
 export default function SignUpPage() {
   const router = useRouter()
+  const { tUI } = useTranslation()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -97,7 +100,7 @@ export default function SignUpPage() {
       parsed.error.issues.forEach((i) => {
         e[i.path[0] as string] = i.message
       })
-    if (!acceptedTerms) e.terms = "Deve aceitar os Termos de Serviço e a Política de Privacidade"
+    if (!acceptedTerms) e.terms = tUI("Deve aceitar os Termos de Serviço e a Política de Privacidade")
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -110,13 +113,13 @@ export default function SignUpPage() {
       const res = await csrfPost("/api/auth/signup", { name, email, password })
       const data = await res.json()
       if (!res.ok) {
-        setErrors({ general: data.error || "Erro ao criar conta" })
+        setErrors({ general: data.error || tUI("Erro ao criar conta") })
         return
       }
       setSuccess(true)
     } catch {
       setErrors({
-        general: "Erro de conexão. Verifique a sua internet e tente novamente.",
+        general: tUI("Erro de conexão. Verifique a sua internet e tente novamente."),
       })
     } finally {
       setLoading(false)
@@ -127,26 +130,26 @@ export default function SignUpPage() {
     return (
       <AuthSuccess
         icon={GraduationCap}
-        title="Conta criada com sucesso!"
-        actionLabel="Ir para o login"
+        title={tUI("Conta criada com sucesso!")}
+        actionLabel={tUI("Ir para o login")}
         actionHref="/signin"
         secondaryAction={
           <Link
             href="/verify-email"
             className="text-xs text-primary hover:underline font-medium"
           >
-            Não recebeu o e-mail? Reenviar verificação
+            {tUI("Não recebeu o e-mail? Reenviar verificação")}
           </Link>
         }
       >
         <p>
-          Enviámos um e-mail de verificação para{" "}
+          {tUI("Enviámos um e-mail de verificação para")}{" "}
           <span className="font-medium text-zinc-700 dark:text-zinc-300">
             {email}
           </span>
           .
         </p>
-        <p>Clique no link para activar a sua conta antes de fazer login.</p>
+        <p>{tUI("Clique no link para activar a sua conta antes de fazer login.")}</p>
       </AuthSuccess>
     )
   }
@@ -157,8 +160,8 @@ export default function SignUpPage() {
         <div className="p-6 sm:p-8">
           <AuthHeader
             icon={UserPlus}
-            title="Criar conta"
-            subtitle="Junte-se à plataforma de gestão escolar Cur10usX"
+            title={tUI("Criar conta")}
+            subtitle={tUI("Junte-se à plataforma de gestão escolar Cur10usX")}
           />
 
           {/* Account type cards */}
@@ -175,10 +178,10 @@ export default function SignUpPage() {
                   />
                 </div>
                 <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-                  {label}
+                  {tUI(label)}
                 </p>
                 <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">
-                  {desc}
+                  {tUI(desc)}
                 </p>
               </div>
             ))}
@@ -191,9 +194,9 @@ export default function SignUpPage() {
 
             <FormInput
               id="name"
-              label="Nome completo"
+              label={tUI("Nome completo")}
               type="text"
-              placeholder="O seu nome"
+              placeholder={tUI("O seu nome")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               error={errors.name}
@@ -203,7 +206,7 @@ export default function SignUpPage() {
 
             <FormInput
               id="signup-email"
-              label="E-mail"
+              label={tUI("E-mail")}
               type="email"
               autoComplete="email"
               placeholder="seu@email.com"
@@ -216,9 +219,9 @@ export default function SignUpPage() {
             <div>
               <PasswordInput
                 id="signup-password"
-                label="Palavra-passe"
+                label={tUI("Palavra-passe")}
                 autoComplete="new-password"
-                placeholder="Mínimo 8 caracteres"
+                placeholder={tUI("Mínimo 8 caracteres")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 error={errors.password}
@@ -240,21 +243,21 @@ export default function SignUpPage() {
                 htmlFor="terms"
                 className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed"
               >
-                Li e aceito os{" "}
+                {tUI("Li e aceito os")}{" "}
                 <Link
                   href="/termos"
                   className="text-primary hover:underline font-medium"
                   target="_blank"
                 >
-                  Termos de Serviço
+                  {tUI("Termos de Serviço")}
                 </Link>{" "}
-                e a{" "}
+                {tUI("e a")}{" "}
                 <Link
                   href="/privacidade"
                   className="text-primary hover:underline font-medium"
                   target="_blank"
                 >
-                  Política de Privacidade
+                  {tUI("Política de Privacidade")}
                 </Link>
                 .
               </label>
@@ -265,12 +268,12 @@ export default function SignUpPage() {
               </p>
             )}
 
-            <SubmitButton loading={loading} loadingText="Criando conta...">
-              Criar conta
+            <SubmitButton loading={loading} loadingText={tUI("Criando conta...")}>
+              {tUI("Criar conta")}
             </SubmitButton>
           </form>
 
-          <OAuthDivider label="ou registe-se com" />
+          <OAuthDivider label={tUI("ou registe-se com")} />
 
           <GoogleOAuthButton disabled={loading} />
 
@@ -279,9 +282,9 @@ export default function SignUpPage() {
       </AuthCard>
 
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
-        Já tem uma conta?{" "}
+        {tUI("Já tem uma conta?")}{" "}
         <Link href="/signin" className="text-primary font-medium hover:underline">
-          Entrar
+          {tUI("Entrar")}
         </Link>
       </p>
     </div>

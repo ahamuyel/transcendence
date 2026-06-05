@@ -5,6 +5,7 @@ import { useSession, signOut } from "next-auth/react"
 import { Lock, CheckCircle2, ShieldAlert } from "lucide-react"
 import { csrfPost } from "@/lib/csrf-client"
 import { changePasswordSchema } from "@/lib/validations/auth"
+import { useTranslation } from "@/lib/i18n"
 import {
   AuthCard,
   PasswordInput,
@@ -13,6 +14,7 @@ import {
 } from "@/components/auth"
 
 export default function ChangePasswordPage() {
+  const { tUI } = useTranslation()
   const { data: session } = useSession()
   const hasPassword = session?.user?.hasPassword
   const isMustChange = session?.user?.mustChangePassword
@@ -27,15 +29,15 @@ export default function ChangePasswordPage() {
   function validate() {
     const e: Record<string, string> = {}
     if (newPassword !== confirmPassword) {
-      e.confirmPassword = "As palavras-passe não coincidem"
+      e.confirmPassword = tUI("As palavras-passe não coincidem")
     }
     const payload = hasPassword ? { currentPassword, newPassword } : { newPassword }
     const parsed = changePasswordSchema.safeParse(payload)
     if (!parsed.success) {
       parsed.error.issues.forEach((i) => {
         const field = i.path[0] as string
-        if (field === "newPassword") e.newPassword = i.message
-        if (field === "currentPassword") e.currentPassword = i.message
+        if (field === "newPassword") e.newPassword = tUI(i.message)
+        if (field === "currentPassword") e.currentPassword = tUI(i.message)
       })
     }
     setErrors(e)
@@ -52,7 +54,7 @@ export default function ChangePasswordPage() {
       const res = await csrfPost("/api/auth/change-password", payload)
       const data = await res.json()
       if (!res.ok) {
-        setErrors({ general: data.error || "Erro ao alterar palavra-passe" })
+        setErrors({ general: data.error ? tUI(data.error) : tUI("Erro ao alterar palavra-passe") })
         return
       }
       setSuccess(true)
@@ -60,7 +62,7 @@ export default function ChangePasswordPage() {
         signOut({ callbackUrl: "/signin?reason=password_changed" })
       }, 2000)
     } catch {
-      setErrors({ general: "Erro de conexão" })
+      setErrors({ general: tUI("Erro de conexão") })
     } finally {
       setLoading(false)
     }
@@ -76,10 +78,10 @@ export default function ChangePasswordPage() {
                 <CheckCircle2 className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
               </div>
               <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
-                Palavra-passe definida!
+                {tUI("Palavra-passe definida!")}
               </h1>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Agora pode entrar com e-mail e senha. Vai ser redirecionado...
+                {tUI("Agora pode entrar com e-mail e senha. Vai ser redirecionado...")}
               </p>
             </div>
           </AuthCard>
@@ -99,11 +101,11 @@ export default function ChangePasswordPage() {
               </div>
               <div>
                 <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                  {hasPassword ? "Alterar palavra-passe" : "Definir palavra-passe"}
+                  {hasPassword ? tUI("Alterar palavra-passe") : tUI("Definir palavra-passe")}
                 </h1>
                 {isMustChange && (
                   <p className="text-xs text-amber-600 dark:text-amber-400">
-                    Tem de alterar a sua palavra-passe temporária antes de continuar.
+                    {tUI("Tem de alterar a sua palavra-passe temporária antes de continuar.")}
                   </p>
                 )}
               </div>
@@ -111,8 +113,7 @@ export default function ChangePasswordPage() {
 
             {!hasPassword && (
               <AlertBanner variant="warning" icon={ShieldAlert} className="mb-4">
-                A sua conta foi criada com o Google. Defina uma palavra-passe para
-                poder entrar também com e-mail e senha.
+                {tUI("A sua conta foi criada com o Google. Defina uma palavra-passe para poder entrar também com e-mail e senha.")}
               </AlertBanner>
             )}
 
@@ -126,7 +127,7 @@ export default function ChangePasswordPage() {
               {hasPassword && (
                 <PasswordInput
                   id="currentPassword"
-                  label="Palavra-passe actual"
+                  label={tUI("Palavra-passe actual")}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   error={errors.currentPassword}
@@ -136,7 +137,7 @@ export default function ChangePasswordPage() {
 
               <PasswordInput
                 id="newPassword"
-                label="Nova palavra-passe"
+                label={tUI("Nova palavra-passe")}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 error={errors.newPassword}
@@ -145,15 +146,15 @@ export default function ChangePasswordPage() {
 
               <PasswordInput
                 id="confirmPassword"
-                label="Confirmar nova palavra-passe"
+                label={tUI("Confirmar nova palavra-passe")}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 error={errors.confirmPassword}
                 required
               />
 
-              <SubmitButton loading={loading} loadingText="A guardar...">
-                {hasPassword ? "Alterar palavra-passe" : "Definir palavra-passe"}
+              <SubmitButton loading={loading} loadingText={tUI("A guardar...")}>
+                {hasPassword ? tUI("Alterar palavra-passe") : tUI("Definir palavra-passe")}
               </SubmitButton>
 
               <button
@@ -161,7 +162,7 @@ export default function ChangePasswordPage() {
                 onClick={() => window.history.back()}
                 className="text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition"
               >
-                Voltar
+                {tUI("Voltar")}
               </button>
             </form>
           </div>

@@ -6,6 +6,7 @@ import { KeyRound, CheckCircle2, ArrowLeft, AlertCircle } from "lucide-react"
 import { useState, Suspense, useMemo } from "react"
 import { csrfPost } from "@/lib/csrf-client"
 import { resetPasswordSchema } from "@/lib/validations/auth"
+import { useTranslation } from "@/lib/i18n"
 import {
   AuthCard,
   AuthHeader,
@@ -16,6 +17,7 @@ import {
 } from "@/components/auth"
 
 function PasswordRequirements({ password }: { password: string }) {
+  const { tUI } = useTranslation()
   const checks = useMemo(
     () => [
       { label: "Mínimo 8 caracteres", met: password.length >= 8 },
@@ -57,7 +59,7 @@ function PasswordRequirements({ password }: { password: string }) {
               <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1" />
             )}
           </svg>
-          <span>{check.label}</span>
+          <span>{tUI(check.label)}</span>
         </div>
       ))}
     </div>
@@ -67,6 +69,7 @@ function PasswordRequirements({ password }: { password: string }) {
 function ResetPasswordForm() {
   const searchParams = useSearchParams()
   const token = searchParams.get("token")
+  const { tUI } = useTranslation()
 
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -83,17 +86,16 @@ function ResetPasswordForm() {
               <AlertCircle className="w-7 h-7 text-red-600 dark:text-red-400" />
             </div>
             <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
-              Link inválido
+              {tUI("Link inválido")}
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-              Este link de redefinição é inválido ou expirou. Solicite um novo
-              link.
+              {tUI("Este link de redefinição é inválido ou expirou. Solicite um novo link.")}
             </p>
             <Link
               href="/forgot-password"
               className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-sm font-medium transition"
             >
-              Solicitar novo link
+              {tUI("Solicitar novo link")}
               <ArrowLeft className="w-4 h-4" />
             </Link>
           </div>
@@ -106,12 +108,12 @@ function ResetPasswordForm() {
     return (
       <AuthSuccess
         icon={CheckCircle2}
-        title="Palavra-passe redefinida"
-        actionLabel="Ir para o login"
+        title={tUI("Palavra-passe redefinida")}
+        actionLabel={tUI("Ir para o login")}
         actionHref="/signin"
       >
-        <p>A sua palavra-passe foi actualizada com sucesso.</p>
-        <p>Pode agora entrar na sua conta com a nova palavra-passe.</p>
+        <p>{tUI("A sua palavra-passe foi actualizada com sucesso.")}</p>
+        <p>{tUI("Pode agora entrar na sua conta com a nova palavra-passe.")}</p>
       </AuthSuccess>
     )
   }
@@ -119,7 +121,7 @@ function ResetPasswordForm() {
   function validate() {
     const e: Record<string, string> = {}
     if (password !== confirmPassword) {
-      e.confirmPassword = "As palavras-passe não coincidem"
+      e.confirmPassword = tUI("As palavras-passe não coincidem")
     }
     const parsed = resetPasswordSchema.safeParse({ token, password })
     if (!parsed.success) {
@@ -141,13 +143,13 @@ function ResetPasswordForm() {
       const res = await csrfPost("/api/auth/reset-password", { token, password })
       const data = await res.json()
       if (!res.ok) {
-        setErrors({ general: data.error || "Erro ao redefinir palavra-passe" })
+        setErrors({ general: data.error || tUI("Erro ao redefinir palavra-passe") })
         return
       }
       setSuccess(true)
     } catch {
       setErrors({
-        general: "Erro de conexão. Verifique a sua internet e tente novamente.",
+        general: tUI("Erro de conexão. Verifique a sua internet e tente novamente."),
       })
     } finally {
       setLoading(false)
@@ -160,8 +162,8 @@ function ResetPasswordForm() {
         <div className="p-6 sm:p-8">
           <AuthHeader
             icon={KeyRound}
-            title="Nova palavra-passe"
-            subtitle="Escolha uma nova palavra-passe para a sua conta."
+            title={tUI("Nova palavra-passe")}
+            subtitle={tUI("Escolha uma nova palavra-passe para a sua conta.")}
           />
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
@@ -172,8 +174,8 @@ function ResetPasswordForm() {
             <div>
               <PasswordInput
                 id="password"
-                label="Nova palavra-passe"
-                placeholder="Mín. 8 caracteres"
+                label={tUI("Nova palavra-passe")}
+                placeholder={tUI("Mín. 8 caracteres")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 error={errors.password}
@@ -184,17 +186,17 @@ function ResetPasswordForm() {
 
             <PasswordInput
               id="confirmPassword"
-              label="Confirmar nova palavra-passe"
-              placeholder="Repita a palavra-passe"
+              label={tUI("Confirmar nova palavra-passe")}
+              placeholder={tUI("Repita a palavra-passe")}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               error={errors.confirmPassword}
               disabled={loading}
             />
 
-            <SubmitButton loading={loading} loadingText="A redefinir...">
+            <SubmitButton loading={loading} loadingText={tUI("A redefinir...")}>
               <KeyRound className="w-4 h-4" />
-              Redefinir palavra-passe
+              {tUI("Redefinir palavra-passe")}
             </SubmitButton>
           </form>
         </div>
@@ -206,7 +208,7 @@ function ResetPasswordForm() {
           className="inline-flex items-center gap-1.5 text-primary font-medium hover:underline"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Voltar para o login
+          {tUI("Voltar para o login")}
         </Link>
       </p>
     </div>

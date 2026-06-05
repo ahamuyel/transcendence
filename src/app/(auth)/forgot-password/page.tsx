@@ -5,6 +5,7 @@ import { ArrowLeft, Mail, CheckCircle2 } from "lucide-react"
 import { useState } from "react"
 import { forgotPasswordSchema } from "@/lib/validations/auth"
 import { csrfPost } from "@/lib/csrf-client"
+import { useTranslation } from "@/lib/i18n"
 import {
   AuthCard,
   AuthHeader,
@@ -14,6 +15,7 @@ import {
 } from "@/components/auth"
 
 export default function ForgotPasswordPage() {
+  const { tUI } = useTranslation()
   const [email, setEmail] = useState("")
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState("")
@@ -41,12 +43,12 @@ export default function ForgotPasswordPage() {
       const res = await csrfPost("/api/auth/forgot-password", { email })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error || "Erro ao enviar link de recuperação")
+        setError(data.error || tUI("Erro ao enviar link de recuperação"))
         return
       }
       setSubmitted(true)
     } catch {
-      setError("Erro de conexão. Verifique a sua internet e tente novamente.")
+      setError(tUI("Erro de conexão. Verifique a sua internet e tente novamente."))
     } finally {
       setLoading(false)
     }
@@ -61,25 +63,23 @@ export default function ForgotPasswordPage() {
               <CheckCircle2 className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
             </div>
             <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
-              E-mail enviado
+              {tUI("E-mail enviado")}
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed">
-              Se o e-mail{" "}
+              {tUI("Se o e-mail")}{" "}
               <span className="font-medium text-zinc-700 dark:text-zinc-300">
                 {email}
               </span>{" "}
-              estiver registado, receberá um link para redefinir a sua
-              palavra-passe em alguns minutos.
+              {tUI("estiver registado, receberá um link para redefinir a sua palavra-passe em alguns minutos.")}
             </p>
             <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-xs text-amber-700 dark:text-amber-300 mb-6 text-left">
-              <strong>Dica:</strong> Verifique também a pasta de spam ou lixo
-              eletrónico.
+              <strong>{tUI("Dica:")}</strong> {tUI("Verifique também a pasta de spam ou lixo electrónico.")}
             </div>
             <Link
               href="/signin"
               className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-sm font-medium transition"
             >
-              Voltar para o login
+              {tUI("Voltar para o login")}
             </Link>
           </div>
         </AuthCard>
@@ -93,8 +93,8 @@ export default function ForgotPasswordPage() {
         <div className="p-6 sm:p-8">
           <AuthHeader
             icon={Mail}
-            title="Recuperar palavra-passe"
-            subtitle="Introduza o seu e-mail e enviaremos um link para redefinir a sua palavra-passe."
+            title={tUI("Recuperar palavra-passe")}
+            subtitle={tUI("Introduza o seu e-mail e enviaremos um link para redefinir a sua palavra-passe.")}
           />
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
@@ -102,7 +102,7 @@ export default function ForgotPasswordPage() {
 
             <FormInput
               id="email"
-              label="E-mail"
+              label={tUI("E-mail")}
               type="email"
               autoComplete="email"
               placeholder="seu@email.com"
@@ -112,8 +112,8 @@ export default function ForgotPasswordPage() {
               disabled={loading}
             />
 
-            <SubmitButton loading={loading} loadingText="A enviar...">
-              Enviar link de recuperação
+            <SubmitButton loading={loading} loadingText={tUI("A enviar...")}>
+              {tUI("Enviar link de recuperação")}
             </SubmitButton>
           </form>
         </div>
@@ -125,7 +125,7 @@ export default function ForgotPasswordPage() {
           className="inline-flex items-center gap-1.5 text-primary font-medium hover:underline"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Voltar para o login
+          {tUI("Voltar para o login")}
         </Link>
       </p>
     </div>

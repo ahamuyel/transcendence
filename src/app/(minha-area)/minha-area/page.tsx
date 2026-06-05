@@ -13,6 +13,7 @@ import {
 } from "lucide-react"
 import StatusBadge from "@/components/ui/StatusBadge"
 import ConfirmActionModal from "@/components/ui/ConfirmActionModal"
+import { useTranslation } from "@/lib/i18n"
 
 /* ─── Labels e ícones ─── */
 
@@ -42,8 +43,6 @@ const ROLES_DISPONIVEIS = [
   { id: "teacher", label: "Professor", desc: "Solicitar contratação como docente" },
   { id: "parent", label: "Encarregado", desc: "Solicitar como encarregado de educação" },
 ]
-
-const CLASSES = Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: `${i + 1}ª classe` }))
 
 /* ─── Tipos ─── */
 
@@ -76,6 +75,7 @@ type UserSchool = {
 /* ─── Página Principal ─── */
 
 export default function MinhaAreaPage() {
+  const { tUI, locale } = useTranslation()
   const { data: session, status: sessionStatus } = useSession()
   const [applications, setApplications] = useState<Application[]>([])
   const [schools, setSchools] = useState<PublicSchool[]>([])
@@ -100,6 +100,17 @@ export default function MinhaAreaPage() {
   const [desiredGrade, setDesiredGrade] = useState("")
   const [teachingArea, setTeachingArea] = useState("")
   const [relationship, setRelationship] = useState("")
+
+  // Classes dynamically localized
+  const classes = Array.from({ length: 12 }, (_, i) => {
+    const val = i + 1
+    const label = locale === "en"
+      ? `${val}th Grade`
+      : locale === "fr"
+      ? `${val}e classe`
+      : `${val}ª classe`
+    return { value: val, label }
+  })
 
   // Carregar dados
   const loadData = useCallback(async () => {
@@ -156,14 +167,18 @@ export default function MinhaAreaPage() {
 
   const handleSubmit = async () => {
     setSubmitError("")
-    if (selRole === "student" && !desiredGrade) { setSubmitError("Seleccione a classe pretendida"); return }
-    if (selRole === "student" && !gender) { setSubmitError("Seleccione o género"); return }
-    if (selRole === "teacher" && !teachingArea.trim()) { setSubmitError("Indique a área de ensino"); return }
-    if (selRole === "parent" && !relationship.trim()) { setSubmitError("Indique o parentesco"); return }
-    if (!phone.trim()) { setSubmitError("Telefone é obrigatório"); return }
+    if (selRole === "student" && !desiredGrade) { setSubmitError(tUI("Seleccione a classe pretendida")); return }
+    if (selRole === "student" && !gender) { setSubmitError(tUI("Seleccione o género")); return }
+    if (selRole === "teacher" && !teachingArea.trim()) { setSubmitError(tUI("Indique a área de ensino")); return }
+    if (selRole === "parent" && !relationship.trim()) { setSubmitError(tUI("Indique o parentesco")); return }
+    if (!phone.trim()) { setSubmitError(tUI("Telefone é obrigatório")); return }
 
     setSubmitting(true)
     try {
+      const modalMessagePT = `Solicitação via Minha Área — ${roleLabels[selRole] || selRole}`
+      const modalMessageEN = `Request via My Area — ${tUI(roleLabels[selRole] || selRole)}`
+      const modalMessageFR = `Demande via Mon Espace — ${tUI(roleLabels[selRole] || selRole)}`
+
       const res = await fetch("/api/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -173,7 +188,7 @@ export default function MinhaAreaPage() {
           phone,
           role: selRole,
           schoolId: selSchool,
-          message: `Solicitação via Minha Área — ${roleLabels[selRole] || selRole}`,
+          message: locale === "en" ? modalMessageEN : locale === "fr" ? modalMessageFR : modalMessagePT,
           ...(selRole === "student" ? {
             gender,
             documentType: docType || undefined,
@@ -184,7 +199,7 @@ export default function MinhaAreaPage() {
         }),
       })
       const data = await res.json()
-      if (!res.ok) { setSubmitError(data.error || "Erro ao enviar"); return }
+      if (!res.ok) { setSubmitError(data.error ? tUI(data.error) : tUI("Erro ao enviar")); return }
 
       setModalStep("success")
       const [apps, userSchs] = await Promise.all([
@@ -194,7 +209,7 @@ export default function MinhaAreaPage() {
       setApplications(Array.isArray(apps) ? apps : [])
       setUserSchools(Array.isArray(userSchs) ? userSchs : [])
     } catch {
-      setSubmitError("Erro de conexão. Tente novamente.")
+      setSubmitError(tUI("Erro de conexão. Tente novamente."))
     } finally {
       setSubmitting(false)
     }
@@ -212,10 +227,15 @@ export default function MinhaAreaPage() {
     }
   }
 
-  const firstName = user?.name?.split(" ")[0] || "Utilizador"
+  const firstName = user?.name?.split(" ")[0] || tUI("Utilizador")
   const hour = new Date().getHours()
-  const greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite"
-  const quickActions = getQuickActions(userSchools)
+  const greeting = hour < 12 ? tUI("Bom dia") : hour < 18 ? tUI("Boa tarde") : tUI("Boa noite")
+  const rawActions = getQuickActions(userSchools)
+  const quickActions = rawActions.map((action) => ({
+    ...action,
+    label: tUI(action.label),
+    desc: tUI(action.desc),
+  }))
 
   return (
     <div className="space-y-8">
@@ -242,27 +262,27 @@ export default function MinhaAreaPage() {
                     const Icon = roleIcons[role] || User
                     return (
                       <span key={role} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-medium backdrop-blur-sm">
-                        <Icon size={12} /> {roleLabels[role] || role}
+                        <Icon size={12} /> {tUI(roleLabels[role] || role)}
                       </span>
                     )
                   })
                 : (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-medium backdrop-blur-sm">
-                    <AlertTriangle size={12} /> Sem escola vinculada
+                    <AlertTriangle size={12} /> {tUI("Sem escola vinculada")}
                   </span>
                 )
               }
             </div>
             {hasActiveSchools && (
               <Link href="/dashboard" className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white text-sm font-medium transition backdrop-blur-sm">
-                Ir para o painel <ExternalLink size={14} />
+                {tUI("Ir para o painel")} <ExternalLink size={14} />
               </Link>
             )}
           </div>
           <div className="flex gap-3 sm:flex-col sm:gap-2 sm:items-end">
-            <StatCard label="Escolas" value={userSchools.length} />
-            <StatCard label="Roles" value={new Set(userSchools.flatMap((s) => s.roles)).size} />
-            {pendingCount > 0 && <StatCard label="Pendentes" value={pendingCount} />}
+            <StatCard label={tUI("Escolas")} value={userSchools.length} />
+            <StatCard label={tUI("Roles")} value={new Set(userSchools.flatMap((s) => s.roles)).size} />
+            {pendingCount > 0 && <StatCard label={tUI("Pendentes")} value={pendingCount} />}
           </div>
         </div>
       </section>
@@ -271,7 +291,7 @@ export default function MinhaAreaPage() {
       {hasActiveSchools && (
         <section>
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-            <School size={18} className="text-primary" /> As minhas escolas
+            <School size={18} className="text-primary" /> {tUI("As minhas escolas")}
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {userSchools.map((school) => <SchoolCard key={school.id} school={school} />)}
@@ -283,24 +303,24 @@ export default function MinhaAreaPage() {
       {!hasActiveSchools && (
         <section>
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-            <UserPlus size={18} className="text-primary" /> Solicitar vinculação
+            <UserPlus size={18} className="text-primary" /> {tUI("Solicitar vinculação")}
           </h2>
           {escolasDisponiveis.length === 0 ? (
             <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 text-center">
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Não há escolas disponíveis para solicitar neste momento.
+                {tUI("Não há escolas disponíveis para solicitar neste momento.")}
               </p>
             </div>
           ) : (
             <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 text-center">
               <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
-                Escolha uma escola e o role pretendido para solicitar vinculação
+                {tUI("Escolha uma escola e o role pretendido para solicitar vinculação")}
               </p>
               <button
                 onClick={openModal}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition shadow-lg shadow-primary/20"
               >
-                <UserPlus size={16} /> Nova solicitação
+                <UserPlus size={16} /> {tUI("Nova solicitação")}
               </button>
             </div>
           )}
@@ -311,17 +331,17 @@ export default function MinhaAreaPage() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <ClipboardList size={18} className="text-primary" /> Histórico de solicitações
+            <ClipboardList size={18} className="text-primary" /> {tUI("Histórico de solicitações")}
           </h2>
           <span className="text-xs text-zinc-400 dark:text-zinc-500">
-            {applications.length} {applications.length === 1 ? "solicitação" : "solicitações"}
+            {applications.length} {applications.length === 1 ? tUI("solicitação") : tUI("solicitações")}
           </span>
         </div>
 
         {applications.length === 0 ? (
           <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 text-center">
             <ClipboardList size={32} className="mx-auto text-zinc-400 dark:text-zinc-600 mb-3" />
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">Ainda não tem nenhuma solicitação.</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">{tUI("Ainda não tem nenhuma solicitação.")}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -334,19 +354,19 @@ export default function MinhaAreaPage() {
                       <StatusBadge status={app.status} />
                     </div>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-                      {roleLabels[app.role] || app.role}
+                      {tUI(roleLabels[app.role] || app.role)}
                       {app.school.city && ` · ${app.school.city}`}
-                      {` · ${new Date(app.createdAt).toLocaleDateString("pt")}`}
+                      {` · ${new Date(app.createdAt).toLocaleDateString(locale)}`}
                     </p>
                     {app.rejectReason && (
                       <p className="text-xs text-red-600 dark:text-red-400 mt-2 bg-red-50 dark:bg-red-950/30 rounded-lg px-2.5 py-1.5 inline-block">
-                        Motivo: {app.rejectReason}
+                        {tUI("Motivo:")} {app.rejectReason}
                       </p>
                     )}
                   </div>
                   {(app.status === "pendente" || app.status === "em_analise") && (
                     <button onClick={() => setCancelTarget(app.id)} className="text-xs text-red-600 dark:text-red-400 hover:underline shrink-0 font-medium">
-                      Cancelar
+                      {tUI("Cancelar")}
                     </button>
                   )}
                 </div>
@@ -360,7 +380,7 @@ export default function MinhaAreaPage() {
       {quickActions.length > 0 && (
         <section>
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-            <Sparkles size={18} className="text-primary" /> Acções rápidas
+            <Sparkles size={18} className="text-primary" /> {tUI("Acções rápidas")}
           </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {quickActions.map((action, i) => (
@@ -382,14 +402,14 @@ export default function MinhaAreaPage() {
       {!hasActiveSchools && (
         <section>
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-            <Sparkles size={18} className="text-primary" /> Como funciona
+            <Sparkles size={18} className="text-primary" /> {tUI("Como funciona")}
           </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: UserPlus, label: "Criar conta", desc: "Registe-se na plataforma" },
-              { icon: Send, label: "Escolher escola", desc: "Seleccione escola e role" },
-              { icon: Clock, label: "Aguardar aprovação", desc: "A escola analisa o pedido" },
-              { icon: ShieldCheck, label: "Aceder", desc: "Acesso ao painel da escola" },
+              { icon: UserPlus, label: tUI("Criar conta"), desc: tUI("Registe-se na plataforma") },
+              { icon: Send, label: tUI("Escolher escola"), desc: tUI("Seleccione escola e role") },
+              { icon: Clock, label: tUI("Aguardar aprovação"), desc: tUI("A escola analisa o pedido") },
+              { icon: ShieldCheck, label: tUI("Aceder"), desc: tUI("Acesso ao painel da escola") },
             ].map((step, i) => (
               <div key={i} className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 text-center">
                 <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-950 flex items-center justify-center mx-auto mb-3">
@@ -406,7 +426,7 @@ export default function MinhaAreaPage() {
       {/* 7. A MINHA CONTA */}
       <section>
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mb-4">
-          <Settings size={18} className="text-primary" /> A minha conta
+          <Settings size={18} className="text-primary" /> {tUI("A minha conta")}
         </h2>
         <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
           <div className="p-4 sm:p-6">
@@ -425,15 +445,15 @@ export default function MinhaAreaPage() {
                 </div>
               </div>
               <div className="flex-1 grid gap-3 sm:grid-cols-2">
-                <InfoItem icon={Mail} label="Provider" value="Email" />
-                <InfoItem icon={Calendar} label="Registado em" value={session?.expires ? new Date(session.expires).toLocaleDateString("pt") : "—"} />
+                <InfoItem icon={Mail} label={tUI("Provider")} value="Email" />
+                <InfoItem icon={Calendar} label={tUI("Registado em")} value={session?.expires ? new Date(session.expires).toLocaleDateString(locale) : "—"} />
               </div>
             </div>
           </div>
           <div className="px-4 sm:px-6 py-3 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">Gerir as suas definições de conta</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">{tUI("Gerir as suas definições de conta")}</p>
             <Link href="/change-password" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary dark:text-primary-400 hover:underline">
-              Alterar palavra-passe <ArrowRight size={14} />
+              {tUI("Alterar palavra-passe")} <ArrowRight size={14} />
             </Link>
           </div>
         </div>
@@ -444,9 +464,9 @@ export default function MinhaAreaPage() {
         open={!!cancelTarget}
         onClose={() => setCancelTarget(null)}
         onConfirm={handleCancel}
-        title="Cancelar solicitação"
-        message="Tem a certeza que deseja cancelar esta solicitação? Esta acção não pode ser desfeita."
-        confirmLabel="Cancelar solicitação"
+        title={tUI("Cancelar solicitação")}
+        message={tUI("Tem a certeza que deseja cancelar esta solicitação? Esta acção não pode ser desfeita.")}
+        confirmLabel={tUI("Cancelar solicitação")}
         confirmColor="red"
       />
 
@@ -459,10 +479,10 @@ export default function MinhaAreaPage() {
             {/* Header */}
             <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-zinc-800">
               <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                {modalStep === "school" && "Escolha a escola"}
-                {modalStep === "role" && "Escolha o role"}
-                {modalStep === "form" && `Dados — ${roleLabels[selRole] || selRole}`}
-                {modalStep === "success" && "Solicitação enviada"}
+                {modalStep === "school" && tUI("Escolha a escola")}
+                {modalStep === "role" && tUI("Escolha o role")}
+                {modalStep === "form" && `${tUI("Dados — ")} ${tUI(roleLabels[selRole] || selRole)}`}
+                {modalStep === "success" && tUI("Solicitação enviada")}
               </h2>
               <button onClick={closeModal} disabled={submitting} className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
                 <X size={18} className="text-zinc-400" />
@@ -473,14 +493,14 @@ export default function MinhaAreaPage() {
               {/* Step 1: Escola */}
               {modalStep === "school" && (
                 <div className="space-y-4">
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Seleccione a escola onde deseja solicitar vinculação</p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{tUI("Seleccione a escola onde deseja solicitar vinculação")}</p>
                   <div className="relative">
                     <select
                       value={selSchool}
                       onChange={(e) => setSelSchool(e.target.value)}
                       className="w-full h-10 px-3 pr-8 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
                     >
-                      <option value="">Seleccione uma escola...</option>
+                      <option value="">{tUI("Seleccione uma escola...")}</option>
                       {escolasDisponiveis.map((s) => (
                         <option key={s.id} value={s.id}>{s.name}{s.city ? ` — ${s.city}` : ""}</option>
                       ))}
@@ -492,7 +512,7 @@ export default function MinhaAreaPage() {
                     disabled={!selSchool}
                     className="w-full h-10 flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    Continuar <ArrowRight size={14} />
+                    {tUI("Continuar")} <ArrowRight size={14} />
                   </button>
                 </div>
               )}
@@ -500,7 +520,7 @@ export default function MinhaAreaPage() {
               {/* Step 2: Role */}
               {modalStep === "role" && (
                 <div className="space-y-4">
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Seleccione o role que pretende nesta escola</p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{tUI("Seleccione o role que pretende nesta escola")}</p>
                   <div className="grid grid-cols-3 gap-2">
                     {ROLES_DISPONIVEIS.map(({ id, label }) => {
                       const Icon = roleIcons[id] || User
@@ -517,21 +537,21 @@ export default function MinhaAreaPage() {
                           <div className={`w-8 h-8 rounded-lg mx-auto mb-1.5 flex items-center justify-center ${selRole === id ? "bg-primary-100 dark:bg-primary-950" : "bg-zinc-100 dark:bg-zinc-700"}`}>
                             <Icon size={14} className={selRole === id ? "text-primary dark:text-primary-400" : "text-zinc-400 dark:text-zinc-500"} />
                           </div>
-                          <p className={`text-xs font-medium ${selRole === id ? "text-primary-700 dark:text-primary-300" : "text-zinc-600 dark:text-zinc-400"}`}>{label}</p>
+                          <p className={`text-xs font-medium ${selRole === id ? "text-primary-700 dark:text-primary-300" : "text-zinc-600 dark:text-zinc-400"}`}>{tUI(label)}</p>
                         </button>
                       )
                     })}
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => setModalStep("school")} className="flex-1 h-10 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition">
-                      Voltar
+                      {tUI("Voltar")}
                     </button>
                     <button
                       onClick={handleNextStep}
                       disabled={!selRole}
                       className="flex-1 h-10 flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed"
                     >
-                      Continuar <ArrowRight size={14} />
+                      {tUI("Continuar")} <ArrowRight size={14} />
                     </button>
                   </div>
                 </div>
@@ -548,7 +568,7 @@ export default function MinhaAreaPage() {
 
                   {/* Campos comuns */}
                   <div>
-                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Telefone *</label>
+                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">{tUI("Telefone *")}</label>
                     <input
                       type="tel"
                       placeholder="+244 900 000 000"
@@ -562,36 +582,36 @@ export default function MinhaAreaPage() {
                   {selRole === "student" && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Género *</label>
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">{tUI("Género *")}</label>
                         <select value={gender} onChange={(e) => setGender(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition appearance-none">
-                          <option value="">Seleccione...</option>
-                          <option value="masculino">Masculino</option>
-                          <option value="feminino">Feminino</option>
+                          <option value="">{tUI("Seleccione...")}</option>
+                          <option value="masculino">{tUI("Masculino")}</option>
+                          <option value="feminino">{tUI("Feminino")}</option>
                         </select>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Tipo de documento</label>
+                          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">{tUI("Tipo de documento")}</label>
                           <select value={docType} onChange={(e) => setDocType(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition appearance-none">
-                            <option value="">Seleccione...</option>
-                            <option value="BI">BI</option>
-                            <option value="Passaporte">Passaporte</option>
+                            <option value="">{tUI("Seleccione...")}</option>
+                            <option value="BI">{tUI("BI")}</option>
+                            <option value="Passaporte">{tUI("Passaporte")}</option>
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Nº do documento</label>
+                          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">{tUI("Nº do documento")}</label>
                           <input type="text" value={docNumber} onChange={(e) => setDocNumber(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition" />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Data de nascimento</label>
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">{tUI("Data de nascimento")}</label>
                         <input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Classe pretendida *</label>
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">{tUI("Classe pretendida *")}</label>
                         <select value={desiredGrade} onChange={(e) => setDesiredGrade(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition appearance-none">
-                          <option value="">Seleccione a classe...</option>
-                          {CLASSES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+                          <option value="">{tUI("Seleccione a classe...")}</option>
+                          {classes.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
                         </select>
                       </div>
                     </>
@@ -601,10 +621,10 @@ export default function MinhaAreaPage() {
                   {selRole === "teacher" && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Área de ensino *</label>
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">{tUI("Área de ensino *")}</label>
                         <input
                           type="text"
-                          placeholder="Ex: Matemática, Física, Português"
+                          placeholder={tUI("Ex: Matemática, Física, Português")}
                           value={teachingArea}
                           onChange={(e) => setTeachingArea(e.target.value)}
                           className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
@@ -617,12 +637,12 @@ export default function MinhaAreaPage() {
                   {selRole === "parent" && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Parentesco *</label>
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">{tUI("Parentesco *")}</label>
                         <select value={relationship} onChange={(e) => setRelationship(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition appearance-none">
-                          <option value="">Seleccione...</option>
-                          <option value="pai">Pai</option>
-                          <option value="mae">Mãe</option>
-                          <option value="tutor">Tutor / Outro</option>
+                          <option value="">{tUI("Seleccione...")}</option>
+                          <option value="pai">{tUI("Pai")}</option>
+                          <option value="mae">{tUI("Mãe")}</option>
+                          <option value="tutor">{tUI("Tutor / Outro")}</option>
                         </select>
                       </div>
                     </>
@@ -630,14 +650,14 @@ export default function MinhaAreaPage() {
 
                   <div className="flex gap-2 pt-2">
                     <button onClick={() => setModalStep("role")} className="flex-1 h-10 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition">
-                      Voltar
+                      {tUI("Voltar")}
                     </button>
                     <button
                       onClick={handleSubmit}
                       disabled={submitting}
                       className="flex-1 h-10 flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition shadow-lg shadow-primary/20 disabled:opacity-50"
                     >
-                      {submitting ? <><Loader2 size={16} className="animate-spin" /> Enviando...</> : <><Send size={16} /> Enviar solicitação</>}
+                      {submitting ? <><Loader2 size={16} className="animate-spin" /> {tUI("Enviando...")}</> : <><Send size={16} /> {tUI("Enviar solicitação")}</>}
                     </button>
                   </div>
                 </div>
@@ -647,12 +667,12 @@ export default function MinhaAreaPage() {
               {modalStep === "success" && (
                 <div className="text-center py-4">
                   <CheckCircle className="w-12 h-12 text-emerald-600 dark:text-emerald-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-2">Solicitação enviada!</h3>
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-2">{tUI("Solicitação enviada!")}</h3>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-                    A sua solicitação foi enviada à escola. Aguarda aprovação.
+                    {tUI("A sua solicitação foi enviada à escola. Aguarda aprovação.")}
                   </p>
                   <button onClick={closeModal} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition">
-                    Fechar
+                    {tUI("Fechar")}
                   </button>
                 </div>
               )}
@@ -695,6 +715,7 @@ function StatCard({ label, value }: { label: string; value: number }) {
 }
 
 function SchoolCard({ school }: { school: UserSchool }) {
+  const { tUI } = useTranslation()
   return (
     <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden hover:shadow-md transition-shadow">
       <div className="p-4 border-b border-zinc-100 dark:border-zinc-800">
@@ -719,13 +740,13 @@ function SchoolCard({ school }: { school: UserSchool }) {
             const Icon = roleIcons[role] || User
             return (
               <span key={role} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium ${roleColors[role] || "text-zinc-600"} bg-zinc-100 dark:bg-zinc-800`}>
-                <Icon size={10} /> {roleLabels[role] || role}
+                <Icon size={10} /> {tUI(roleLabels[role] || role)}
               </span>
             )
           })}
         </div>
         <Link href="/dashboard" className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-primary hover:bg-primary-700 text-white text-sm font-medium transition shadow-lg shadow-primary/20">
-          Aceder ao painel <ExternalLink size={14} />
+          {tUI("Aceder ao painel")} <ExternalLink size={14} />
         </Link>
       </div>
     </div>

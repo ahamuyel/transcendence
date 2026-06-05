@@ -5,6 +5,7 @@ import { Eye, EyeOff, School, Loader2, ArrowRight, ShieldCheck, Building2, User 
 import { useState } from "react"
 import { registerSchoolSchema } from "@/lib/validations/register-school"
 import { csrfPost } from "@/lib/csrf-client"
+import { useTranslation } from "@/lib/i18n"
 import {
   AuthCard,
   AlertBanner,
@@ -27,6 +28,7 @@ function toSlug(name: string) {
 }
 
 export default function RegistarEscolaPage() {
+  const { tUI } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -55,7 +57,7 @@ export default function RegistarEscolaPage() {
     e.preventDefault()
     setError("")
     if (!acceptedTerms) {
-      setError("Deve aceitar os Termos de Serviço e a Política de Privacidade")
+      setError(tUI("Deve aceitar os Termos de Serviço e a Política de Privacidade"))
       return
     }
     const parsed = registerSchoolSchema.safeParse({
@@ -66,17 +68,18 @@ export default function RegistarEscolaPage() {
       setError(parsed.error.issues[0].message)
       return
     }
+    loading;
     setLoading(true)
     try {
       const res = await csrfPost("/api/auth/register-school", parsed.data)
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error || "Erro ao registar escola")
+        setError(data.error || tUI("Erro ao registar escola"))
         return
       }
       setSuccess(true)
     } catch {
-      setError("Erro de conexão. Verifique a sua internet e tente novamente.")
+      setError(tUI("Erro de conexão. Verifique a sua internet e tente novamente."))
     } finally {
       setLoading(false)
     }
@@ -91,25 +94,23 @@ export default function RegistarEscolaPage() {
               <School className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
             </div>
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
-              Registo enviado!
+              {tUI("Registo enviado!")}
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4 leading-relaxed">
-              A escola{" "}
+              {tUI("A escola")}{" "}
               <span className="font-medium text-zinc-700 dark:text-zinc-300">
                 {schoolName}
               </span>{" "}
-              foi registada com sucesso e está pendente de análise pela equipa
-              Cur10usX.
+              {tUI("foi registada com sucesso e está pendente de análise pela equipa Cur10usX.")}
             </p>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-              Receberá um e-mail quando a escola for aprovada e activada.
-              Entretanto, pode fazer login para acompanhar o estado.
+              {tUI("Receberá um e-mail quando a escola for aprovada e activada. Entretanto, pode fazer login para acompanhar o estado.")}
             </p>
             <Link
               href="/signin"
               className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-medium text-sm transition"
             >
-              Ir para o login
+              {tUI("Ir para o login")}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -129,11 +130,10 @@ export default function RegistarEscolaPage() {
         <div className="p-6 sm:p-8">
           <div className="mb-8">
             <h1 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-              Registar escola
+              {tUI("Registar escola")}
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-              Preencha os dados abaixo para registar a sua instituição na
-              plataforma
+              {tUI("Preencha os dados abaixo para registar a sua instituição na plataforma")}
             </p>
           </div>
 
@@ -147,18 +147,18 @@ export default function RegistarEscolaPage() {
                   <User size={14} className="text-primary dark:text-primary-400" />
                 </div>
                 <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                  Dados do administrador
+                  {tUI("Dados do administrador")}
                 </h2>
               </div>
 
               <div>
                 <label htmlFor="adminName" className={labelClass}>
-                  Nome completo
+                  {tUI("Nome completo")}
                 </label>
                 <input
                   id="adminName"
                   type="text"
-                  placeholder="O seu nome"
+                  placeholder={tUI("O seu nome")}
                   value={adminName}
                   onChange={(e) => setAdminName(e.target.value)}
                   disabled={loading}
@@ -167,7 +167,7 @@ export default function RegistarEscolaPage() {
               </div>
               <div>
                 <label htmlFor="adminEmail" className={labelClass}>
-                  E-mail pessoal
+                  {tUI("E-mail pessoal")}
                 </label>
                 <input
                   id="adminEmail"
@@ -182,14 +182,14 @@ export default function RegistarEscolaPage() {
               </div>
               <div>
                 <label htmlFor="adminPassword" className={labelClass}>
-                  Palavra-passe
+                  {tUI("Palavra-passe")}
                 </label>
                 <div className="relative">
                   <input
                     id="adminPassword"
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
-                    placeholder="Mínimo 8 caracteres"
+                    placeholder={tUI("Mínimo 8 caracteres")}
                     value={adminPassword}
                     onChange={(e) => setAdminPassword(e.target.value)}
                     disabled={loading}
@@ -199,7 +199,7 @@ export default function RegistarEscolaPage() {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition p-1"
-                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                    aria-label={showPassword ? tUI("Ocultar senha") : tUI("Mostrar senha")}
                   >
                     {showPassword ? (
                       <EyeOff className="w-4 h-4" />
@@ -218,18 +218,18 @@ export default function RegistarEscolaPage() {
                   <Building2 size={14} className="text-primary dark:text-primary-400" />
                 </div>
                 <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                  Dados da escola
+                  {tUI("Dados da escola")}
                 </h2>
               </div>
 
               <div>
                 <label htmlFor="schoolName" className={labelClass}>
-                  Nome da escola
+                  {tUI("Nome da escola")}
                 </label>
                 <input
                   id="schoolName"
                   type="text"
-                  placeholder="Colégio Exemplo"
+                  placeholder={tUI("Colégio Exemplo")}
                   value={schoolName}
                   onChange={(e) => handleSchoolNameChange(e.target.value)}
                   disabled={loading}
@@ -238,7 +238,7 @@ export default function RegistarEscolaPage() {
               </div>
               <div>
                 <label htmlFor="slug" className={labelClass}>
-                  Slug (identificador único)
+                  {tUI("Slug (identificador único)")}
                 </label>
                 <input
                   id="slug"
@@ -250,13 +250,13 @@ export default function RegistarEscolaPage() {
                   className={inputClass}
                 />
                 <p className="text-xs text-zinc-400 mt-1">
-                  Gerado automaticamente a partir do nome
+                  {tUI("Gerado automaticamente a partir do nome")}
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="nif" className={labelClass}>
-                    NIF <span className="text-zinc-400">(opcional)</span>
+                    {tUI("NIF")}{" "}<span className="text-zinc-400">{tUI("(opcional)")}</span>
                   </label>
                   <input
                     id="nif"
@@ -270,7 +270,7 @@ export default function RegistarEscolaPage() {
                 </div>
                 <div>
                   <label htmlFor="phone" className={labelClass}>
-                    Telefone
+                    {tUI("Telefone")}
                   </label>
                   <input
                     id="phone"
@@ -285,7 +285,7 @@ export default function RegistarEscolaPage() {
               </div>
               <div>
                 <label htmlFor="schoolEmail" className={labelClass}>
-                  E-mail da escola
+                  {tUI("E-mail da escola")}
                 </label>
                 <input
                   id="schoolEmail"
@@ -299,12 +299,12 @@ export default function RegistarEscolaPage() {
               </div>
               <div>
                 <label htmlFor="address" className={labelClass}>
-                  Endereço
+                  {tUI("Endereço")}
                 </label>
                 <input
                   id="address"
                   type="text"
-                  placeholder="Rua, número, bairro"
+                  placeholder={tUI("Rua, número, bairro")}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   disabled={loading}
@@ -314,7 +314,7 @@ export default function RegistarEscolaPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="city" className={labelClass}>
-                    Cidade
+                    {tUI("Cidade")}
                   </label>
                   <input
                     id="city"
@@ -328,7 +328,7 @@ export default function RegistarEscolaPage() {
                 </div>
                 <div>
                   <label htmlFor="provincia" className={labelClass}>
-                    Província
+                    {tUI("Província")}
                   </label>
                   <select
                     id="provincia"
@@ -337,7 +337,7 @@ export default function RegistarEscolaPage() {
                     disabled={loading}
                     className={inputClass}
                   >
-                    <option value="">Seleccione...</option>
+                    <option value="">{tUI("Seleccione...")}</option>
                     {PROVINCIAS.map((p) => (
                       <option key={p} value={p}>
                         {p}
@@ -361,21 +361,21 @@ export default function RegistarEscolaPage() {
                 htmlFor="terms"
                 className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed"
               >
-                Li e aceito os{" "}
+                {tUI("Li e aceito os")}{" "}
                 <Link
                   href="/termos"
                   className="text-primary hover:underline font-medium"
                   target="_blank"
                 >
-                  Termos de Serviço
+                  {tUI("Termos de Serviço")}
                 </Link>{" "}
-                e a{" "}
+                {tUI("e a")}{" "}
                 <Link
                   href="/privacidade"
                   className="text-primary hover:underline font-medium"
                   target="_blank"
                 >
-                  Política de Privacidade
+                  {tUI("Política de Privacidade")}
                 </Link>
                 .
               </label>
@@ -389,11 +389,11 @@ export default function RegistarEscolaPage() {
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Registando...
+                  <Loader2 className="w-4 h-4 animate-spin" /> {tUI("Registando...")}
                 </>
               ) : (
                 <>
-                  Registar escola
+                  {tUI("Registar escola")}
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -402,20 +402,20 @@ export default function RegistarEscolaPage() {
             {/* Trust signal */}
             <div className="flex items-center justify-center gap-1.5 text-xs text-zinc-400 -mt-2">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Os seus dados estão protegidos com encriptação</span>
+              <span>{tUI("Os seus dados estão protegidos com encriptação")}</span>
             </div>
           </form>
         </div>
       </AuthCard>
 
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
-        Já tem uma conta?{" "}
+        {tUI("Já tem uma conta?")}{" "}
         <Link href="/signin" className="text-primary font-medium hover:underline">
-          Entrar
+          {tUI("Entrar")}
         </Link>
         {" · "}
         <Link href="/signup" className="text-primary font-medium hover:underline">
-          Criar conta pessoal
+          {tUI("Criar conta pessoal")}
         </Link>
       </p>
     </div>

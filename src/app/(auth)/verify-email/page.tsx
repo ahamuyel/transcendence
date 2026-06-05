@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { CheckCircle, XCircle, Loader2, Mail, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { csrfPost } from "@/lib/csrf-client"
+import { useTranslation } from "@/lib/i18n"
 import {
   AuthCard,
   AlertBanner,
@@ -13,6 +14,7 @@ import {
 function VerifyEmailContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { tUI } = useTranslation()
   const token = searchParams.get("token")
   const justRegistered = searchParams.get("justRegistered")
   const [status, setStatus] = useState<"verifying" | "success" | "error" | "resend">("resend")
@@ -36,22 +38,22 @@ function VerifyEmailContent() {
         })
         if (!res.ok) {
           const data = await res.json()
-          setError(data.error || "Falha na verificação")
+          setError(data.error || tUI("Falha na verificação"))
           setStatus("error")
           return
         }
         setStatus("success")
       } catch {
-        setError("Erro de conexão. Verifique a sua internet e tente novamente.")
+        setError(tUI("Erro de conexão. Verifique a sua internet e tente novamente."))
         setStatus("error")
       }
     }
     verify()
-  }, [token])
+  }, [token, tUI])
 
   async function handleResend() {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setEmailError("Introduza um e-mail válido")
+      setEmailError(tUI("Introduza um e-mail válido"))
       return
     }
     setEmailError("")
@@ -60,12 +62,12 @@ function VerifyEmailContent() {
       const res = await csrfPost("/api/auth/verify-email", { email }, "PATCH")
       if (!res.ok) {
         const data = await res.json()
-        setError(data.error || "Falha ao reenviar e-mail")
+        setError(data.error || tUI("Falha ao reenviar e-mail"))
         return
       }
       setResent(true)
     } catch {
-      setError("Erro de conexão. Verifique a sua internet e tente novamente.")
+      setError(tUI("Erro de conexão. Verifique a sua internet e tente novamente."))
     } finally {
       setResending(false)
     }
@@ -78,10 +80,10 @@ function VerifyEmailContent() {
           <div className="p-8 text-center">
             <Loader2 className="w-10 h-10 text-primary animate-spin mx-auto mb-4" />
             <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-              A verificar e-mail...
+              {tUI("A verificar e-mail...")}
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-              Aguarde um momento
+              {tUI("Aguarde um momento")}
             </p>
           </div>
         </AuthCard>
@@ -98,17 +100,16 @@ function VerifyEmailContent() {
               <CheckCircle className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
             </div>
             <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
-              E-mail verificado!
+              {tUI("E-mail verificado!")}
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-              O seu e-mail foi verificado com sucesso. Já pode entrar na sua
-              conta.
+              {tUI("O seu e-mail foi verificado com sucesso. Já pode entrar na sua conta.")}
             </p>
             <Link
               href="/signin"
               className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-sm font-medium transition"
             >
-              Entrar agora
+              {tUI("Entrar agora")}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -126,26 +127,26 @@ function VerifyEmailContent() {
               <XCircle className="w-7 h-7 text-red-600 dark:text-red-400" />
             </div>
             <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
-              Falha na verificação
+              {tUI("Falha na verificação")}
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-2">
               {error}
             </p>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-              O link pode ter expirado. Solicite um novo e-mail de verificação.
+              {tUI("O link pode ter expirado. Solicite um novo e-mail de verificação.")}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/signin"
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-zinc-300 dark:border-zinc-700 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition"
               >
-                Voltar ao login
+                {tUI("Voltar ao login")}
               </Link>
               <Link
                 href="/verify-email"
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-sm font-medium transition"
               >
-                Reenviar verificação
+                {tUI("Reenviar verificação")}
               </Link>
             </div>
           </div>
@@ -163,13 +164,13 @@ function VerifyEmailContent() {
           </div>
           <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
             {justRegistered
-              ? "Conta criada com sucesso!"
-              : "Verifique o seu e-mail"}
+              ? tUI("Conta criada com sucesso!")
+              : tUI("Verifique o seu e-mail")}
           </h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed">
             {justRegistered
-              ? "Enviamos um e-mail de verificação para a sua caixa de entrada. Verifique também a pasta de spam."
-              : "Insira o seu e-mail para receber um link de verificação"}
+              ? tUI("Enviamos um e-mail de verificação para a sua caixa de entrada. Verifique também a pasta de spam.")
+              : tUI("Insira o seu e-mail para receber um link de verificação")}
           </p>
 
           {error && (
@@ -180,7 +181,7 @@ function VerifyEmailContent() {
 
           {resent && (
             <AlertBanner variant="success" className="mb-5">
-              E-mail de verificação enviado com sucesso!
+              {tUI("E-mail de verificação enviado com sucesso!")}
             </AlertBanner>
           )}
 
@@ -196,7 +197,7 @@ function VerifyEmailContent() {
                 htmlFor="verify-email-input"
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5 text-left"
               >
-                E-mail
+                {tUI("E-mail")}
               </label>
               <input
                 id="verify-email-input"
@@ -227,10 +228,10 @@ function VerifyEmailContent() {
             >
               {resending ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Enviando...
+                  <Loader2 className="w-4 h-4 animate-spin" /> {tUI("Enviando...")}
                 </>
               ) : (
-                "Reenviar link de verificação"
+                tUI("Reenviar link de verificação")
               )}
             </button>
           </form>
@@ -242,7 +243,7 @@ function VerifyEmailContent() {
           href="/signin"
           className="text-primary font-medium hover:underline"
         >
-          Voltar ao login
+          {tUI("Voltar ao login")}
         </Link>
       </p>
     </div>

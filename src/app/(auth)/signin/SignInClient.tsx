@@ -19,6 +19,7 @@ import {
   TrustBadge,
   AlertBanner,
 } from "@/components/auth"
+import { useTranslation } from "@/lib/i18n"
 
 function isValidRedirect(url: string): boolean {
   if (!url.startsWith("/")) return false
@@ -38,6 +39,7 @@ const OAUTH_ERROR_MESSAGES: Record<string, string> = {
 export default function SignInClient() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { tUI } = useTranslation()
 
   const reason = searchParams.get("reason")
   const errorParam = searchParams.get("error")
@@ -121,7 +123,7 @@ export default function SignInClient() {
     try {
       const res = await nextAuthSignIn("credentials", { email, password, redirect: false })
       if (res?.error) {
-        setErrors({ general: "E-mail ou senha incorretos. Se acabou de se registar, verifique o seu e-mail." })
+        setErrors({ general: tUI("E-mail ou senha incorretos. Se acabou de se registar, verifique o seu e-mail.") })
         return
       }
       const session = await getSession()
@@ -145,7 +147,7 @@ export default function SignInClient() {
       }
       router.refresh()
     } catch {
-      setErrors({ general: "Erro de conexão. Verifique a sua internet e tente novamente." })
+      setErrors({ general: tUI("Erro de conexão. Verifique a sua internet e tente novamente.") })
     } finally {
       setLoading(false)
     }
@@ -169,26 +171,26 @@ export default function SignInClient() {
           )}
 
           <AuthHeader
-            title={schoolBranding?.loginMessage || "Bem-vindo de volta"}
-            subtitle="Introduza os seus dados para aceder à plataforma"
+            title={schoolBranding?.loginMessage || tUI("Bem-vindo de volta")}
+            subtitle={tUI("Introduza os seus dados para aceder à plataforma")}
           />
 
           {/* Alert banners */}
           {reason === "session_expired" && (
             <AlertBanner variant="warning" icon={AlertCircle} className="mb-5">
-              A sua sessão foi terminada porque iniciou sessão noutro dispositivo.
+              {tUI("A sua sessão foi terminada porque iniciou sessão noutro dispositivo.")}
             </AlertBanner>
           )}
 
           {reason === "password_changed" && (
             <AlertBanner variant="success" className="mb-5">
-              Palavra-passe alterada com sucesso. Faça login novamente.
+              {tUI("Palavra-passe alterada com sucesso. Faça login novamente.")}
             </AlertBanner>
           )}
 
           {errorParam && (
             <AlertBanner variant="error" className="mb-5">
-              {OAUTH_ERROR_MESSAGES[errorParam] || OAUTH_ERROR_MESSAGES.default}
+              {tUI(OAUTH_ERROR_MESSAGES[errorParam] || OAUTH_ERROR_MESSAGES.default)}
             </AlertBanner>
           )}
 
@@ -201,7 +203,7 @@ export default function SignInClient() {
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <FormInput
               id="email"
-              label="E-mail"
+              label={tUI("E-mail")}
               type="email"
               autoComplete="email"
               placeholder="seu@email.com"
@@ -214,9 +216,9 @@ export default function SignInClient() {
 
             <PasswordInput
               id="password"
-              label="Senha"
+              label={tUI("Senha")}
               autoComplete="current-password"
-              placeholder="A sua senha"
+              placeholder={tUI("A sua senha")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={errors.password}
@@ -226,13 +228,13 @@ export default function SignInClient() {
                   href="/forgot-password"
                   className="text-xs text-primary hover:underline"
                 >
-                  Esqueceu-se?
+                  {tUI("Esqueceu-se?")}
                 </Link>
               }
             />
 
-            <SubmitButton loading={loading} loadingText="A entrar...">
-              Entrar
+            <SubmitButton loading={loading} loadingText={tUI("A entrar...")}>
+              {tUI("Entrar")}
             </SubmitButton>
           </form>
 
@@ -245,9 +247,9 @@ export default function SignInClient() {
       </AuthCard>
 
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
-        Ainda não tem conta?{" "}
+        {tUI("Ainda não tem conta?")}{" "}
         <Link href="/signup" className="text-primary font-medium hover:underline">
-          Criar conta
+          {tUI("Criar conta")}
         </Link>
       </p>
     </div>

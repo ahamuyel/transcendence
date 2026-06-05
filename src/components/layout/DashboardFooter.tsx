@@ -2,9 +2,11 @@
 
 import Link from "next/link"
 import { useSchoolBranding } from "@/provider/school-branding"
+import { useTranslation } from "@/lib/i18n"
 
 export default function DashboardFooter() {
   const { footerText, contactEmail } = useSchoolBranding()
+  const { tUI } = useTranslation()
   const year = new Date().getFullYear()
 
   return (
@@ -16,7 +18,7 @@ export default function DashboardFooter() {
             {footerText ? (
               <span>{footerText}</span>
             ) : (
-              <span>&copy; {year} Cur10usX. Todos os direitos reservados.</span>
+              <span>&copy; {year} Cur10usX. {tUI("Todos os direitos reservados.")}</span>
             )}
           </div>
 
@@ -26,14 +28,14 @@ export default function DashboardFooter() {
               href="/termos"
               className="hover:text-zinc-600 dark:hover:text-zinc-300 transition"
             >
-              Termos
+              {tUI("Termos")}
             </Link>
             <span className="text-zinc-300 dark:text-zinc-700">&middot;</span>
             <Link
               href="/privacidade"
               className="hover:text-zinc-600 dark:hover:text-zinc-300 transition"
             >
-              Privacidade
+              {tUI("Privacidade")}
             </Link>
             {contactEmail && (
               <>
