@@ -9,7 +9,6 @@ const APP_PORT = parseInt(process.env.APP_PORT, 10) || 3000
 
 const wss = new WebSocketServer({ port: WS_PORT })
 const clients = new Map()
-const rooms = new Map() // roomId => Set of userIds
 
 let pub = null
 let sub = null
@@ -36,8 +35,8 @@ function disableRedis() {
   if (!redisEnabled) return
   console.warn("[WS] Redis not available, running in single-instance mode")
   redisEnabled = false
-  try { pub?.disconnect() } catch { }
-  try { sub?.disconnect() } catch { }
+  try { pub?.disconnect() } catch {}
+  try { sub?.disconnect() } catch {}
   pub = null
   sub = null
 }
@@ -92,16 +91,6 @@ function broadcastToAll(event, payload) {
     if (client.readyState === 1) {
       client.send(msg)
     }
-  }
-}
-function broadcastToRoom(roomId, event, payload, excludeUserId = null) {
-  const members = rooms.get(roomId)
-  if (!members) return
-  const msg = JSON.stringify({ event, payload })
-  for (const userId of members) {
-    if (userId === excludeUserId) continue
-    const client = clients.get(userId)
-    if (client && client.readyState === 1) client.send(msg)
   }
 }
 
@@ -177,46 +166,12 @@ wss.on("connection", (ws, req) => {
       }
 
       if (msg.type === "broadcast") {
-        if (redisEnabled) {
-          publishToRedis(msg)
+        publishToRedis(msg)
+        if (msg.target === "user") {
+          broadcast(msg.userId, msg.event, msg.payload)
         } else {
-          if (msg.target === "user") {
-            broadcast(msg.userId, msg.event, msg.payload)
-          } else {
-            broadcastToAll(msg.event, msg.payload)
-          }
+          broadcastToAll(msg.event, msg.payload)
         }
-      }
-      if (!ws.userId) return // rejeita msgs sem auth
-
-      if (msg.type === "join_room" && msg.roomId) {
-        if (!rooms.has(msg.roomId)) rooms.set(msg.roomId, new Set())
-        rooms.get(msg.roomId).add(ws.userId)
-        ws.rooms = ws.rooms || new Set()
-        ws.rooms.add(msg.roomId)
-        return
-      }
-
-      if (msg.type === "leave_room" && msg.roomId) {
-        rooms.get(msg.roomId)?.delete(ws.userId)
-        ws.rooms?.delete(msg.roomId)
-        return
-      }
-
-      if (msg.type === "typing" && msg.roomId) {
-        broadcastToRoom(msg.roomId, "typing", {
-          userId: ws.userId,
-          conversationId: msg.roomId,
-          isTyping: msg.isTyping ?? true
-        }, ws.userId) // não enviar ao próprio
-        return
-      }
-
-      if (msg.type === "message_read" && msg.messageId && msg.senderId) {
-        broadcast(msg.senderId, "message_read", {
-          messageId: msg.messageId,
-          readBy: ws.userId
-        })
         return
       }
     } catch {
@@ -230,11 +185,6 @@ wss.on("connection", (ws, req) => {
       publishToRedis({ target: "all", event: "online_status", payload: { userId: ws.userId, online: false } })
       broadcastToAll("online_status", { userId: ws.userId, online: false })
       console.log(`[WS] User ${ws.userId} disconnected`)
-    }
-    if (ws.rooms) {
-      for (const roomId of ws.rooms) {
-        rooms.get(roomId)?.delete(ws.userId)
-      }
     }
     clearTimeout(authTimer)
   })
