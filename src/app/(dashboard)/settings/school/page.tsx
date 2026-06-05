@@ -5,15 +5,11 @@ import {
   Loader2,
   Save,
   RotateCcw,
-  Check,
   Palette,
   Type,
-  Maximize,
-  Layout,
   Square,
   Sparkles,
   Eye,
-  X,
   Rocket,
   BookOpen,
   Briefcase,
@@ -27,9 +23,9 @@ import {
 } from "@/provider/school-branding";
 
 import { cn } from "@/lib/utils";
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "@/lib/i18n";
 
 const PRESET_COLORS = [
   { value: "#6366f1", label: "Indigo" },
@@ -205,6 +201,7 @@ function applyPreviewTheme(settings: Partial<FormData>) {
 }
 
 export default function SchoolSettingsPage() {
+  const { tUI } = useTranslation();
   const { refresh: refreshBranding } = useSchoolBranding();
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -321,14 +318,14 @@ export default function SchoolSettingsPage() {
       refreshBranding();
 
       setMessage({
-        text: "Configurações guardadas com sucesso!",
+        text: tUI("Configurações guardadas com sucesso!"),
         type: "success",
       });
 
       setIsDirty(false);
     } catch {
       setMessage({
-        text: "Erro ao guardar configurações",
+        text: tUI("Erro ao guardar configurações"),
         type: "error",
       });
     } finally {
@@ -372,7 +369,7 @@ export default function SchoolSettingsPage() {
     setIsDirty(true);
 
     setMessage({
-      text: "Tema redefinido",
+      text: tUI("Tema redefinido"),
       type: "success",
     });
   };
@@ -384,7 +381,7 @@ export default function SchoolSettingsPage() {
 
     if (file.size > 200 * 1024) {
       setMessage({
-        text: "Imagem muito grande (máx. 200KB)",
+        text: tUI("Imagem muito grande (máx. 200KB)"),
         type: "error",
       });
 
@@ -416,10 +413,10 @@ export default function SchoolSettingsPage() {
       <div className="flex-1 min-w-0 space-y-6">
         {/* HEADER */}
         <div className="theme-card p-6">
-          <h1 className="text-2xl font-bold">Personalização Visual</h1>
+          <h1 className="text-2xl font-bold">{tUI("Personalização Visual")}</h1>
 
           <p className="text-sm text-zinc-500 mt-1">
-            Configure a identidade visual da escola
+            {tUI("Configure a identidade visual da escola")}
           </p>
         </div>
 
@@ -434,7 +431,7 @@ export default function SchoolSettingsPage() {
                 : "text-zinc-500",
             )}
           >
-            Tema
+            {tUI("Tema")}
           </button>
 
           <button
@@ -446,14 +443,14 @@ export default function SchoolSettingsPage() {
                 : "text-zinc-500",
             )}
           >
-            Marca
+            {tUI("Marca")}
           </button>
         </div>
 
         {activeTab === "theme" && (
           <>
             {/* PRESETS */}
-            <Section icon={Sparkles} title="Presets">
+            <Section icon={Sparkles} title={tUI("Presets")}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {THEME_PRESET_OPTIONS.map((preset) => {
                   const Icon = preset.icon;
@@ -476,10 +473,10 @@ export default function SchoolSettingsPage() {
                         />
 
                         <div>
-                          <p className="font-semibold">{preset.label}</p>
+                          <p className="font-semibold">{tUI(preset.label)}</p>
 
                           <p className="text-xs text-zinc-500 mt-1">
-                            {preset.desc}
+                            {tUI(preset.desc)}
                           </p>
                         </div>
                       </div>
@@ -490,11 +487,11 @@ export default function SchoolSettingsPage() {
             </Section>
 
             {/* TYPOGRAPHY */}
-            <Section icon={Type} title="Tipografia">
+            <Section icon={Type} title={tUI("Tipografia")}>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-medium mb-1 block">
-                    Fonte
+                    {tUI("Fonte")}
                   </label>
 
                   <select
@@ -513,7 +510,7 @@ export default function SchoolSettingsPage() {
             </Section>
 
             {/* COLORS */}
-            <Section icon={Palette} title="Cores">
+            <Section icon={Palette} title={tUI("Cores")}>
               <div className="flex flex-wrap gap-2">
                 {PRESET_COLORS.map((c) => (
                   <button
@@ -542,7 +539,7 @@ export default function SchoolSettingsPage() {
                 className="flex items-center gap-2 px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all"
               >
                 <RotateCcw size={14} />
-                Resetar tema
+                {tUI("Resetar tema")}
               </button>
             </div>
           </>
@@ -550,7 +547,7 @@ export default function SchoolSettingsPage() {
 
         {activeTab === "brand" && (
           <>
-            <Section title="Logo e Identidade">
+            <Section title={tUI("Logo e Identidade")}>
               <div className="flex items-start gap-4">
                 <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 overflow-hidden flex items-center justify-center">
                   {form.logo ? (
@@ -579,7 +576,7 @@ export default function SchoolSettingsPage() {
                     variant="primary"
                     onClick={() => fileRef.current?.click()}
                   >
-                    Carregar logo
+                    {tUI("Carregar logo")}
                   </Button>
 
                   {form.logo && (
@@ -587,7 +584,7 @@ export default function SchoolSettingsPage() {
                       variant="outline"
                       onClick={() => updateForm("logo", null)}
                     >
-                      Remover
+                      {tUI("Remover")}
                     </Button>
                   )}
                 </div>
@@ -596,7 +593,7 @@ export default function SchoolSettingsPage() {
               <div className="space-y-4 mt-4">
                 <div>
                   <label className="text-xs font-medium block mb-1">
-                    Slogan
+                    {tUI("Slogan")}
                   </label>
 
                   <input
@@ -608,7 +605,7 @@ export default function SchoolSettingsPage() {
 
                 <div>
                   <label className="text-xs font-medium block mb-1">
-                    Email
+                    {tUI("Email")}
                   </label>
 
                   <input
@@ -628,10 +625,10 @@ export default function SchoolSettingsPage() {
             <div>
               {isDirty ? (
                 <p className="text-sm text-amber-600">
-                  Existem alterações não guardadas
+                  {tUI("Existem alterações não guardadas")}
                 </p>
               ) : (
-                <p className="text-sm text-emerald-600">Tudo sincronizado</p>
+                <p className="text-sm text-emerald-600">{tUI("Tudo sincronizado")}</p>
               )}
             </div>
 
@@ -659,7 +656,7 @@ export default function SchoolSettingsPage() {
                 ) : (
                   <Save size={14} />
                 )}
-                Guardar
+                {tUI("Guardar")}
               </Button>
             </div>
           </div>
@@ -673,7 +670,7 @@ export default function SchoolSettingsPage() {
             <div className="flex items-center gap-2 mb-4">
               <Eye size={16} className="text-primary" />
 
-              <h3 className="font-semibold">Pré-visualização</h3>
+              <h3 className="font-semibold">{tUI("Pré-visualização")}</h3>
             </div>
 
             {/* MINI DASHBOARD */}
@@ -694,7 +691,7 @@ export default function SchoolSettingsPage() {
                   </div>
                 </div>
 
-                <Badge variant="default">Online</Badge>
+                <Badge variant="default">{tUI("Online")}</Badge>
               </div>
 
               {/* CONTENT */}
@@ -702,13 +699,13 @@ export default function SchoolSettingsPage() {
                 {/* STATS */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="theme-card p-3">
-                    <p className="text-[10px] text-zinc-500">Alunos</p>
+                    <p className="text-[10px] text-zinc-500">{tUI("Alunos")}</p>
 
                     <p className="text-lg font-bold text-primary">245</p>
                   </div>
 
                   <div className="theme-card p-3">
-                    <p className="text-[10px] text-zinc-500">Professores</p>
+                    <p className="text-[10px] text-zinc-500">{tUI("Professores")}</p>
 
                     <p className="text-lg font-bold text-primary">18</p>
                   </div>
@@ -726,11 +723,11 @@ export default function SchoolSettingsPage() {
                           <p className="text-xs font-medium">Aula #{i}</p>
 
                           <p className="text-[10px] text-zinc-500">
-                            Matemática
+                            {tUI("Matemática")}
                           </p>
                         </div>
 
-                        <Badge variant="secondary">Ativa</Badge>
+                        <Badge variant="secondary">{tUI("Ativa")}</Badge>
                       </div>
                     ))}
                   </div>
@@ -739,23 +736,23 @@ export default function SchoolSettingsPage() {
                 {/* BUTTONS */}
                 <div className="flex gap-2">
                   <Button size="sm" variant="primary">
-                    Primário
+                    {tUI("Primário")}
                   </Button>
 
                   <Button size="sm" variant="primary-outline">
-                    Outline
+                    {tUI("Outline")}
                   </Button>
                 </div>
               </div>
             </div>
 
             <p className="text-[10px] text-zinc-500 mt-4 text-center">
-              Tema:{" "}
+              {tUI("Tema")}:{" "}
               <strong>
-                {
+                {tUI(
                   THEME_PRESET_OPTIONS.find((p) => p.value === form.themePreset)
-                    ?.label
-                }
+                    ?.label || ""
+                )}
               </strong>
             </p>
           </div>

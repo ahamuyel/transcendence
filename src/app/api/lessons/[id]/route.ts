@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import { requirePermission, getSchoolId } from "@/lib/api-auth"
 import { updateLessonSchema } from "@/lib/validations/academic"
+import { checkTeacherScheduleConflict } from "@/lib/lesson-conflicts"
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -53,6 +54,20 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     }
 
     const { materials, subjectId, classId: cId, teacherId, ...rest } = parsed.data
+
+    // Check for teacher schedule conflict (exclude current lesson)
+    const conflict = await checkTeacherScheduleConflict({
+      teacherId: teacherId ?? existing.teacherId,
+      day: rest.day ?? existing.day,
+      startTime: rest.startTime ?? existing.startTime,
+      endTime: rest.endTime ?? existing.endTime,
+      schoolId,
+      academicYearId: existing.academicYearId,
+      excludeLessonId: id,
+    })
+    if (conflict) {
+      return NextResponse.json({ error: conflict }, { status: 409 })
+    }
 
     const updated = await prisma.lesson.update({
       where: { id },

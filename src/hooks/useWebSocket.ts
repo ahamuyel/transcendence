@@ -70,7 +70,17 @@ export function useWebSocket() {
   const connect = useCallback(() => {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
     const host = window.location.hostname
-    const url = process.env.NEXT_PUBLIC_WS_URL || `${protocol}//${host}:3001`
+    const rawUrl = process.env.NEXT_PUBLIC_WS_URL || `${protocol}//${host}:3001`
+
+    let url: string
+    try {
+      url = rawUrl.replace(/^ws(s?):\/\//, "http$1://")
+      new URL(url)
+      url = rawUrl
+    } catch {
+      console.warn(`[WS] Invalid WS URL "${rawUrl}", falling back to default`)
+      url = `${protocol}//${host}:3001`
+    }
 
     const ws = new WebSocket(url)
 

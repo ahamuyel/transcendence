@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react"
 import FormModal from "@/components/ui/FormModal"
 import DeleteConfirmModal from "@/components/ui/DeleteConfirmModal"
 import { Settings2, Plus, Pencil, Trash2, Loader2, Info } from "lucide-react"
+import { useTranslation } from "@/lib/i18n"
 
 /* ───── types ───── */
 
@@ -68,12 +69,6 @@ const emptyForm: FormData = {
   tw3: "0.34",
 }
 
-const roundingLabels: Record<string, string> = {
-  truncar: "Truncar",
-  arredondar: "Arredondar",
-  teto: "Teto",
-}
-
 const inputClass =
   "w-full px-3 py-2 rounded-xl text-sm bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition"
 
@@ -83,6 +78,7 @@ const selectClass =
 /* ───── page ───── */
 
 export default function GradingConfigPage() {
+  const { tUI, locale } = useTranslation()
   const { data: session } = useSession()
   const isAdmin = session?.user?.role === "school_admin"
 
@@ -98,6 +94,12 @@ export default function GradingConfigPage() {
   const [deleteItem, setDeleteItem] = useState<GradingConfig | null>(null)
   const [form, setForm] = useState<FormData>(emptyForm)
   const [error, setError] = useState("")
+
+  const roundingLabels: Record<string, string> = {
+    truncar: tUI("Truncar"),
+    arredondar: tUI("Arredondar"),
+    teto: tUI("Teto"),
+  }
 
   /* ── fetch ── */
 
@@ -188,7 +190,7 @@ export default function GradingConfigPage() {
 
       if (!res.ok) {
         const d = await res.json().catch(() => ({}))
-        setError(d.error || "Erro ao guardar configuracao")
+        setError(d.error ? tUI(d.error) : tUI("Erro ao guardar configuracao"))
         setSaving(false)
         return
       }
@@ -197,7 +199,7 @@ export default function GradingConfigPage() {
       setEditItem(null)
       await fetchConfigs()
     } catch {
-      setError("Erro de rede")
+      setError(tUI("Erro de rede"))
     }
     setSaving(false)
   }
@@ -236,10 +238,10 @@ export default function GradingConfigPage() {
           <Settings2 className="w-5 h-5 text-indigo-500" />
           <div>
             <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-              Configuracao de Avaliacao
+              {tUI("Configuracao de Avaliacao")}
             </h1>
             <p className="text-[11px] sm:text-xs md:text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
-              Regras de aprovacao, arredondamento e pesos por trimestre
+              {tUI("Regras de aprovacao, arredondamento e pesos por trimestre")}
             </p>
           </div>
         </div>
@@ -249,7 +251,7 @@ export default function GradingConfigPage() {
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20"
           >
             <Plus size={16} />
-            <span className="hidden sm:inline">Nova Configuracao</span>
+            <span className="hidden sm:inline">{tUI("Nova Configuracao")}</span>
           </button>
         )}
       </div>
@@ -260,7 +262,7 @@ export default function GradingConfigPage() {
           <div className="flex items-center gap-2 mb-3">
             <Info className="w-4 h-4 text-amber-500" />
             <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider">
-              Configuracao Global (referencia)
+              {tUI("Configuracao Global (referencia)")}
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -270,10 +272,10 @@ export default function GradingConfigPage() {
                 className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40"
               >
                 <div className="space-y-1 text-xs text-zinc-700 dark:text-zinc-300">
-                  <Row label="Nota de Aprovacao" value={String(g.passingGrade)} />
-                  <Row label="Max. Reprovacoes" value={String(g.maxFailedSubjects)} />
-                  <Row label="Arredondamento" value={roundingLabels[g.roundingMode] ?? g.roundingMode} />
-                  <Row label="Recurso" value={g.recursoAllowed ? "Sim" : "Nao"} />
+                  <Row label={tUI("Nota de Aprovacao")} value={String(g.passingGrade)} />
+                  <Row label={tUI("Max. Reprovacoes")} value={String(g.maxFailedSubjects)} />
+                  <Row label={tUI("Arredondamento")} value={roundingLabels[g.roundingMode] ?? g.roundingMode} />
+                  <Row label={tUI("Recurso")} value={g.recursoAllowed ? tUI("Sim") : tUI("Nao")} />
                 </div>
               </div>
             ))}
@@ -286,14 +288,14 @@ export default function GradingConfigPage() {
         <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl sm:rounded-2xl p-8 shadow-sm text-center">
           <Settings2 className="w-10 h-10 mx-auto text-zinc-300 dark:text-zinc-700 mb-3" />
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Nenhuma configuracao especifica encontrada.
+            {tUI("Nenhuma configuracao especifica encontrada.")}
           </p>
           {isAdmin && (
             <button
               onClick={openCreate}
               className="mt-3 text-sm text-indigo-600 dark:text-indigo-400 font-semibold hover:underline"
             >
-              Criar primeira configuracao
+              {tUI("Criar primeira configuracao")}
             </button>
           )}
         </div>
@@ -308,7 +310,7 @@ export default function GradingConfigPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-                    {c.classGrade != null ? `Classe ${c.classGrade}` : "Todas as classes"}
+                    {c.classGrade != null ? `${tUI("Classe")} ${c.classGrade}` : tUI("Todas as classes")}
                   </span>
                   {c.course && (
                     <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
@@ -341,16 +343,16 @@ export default function GradingConfigPage() {
 
               {/* Card body */}
               <div className="mt-1 space-y-1 text-xs text-zinc-700 dark:text-zinc-300">
-                <Row label="Nota de Aprovacao" value={String(c.passingGrade)} />
-                <Row label="Max. Reprovacoes" value={String(c.maxFailedSubjects)} />
-                <Row label="Arredondamento" value={roundingLabels[c.roundingMode] ?? c.roundingMode} />
-                <Row label="Recurso" value={c.recursoAllowed ? "Sim" : "Nao"} />
+                <Row label={tUI("Nota de Aprovacao")} value={String(c.passingGrade)} />
+                <Row label={tUI("Max. Reprovacoes")} value={String(c.maxFailedSubjects)} />
+                <Row label={tUI("Arredondamento")} value={roundingLabels[c.roundingMode] ?? c.roundingMode} />
+                <Row label={tUI("Recurso")} value={c.recursoAllowed ? tUI("Sim") : tUI("Nao")} />
                 {c.resourceMinGrade != null && (
-                  <Row label="Nota Min. Recurso" value={String(c.resourceMinGrade)} />
+                  <Row label={tUI("Nota Min. Recurso")} value={String(c.resourceMinGrade)} />
                 )}
                 {c.trimesterWeights && c.trimesterWeights.length === 3 && (
                   <Row
-                    label="Pesos Trim."
+                    label={tUI("Pesos Trim.")}
                     value={c.trimesterWeights.map((w) => w.toFixed(2)).join(" / ")}
                   />
                 )}
@@ -361,7 +363,7 @@ export default function GradingConfigPage() {
       )}
 
       {/* ── Create Modal ── */}
-      <FormModal open={createOpen} onClose={() => setCreateOpen(false)} title="Nova Configuracao de Avaliacao">
+      <FormModal open={createOpen} onClose={() => setCreateOpen(false)} title={tUI("Nova Configuracao de Avaliacao")}>
         <ConfigForm
           form={form}
           updateField={updateField}
@@ -376,7 +378,7 @@ export default function GradingConfigPage() {
       </FormModal>
 
       {/* ── Edit Modal ── */}
-      <FormModal open={!!editItem} onClose={() => setEditItem(null)} title="Editar Configuracao de Avaliacao">
+      <FormModal open={!!editItem} onClose={() => setEditItem(null)} title={tUI("Editar Configuracao de Avaliacao")}>
         <ConfigForm
           form={form}
           updateField={updateField}
@@ -397,7 +399,7 @@ export default function GradingConfigPage() {
         onConfirm={handleDelete}
         itemName={
           deleteItem
-            ? `Configuracao ${deleteItem.classGrade != null ? `Classe ${deleteItem.classGrade}` : "geral"}${deleteItem.course ? ` - ${deleteItem.course.name}` : ""}`
+            ? `${tUI("Configuracao de Avaliacao")} ${deleteItem.classGrade != null ? `${tUI("Classe")} ${deleteItem.classGrade}` : locale === "en" ? "general" : locale === "fr" ? "générale" : "geral"}${deleteItem.course ? ` - ${deleteItem.course.name}` : ""}`
             : ""
         }
       />
@@ -441,19 +443,20 @@ function ConfigForm({
   onSave,
   onCancel,
 }: ConfigFormProps) {
+  const { tUI } = useTranslation()
   return (
     <div className="flex flex-col gap-4">
       {/* Ano Letivo */}
       <div>
         <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1 block">
-          Ano Letivo
+          {tUI("Ano Letivo")}
         </label>
         <select
           className={selectClass}
           value={form.academicYearId}
           onChange={(e) => updateField("academicYearId", e.target.value)}
         >
-          <option value="">-- Selecionar --</option>
+          <option value="">{tUI("-- Selecionar --")}</option>
           {academicYears.map((ay) => (
             <option key={ay.id} value={ay.id}>
               {ay.name}
@@ -465,7 +468,7 @@ function ConfigForm({
       {/* Classe */}
       <div>
         <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1 block">
-          Classe (1-13)
+          {tUI("Classe (1-13)")}
         </label>
         <input
           type="number"
@@ -474,21 +477,21 @@ function ConfigForm({
           className={inputClass}
           value={form.classGrade}
           onChange={(e) => updateField("classGrade", e.target.value)}
-          placeholder="Ex: 10"
+          placeholder={tUI("Ex: 10")}
         />
       </div>
 
       {/* Curso */}
       <div>
         <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1 block">
-          Curso <span className="text-zinc-400">(opcional)</span>
+          {tUI("Curso")} <span className="text-zinc-400">({tUI("(opcional)")})</span>
         </label>
         <select
           className={selectClass}
           value={form.courseId}
           onChange={(e) => updateField("courseId", e.target.value)}
         >
-          <option value="">-- Todos os cursos --</option>
+          <option value="">{tUI("-- Todos os cursos --")}</option>
           {courses.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -500,7 +503,7 @@ function ConfigForm({
       {/* Nota de Aprovacao */}
       <div>
         <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1 block">
-          Nota de Aprovacao
+          {tUI("Nota de Aprovacao")}
         </label>
         <input
           type="number"
@@ -515,7 +518,7 @@ function ConfigForm({
       {/* Nota Min. Recurso */}
       <div>
         <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1 block">
-          Nota Minima Recurso <span className="text-zinc-400">(opcional)</span>
+          {tUI("Nota Minima Recurso")} <span className="text-zinc-400">({tUI("(opcional)")})</span>
         </label>
         <input
           type="number"
@@ -524,14 +527,14 @@ function ConfigForm({
           className={inputClass}
           value={form.resourceMinGrade}
           onChange={(e) => updateField("resourceMinGrade", e.target.value)}
-          placeholder="Ex: 7"
+          placeholder={tUI("Ex: 7")}
         />
       </div>
 
       {/* Max Reprovacoes */}
       <div>
         <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1 block">
-          Max. Disciplinas Reprovadas
+          {tUI("Max. Disciplinas Reprovadas")}
         </label>
         <input
           type="number"
@@ -546,16 +549,16 @@ function ConfigForm({
       {/* Arredondamento */}
       <div>
         <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1 block">
-          Modo de Arredondamento
+          {tUI("Modo de Arredondamento")}
         </label>
         <select
           className={selectClass}
           value={form.roundingMode}
           onChange={(e) => updateField("roundingMode", e.target.value)}
         >
-          <option value="truncar">Truncar</option>
-          <option value="arredondar">Arredondar</option>
-          <option value="teto">Teto</option>
+          <option value="truncar">{tUI("Truncar")}</option>
+          <option value="arredondar">{tUI("Arredondar")}</option>
+          <option value="teto">{tUI("Teto")}</option>
         </select>
       </div>
 
@@ -567,17 +570,17 @@ function ConfigForm({
           onChange={(e) => updateField("recursoAllowed", e.target.checked)}
           className="w-4 h-4 rounded border-zinc-300 dark:border-zinc-700 text-indigo-600 focus:ring-indigo-500"
         />
-        <span className="text-sm text-zinc-700 dark:text-zinc-300">Recurso permitido</span>
+        <span className="text-sm text-zinc-700 dark:text-zinc-300">{tUI("Recurso permitido")}</span>
       </label>
 
       {/* Trimester Weights */}
       <div>
         <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1 block">
-          Pesos dos Trimestres
+          {tUI("Pesos dos Trimestres")}
         </label>
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <span className="text-[10px] text-zinc-400 block mb-0.5">1o Trim.</span>
+            <span className="text-[10px] text-zinc-400 block mb-0.5">{tUI("1o Trim.")}</span>
             <input
               type="number"
               step="0.01"
@@ -589,7 +592,7 @@ function ConfigForm({
             />
           </div>
           <div>
-            <span className="text-[10px] text-zinc-400 block mb-0.5">2o Trim.</span>
+            <span className="text-[10px] text-zinc-400 block mb-0.5">{tUI("2o Trim.")}</span>
             <input
               type="number"
               step="0.01"
@@ -601,7 +604,7 @@ function ConfigForm({
             />
           </div>
           <div>
-            <span className="text-[10px] text-zinc-400 block mb-0.5">3o Trim.</span>
+            <span className="text-[10px] text-zinc-400 block mb-0.5">{tUI("3o Trim.")}</span>
             <input
               type="number"
               step="0.01"
@@ -620,7 +623,7 @@ function ConfigForm({
               : "text-rose-600 dark:text-rose-400"
           }`}
         >
-          Soma: {twSum.toFixed(2)} {Math.abs(twSum - 1) < 0.02 ? "" : "(deve ser proximo de 1.0)"}
+          {tUI("Soma:")} {twSum.toFixed(2)} {Math.abs(twSum - 1) < 0.02 ? "" : tUI("(deve ser proximo de 1.0)")}
         </p>
       </div>
 
@@ -634,7 +637,7 @@ function ConfigForm({
           disabled={saving}
           className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
         >
-          Cancelar
+          {tUI("Cancelar")}
         </button>
         <button
           onClick={onSave}
@@ -642,7 +645,7 @@ function ConfigForm({
           className="flex items-center gap-2 px-5 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition disabled:opacity-50 shadow-lg shadow-indigo-600/20"
         >
           {saving && <Loader2 size={14} className="animate-spin" />}
-          Guardar
+          {tUI("Guardar")}
         </button>
       </div>
     </div>

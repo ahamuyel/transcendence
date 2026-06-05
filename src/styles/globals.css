@@ -375,6 +375,99 @@ html, body {
   to { opacity: 0; transform: scale(0.95); }
 }
 
+/* Landing page utilities */
+@utility grid-bg {
+  background-image: linear-gradient(to right, var(--landing-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--landing-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@utility grid-bg-fine {
+  background-image: linear-gradient(to right, var(--landing-grid-fine) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--landing-grid-fine) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+@utility orb {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.15;
+  pointer-events: none;
+  background: radial-gradient(circle, var(--landing-orb-accent) 0%, transparent 70%);
+}
+
+@utility orb-green {
+  background: radial-gradient(circle, var(--landing-orb-green) 0%, transparent 70%);
+}
+
+:root {
+  --landing-bg: #ffffff;
+  --landing-bg-secondary: #fafafa;
+  --landing-bg-tertiary: #f4f4f5;
+  --landing-bg-elevated: #ffffff;
+  --landing-text-primary: #09090b;
+  --landing-text-secondary: #52525b;
+  --landing-text-muted: #71717a;
+  --landing-text-dim: #a1a1aa;
+  --landing-border: #e4e4e7;
+  --landing-border-subtle: #f4f4f5;
+  --landing-border-strong: #d4d4d8;
+  --landing-orb-accent: #818cf8;
+  --landing-orb-green: #10b981;
+  --landing-grid: rgba(0, 0, 0, 0.06);
+  --landing-grid-fine: rgba(0, 0, 0, 0.03);
+  --landing-overlay: rgba(0, 0, 0, 0.03);
+  --landing-status-dot: #22c55e;
+  --landing-bg-dark: #09090b;
+  --landing-bg-dark-elevated: #111113;
+  --landing-text-dark-primary: #fafafa;
+  --landing-text-dark-secondary: #a1a1aa;
+  --landing-border-dark: #27272a;
+}
+
+.dark {
+  --landing-bg: #000000;
+  --landing-bg-secondary: #050505;
+  --landing-bg-tertiary: #09090b;
+  --landing-bg-elevated: #09090b;
+  --landing-text-primary: #fafafa;
+  --landing-text-secondary: #a1a1aa;
+  --landing-text-muted: #71717a;
+  --landing-text-dim: #52525b;
+  --landing-border: #27272a;
+  --landing-border-subtle: #18181b;
+  --landing-border-strong: #3f3f46;
+  --landing-orb-accent: #818cf8;
+  --landing-orb-green: #10b981;
+  --landing-grid: rgba(255, 255, 255, 0.04);
+  --landing-grid-fine: rgba(255, 255, 255, 0.02);
+  --landing-overlay: rgba(255, 255, 255, 0.03);
+  --landing-status-dot: #22c55e;
+  --landing-bg-dark: #09090b;
+  --landing-bg-dark-elevated: #111113;
+  --landing-text-dark-primary: #fafafa;
+  --landing-text-dark-secondary: #a1a1aa;
+  --landing-border-dark: #27272a;
+}
+
+.landing-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.landing-scrollbar::-webkit-scrollbar-track {
+  background: var(--landing-bg);
+}
+.landing-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--landing-border);
+  border-radius: 3px;
+}
+.landing-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--landing-border-strong);
+}
+
 /* Radix data attributes for animation */
 .DialogOverlay[data-state="open"],
 .DialogContent[data-state="open"],

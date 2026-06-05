@@ -21,6 +21,8 @@ import {
 } from "lucide-react"
 import ThemeToggle from "@/components/ui/ThemeToggle"
 import SessionGuard from "@/components/layout/SessionGuard"
+import LocaleSwitcher from "@/components/landing/LocaleSwitcher"
+import { useTranslation } from "@/lib/i18n"
 import TwoFactorGate from "@/components/layout/TwoFactorGate"
 import { SidebarProvider, useSidebar } from "@/hooks/useSidebar"
 import { cn } from "@/lib/utils"
@@ -71,10 +73,24 @@ const sidebarItems = [
   { icon: Settings, label: "Configurações", href: "/admin/settings" },
 ]
 
+const adminTranslationKeys: Record<string, string> = {
+  "Dashboard": "nav.dashboard",
+  "Escolas": "nav.schools",
+  "Utilizadores": "nav.users",
+  "Solicitações": "nav.applications",
+  "Catálogo": "nav.catalog",
+  "Config. Avaliação": "nav.gradingConfig",
+  "Estatísticas": "nav.stats",
+  "Super Admins": "nav.superAdmins",
+  "Suporte": "nav.support",
+  "Configurações": "nav.settings",
+}
+
 function AdminSidebar() {
   const pathname = usePathname()
   const { data: session } = useSession()
   const { collapsed, setCollapsed } = useSidebar()
+  const { t, locale } = useTranslation()
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -129,6 +145,9 @@ function AdminSidebar() {
                 ? pathname === "/admin"
                 : pathname.startsWith(item.href)
 
+            const labelKey = adminTranslationKeys[item.label]
+            const translatedLabel = labelKey ? t(labelKey as any) : item.label
+
             if (collapsed) {
               return (
                 <Tooltip key={item.href}>
@@ -145,7 +164,7 @@ function AdminSidebar() {
                       <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
                     </Link>
                   </TooltipTrigger>
-                  <TooltipContent side="right">{item.label}</TooltipContent>
+                  <TooltipContent side="right">{translatedLabel}</TooltipContent>
                 </Tooltip>
               )
             }
@@ -162,7 +181,7 @@ function AdminSidebar() {
                 )}
               >
                 <Icon size={18} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
-                <span className="truncate">{item.label}</span>
+                <span className="truncate">{translatedLabel}</span>
               </Link>
             )
           })}
@@ -194,7 +213,7 @@ function AdminSidebar() {
                     <LogOut size={18} />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="right">Sair</TooltipContent>
+                <TooltipContent side="right">{t("auth.logout" as any)}</TooltipContent>
               </Tooltip>
             </div>
           ) : (
@@ -209,6 +228,7 @@ function AdminSidebar() {
                   {session?.user?.name}
                 </span>
               </div>
+              <LocaleSwitcher currentLocale={locale} />
               <ThemeToggle />
               <button
                 onClick={() => signOut({ callbackUrl: "/signin" })}
@@ -228,6 +248,7 @@ function AdminMobileHeader() {
   const pathname = usePathname()
   const { data: session } = useSession()
   const { toggleMobile, mobileOpen, setMobileOpen } = useSidebar()
+  const { t, locale } = useTranslation()
 
   const pageTitles: Record<string, string> = {
     "/admin": "Dashboard",
@@ -239,7 +260,11 @@ function AdminMobileHeader() {
   }
 
   function getPageTitle(p: string) {
-    if (pageTitles[p]) return pageTitles[p]
+    const rawTitle = pageTitles[p]
+    if (rawTitle) {
+      const key = adminTranslationKeys[rawTitle]
+      return key ? t(key as any) : rawTitle
+    }
     if (p.startsWith("/admin/schools/")) return "Detalhes da Escola"
     return "Admin"
   }
@@ -277,6 +302,8 @@ function AdminMobileHeader() {
               item.href === "/admin"
                 ? pathname === "/admin"
                 : pathname.startsWith(item.href)
+            const labelKey = adminTranslationKeys[item.label]
+            const translatedLabel = labelKey ? t(labelKey as any) : item.label
             return (
               <Link
                 key={item.href}
@@ -289,7 +316,7 @@ function AdminMobileHeader() {
                 )}
               >
                 <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-                {item.label}
+                {translatedLabel}
               </Link>
             )
           })}
@@ -300,7 +327,7 @@ function AdminMobileHeader() {
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 w-full"
           >
             <LogOut size={16} />
-            Terminar Sessão
+            {t("auth.logout" as any)}
           </button>
         </div>
       </div>
@@ -322,6 +349,7 @@ function AdminMobileHeader() {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-zinc-500 hidden min-[400px]:block">{session?.user?.name}</span>
+          <LocaleSwitcher currentLocale={locale} />
           <ThemeToggle />
         </div>
       </div>

@@ -35,6 +35,7 @@ import {
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { isFeatureEnabled, menuFeatureMap, type FeatureKey } from "@/lib/features"
+import { useTranslation } from "@/lib/i18n"
 
 interface MenuItem {
   icon: LucideIcon
@@ -89,6 +90,7 @@ const menuItems: { title: string; items: MenuItem[] }[] = [
 const Menu = () => {
   const { data: session } = useSession()
   const pathname = usePathname()
+  const { tUI } = useTranslation()
   const role = session?.user?.role || "student"
   const adminLevel = session?.user?.adminLevel
   const permissions = session?.user?.permissions || []
@@ -117,7 +119,7 @@ const Menu = () => {
       {menuItems.map((i) => (
         <div className="flex flex-col gap-2" key={i.title}>
           <span className="hidden lg:block text-zinc-400 dark:text-zinc-500 font-light my-4 text-xs tracking-wider">
-            {i.title}
+            {tUI(i.title)}
           </span>
           {i.items.map((item) => {
             if (!isVisible(item)) return null
@@ -140,7 +142,7 @@ const Menu = () => {
                 } : undefined}
               >
                 <item.icon size={20} />
-                <span className="hidden lg:block">{item.label}</span>
+                <span className="hidden lg:block">{tUI(item.label)}</span>
               </Link>
             )
           })}
@@ -154,7 +156,7 @@ const Menu = () => {
           className="flex items-center justify-center lg:justify-start gap-4 text-zinc-500 dark:text-zinc-400 py-2 rounded-lg md:px-2 hover:bg-red-50 dark:hover:bg-red-950/50 hover:text-red-600 dark:hover:text-red-400 transition-colors w-full"
         >
           <LogOut size={20} />
-          <span className="hidden lg:block">Sair</span>
+          <span className="hidden lg:block">{tUI("Sair")}</span>
         </button>
       </div>
     </div>

@@ -1,7 +1,10 @@
 import Link from "next/link"
 import { getPlatformConfig } from "@/lib/platform-config"
+import { GraduationCap } from "lucide-react"
+import { getServerLocale } from "@/lib/i18n/server"
+import LocaleSwitcher from "@/components/landing/LocaleSwitcher"
 
-async function PlatformName({ small }: { small?: boolean }) {
+async function PlatformName() {
   let name = "Cur10usX"
   try {
     const config = await getPlatformConfig()
@@ -9,18 +12,17 @@ async function PlatformName({ small }: { small?: boolean }) {
   } catch {
     /* fallback to default name when DB is unavailable */
   }
-  const cls = small ? "text-xs" : "text-2xl font-bold tracking-tight"
   if (name === "Cur10usX") {
     return (
-      <span className={cls}>
+      <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
         Cur10us
-        <span className={small ? "" : "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"}>
+        <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
           X
         </span>
       </span>
     )
   }
-  return <span className={cls}>{name}</span>
+  return <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">{name}</span>
 }
 
 export default async function AuthLayout({
@@ -28,34 +30,49 @@ export default async function AuthLayout({
 }: {
   children: React.ReactNode
 }) {
+  const locale = await getServerLocale()
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center bg-zinc-100 dark:bg-zinc-950 p-4 sm:p-6 lg:p-10">
-      {/* Background decoration */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/10 blur-[100px]" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[400px] h-[400px] rounded-full bg-accent/10 blur-[100px]" />
+    <div className="relative flex min-h-svh flex-col bg-zinc-50 dark:bg-zinc-950">
+      {/* Subtle background pattern for depth */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+
+      {/* Locale Switcher top right */}
+      <div className="absolute top-4 right-4 z-50">
+        <LocaleSwitcher currentLocale={locale} />
       </div>
 
-      <div className="w-full flex flex-col items-center">
-        {/* Logo - centered, fixed width */}
-        <div className="w-full max-w-sm mb-6 sm:mb-8">
-          <div className="flex justify-center">
-            <Link href="/" className="flex items-center gap-2.5">
-              <PlatformName />
-            </Link>
+      <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-8 sm:py-12">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 mb-8 sm:mb-10 group">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-sm transition-transform group-hover:scale-105">
+            <GraduationCap className="w-5 h-5 text-white" />
           </div>
-        </div>
+          <PlatformName />
+        </Link>
 
-        {/* Content area - flexible width, pages control their own */}
-        <div className="w-full flex flex-col items-center px-4  sm:px-0">
+        {/* Content */}
+        <div className="w-full flex flex-col items-center">
           {children}
         </div>
 
         {/* Footer */}
-        <div className="w-full max-w-sm mt-6 sm:mt-8">
-          <p className="text-center text-xs text-zinc-400 dark:text-zinc-500">
-            &copy; {new Date().getFullYear()} <PlatformName small />. Todos os direitos reservados.
+        <div className="mt-12 space-y-2">
+          <p className="text-center text-xs text-zinc-400 dark:text-zinc-600">
+            &copy; {new Date().getFullYear()} Cur10usX. Todos os direitos reservados.
           </p>
+          <div className="flex items-center justify-center gap-3 text-xs text-zinc-400 dark:text-zinc-600">
+            <Link href="/termos" className="hover:text-zinc-600 dark:hover:text-zinc-400 transition-colors">
+              Termos
+            </Link>
+            <span className="text-zinc-300 dark:text-zinc-700">&middot;</span>
+            <Link href="/privacidade" className="hover:text-zinc-600 dark:hover:text-zinc-400 transition-colors">
+              Privacidade
+            </Link>
+            <span className="text-zinc-300 dark:text-zinc-700">&middot;</span>
+            <Link href="/aplicacao" className="hover:text-zinc-600 dark:hover:text-zinc-400 transition-colors">
+              Sobre
+            </Link>
+          </div>
         </div>
       </div>
     </div>

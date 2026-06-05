@@ -19,6 +19,62 @@ import { navGroups, type NavItem } from "@/lib/routes.config"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
 import { Badge } from "@/components/ui/badge"
+import { useTranslation } from "@/lib/i18n"
+
+const navTranslationKeys: Record<string, string> = {
+  "Início": "nav.dashboard",
+  "Alunos": "nav.students",
+  "Professores": "nav.teachers",
+  "Encarregados": "nav.parents",
+  "Turmas": "nav.classes",
+  "Disciplinas": "nav.subjects",
+  "Cursos": "nav.courses",
+  "Aulas": "nav.lessons",
+  "Anos Letivos": "nav.academicYears",
+  "Matrículas": "nav.enrollments",
+  "Provas": "nav.exams",
+  "Tarefas": "nav.assignments",
+  "Resultados": "nav.results",
+  "Assiduidade": "nav.attendance",
+  "Avaliações": "nav.evaluation",
+  "Recursos": "nav.recurso",
+  "Mensagens": "nav.messages",
+  "Avisos": "nav.announcements",
+  "Amigos": "nav.friends",
+  "Solicitações": "nav.applications",
+  "Administradores": "nav.admins",
+  "Config. Avaliação": "nav.gradingConfig",
+  "Importar": "nav.import",
+  "Perfil": "nav.profile",
+  "Configurações": "nav.settings",
+  "Suporte": "nav.support",
+  "Ajuda": "nav.help",
+}
+
+const groupTranslationKeys: Record<string, string> = {
+  "Dashboard": "nav.groupDashboard",
+  "Gestão Académica": "nav.groupAcademic",
+  "Avaliações": "nav.groupEvaluations",
+  "Comunicação": "nav.groupCommunication",
+  "Administração": "nav.groupAdmin",
+  "Outros": "nav.groupOthers",
+}
+
+export function useTranslateMenu() {
+  const { t } = useTranslation()
+  const getTranslatedLabel = useCallback((label: string) => {
+    const key = navTranslationKeys[label]
+    return key ? t(key as any) : label
+  }, [t])
+
+  const getTranslatedGroup = useCallback((title: string) => {
+    const key = groupTranslationKeys[title]
+    return key ? t(key as any) : title
+  }, [t])
+
+  return { getTranslatedLabel, getTranslatedGroup }
+}
+
 
 const GROUP_STATE_KEY = "sidebar_groups"
 
@@ -79,6 +135,8 @@ function NavItemLink({
   homePath: string
 }) {
   const href = item.label === "Início" ? homePath : item.href
+  const { getTranslatedLabel } = useTranslateMenu()
+  const translatedLabel = getTranslatedLabel(item.label)
 
   const linkContent = (
     <Link
@@ -95,7 +153,7 @@ function NavItemLink({
         strokeWidth={isActive ? 2.5 : 2}
         className="shrink-0"
       />
-      <span className="flex-1 truncate">{item.label}</span>
+      <span className="flex-1 truncate">{translatedLabel}</span>
       {item.badge && item.badge() > 0 && (
         <Badge variant="default" className="h-5 min-w-5 px-1 text-[10px]">
           {item.badge()}
@@ -121,7 +179,7 @@ function NavItemLink({
           </Link>
         </TooltipTrigger>
         <TooltipContent side="right" className="flex items-center gap-2">
-          {item.label}
+          {translatedLabel}
           {item.badge && item.badge() > 0 && (
             <Badge variant="default" className="h-5 min-w-5 px-1 text-[10px]">
               {item.badge()}
@@ -143,6 +201,7 @@ export default function AppSidebar() {
   const { name, logo } = useSchoolBranding()
   const platform = usePlatformBranding()
   const homePath = getDashboardPath(session?.user?.id)
+  const { getTranslatedGroup } = useTranslateMenu()
 
   const userName = session?.user?.name || "Utilizador"
   const userEmail = session?.user?.email || ""
@@ -269,7 +328,7 @@ export default function AppSidebar() {
                     )}
                   />
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-                    {group.title}
+                    {getTranslatedGroup(group.title)}
                   </span>
                 </button>
 

@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server"
 const authPages = ["/signin", "/signup", "/forgot-password", "/registar-escola"]
 // Pages that should be accessible by both authenticated and unauthenticated users
 const alwaysAccessible = ["/reset-password", "/verify-email", "/signin/verify-2fa"]
-const publicPaths = ["/", "/aplicacao", "/aplicacao/status", "/maintenance"]
+const publicPaths = ["/", "/aplicacao", "/aplicacao/status", "/maintenance", "/termos", "/privacidade"]
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
@@ -16,7 +16,7 @@ export async function middleware(req: NextRequest) {
 
   // API routes — auth is enforced per-route via requireRole/requirePermission
   // Only allow explicitly public API endpoints without session check
-  const publicApiPrefixes = ["/api/auth/", "/api/applications/status", "/api/platform/status", "/api/schools/public"]
+  const publicApiPrefixes = ["/api/auth/", "/api/applications/status", "/api/platform/status", "/api/schools/public", "/api/health"]
   if (pathname.startsWith("/api/")) {
     if (publicApiPrefixes.some((p) => pathname.startsWith(p))) {
       return NextResponse.next()

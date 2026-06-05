@@ -5,6 +5,8 @@ import { signOut, useSession } from "next-auth/react"
 import { useRouter, usePathname } from "next/navigation"
 import { LogOut, Loader2 } from "lucide-react"
 import ThemeToggle from "@/components/ui/ThemeToggle"
+import LocaleSwitcher from "@/components/landing/LocaleSwitcher"
+import { useTranslation } from "@/lib/i18n"
 import { on } from "@/hooks/useWebSocket"
 import { usePlatformBranding } from "@/provider/platform-branding"
 
@@ -24,6 +26,7 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
   const { data: session, status, update } = useSession()
   const router = useRouter()
   const pathname = usePathname()
+  const { t, locale } = useTranslation()
 
   const user = session?.user
   const isActive = user?.isActive && !!user?.schoolId && (user?.role !== "school_admin" || user?.schoolStatus === "ativa")
@@ -98,11 +101,12 @@ export default function MinhaAreaLayout({ children }: { children: React.ReactNod
                 {session.user.name}
               </span>
             )}
+            <LocaleSwitcher currentLocale={locale} />
             <ThemeToggle />
             <button
               onClick={() => signOut({ callbackUrl: "/signin" })}
               className="p-2 rounded-lg text-zinc-500 hover:text-rose-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
-              title="Sair"
+              title={t("auth.logout" as any)}
             >
               <LogOut size={18} />
             </button>

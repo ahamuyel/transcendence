@@ -1,11 +1,11 @@
 "use client"
-import { Suspense } from "react"
 
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { Loader2, Search, CheckCircle2, Clock, XCircle, UserPlus, FileSearch } from "lucide-react"
 import Link from "next/link"
 import StatusBadge from "@/components/ui/StatusBadge"
+import { useTranslation } from "@/lib/i18n"
 
 interface ApplicationStatus {
   name: string
@@ -18,19 +18,6 @@ interface ApplicationStatus {
   school: { name: string }
 }
 
-const roleLabels: Record<string, string> = {
-  teacher: "Professor(a)",
-  student: "Aluno(a)",
-  parent: "Encarregado de educação",
-}
-
-const statusTimeline = [
-  { key: "pendente", label: "Solicitação enviada", icon: Clock },
-  { key: "em_analise", label: "Em análise", icon: FileSearch },
-  { key: "aprovada", label: "Aprovada", icon: CheckCircle2 },
-  { key: "matriculada", label: "Matrícula confirmada", icon: UserPlus },
-]
-
 const statusOrder: Record<string, number> = {
   pendente: 0,
   em_analise: 1,
@@ -40,12 +27,26 @@ const statusOrder: Record<string, number> = {
 }
 
 function StatusPageContent() {
+  const { tUI, locale } = useTranslation()
   const searchParams = useSearchParams()
   const [token, setToken] = useState(searchParams.get("token") || "")
   const [data, setData] = useState<ApplicationStatus | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [searched, setSearched] = useState(false)
+
+  const roleLabels: Record<string, string> = {
+    teacher: tUI("Professor(a)"),
+    student: tUI("Aluno(a)"),
+    parent: tUI("Encarregado de educação"),
+  }
+
+  const statusTimeline = [
+    { key: "pendente", label: tUI("Solicitação enviada"), icon: Clock },
+    { key: "em_analise", label: tUI("Em análise"), icon: FileSearch },
+    { key: "aprovada", label: tUI("Aprovada"), icon: CheckCircle2 },
+    { key: "matriculada", label: tUI("Matrícula confirmada"), icon: UserPlus },
+  ]
 
   async function fetchStatus(t: string) {
     if (!t.trim()) return
@@ -57,12 +58,12 @@ function StatusPageContent() {
       const res = await fetch(`/api/applications/status?token=${encodeURIComponent(t)}`)
       const json = await res.json()
       if (!res.ok) {
-        setError(json.error || "Solicitação não encontrada")
+        setError(json.error ? tUI(json.error) : tUI("Solicitação não encontrada"))
         return
       }
       setData(json)
     } catch {
-      setError("Erro de conexão")
+      setError(tUI("Erro de conexão"))
     } finally {
       setLoading(false)
     }
@@ -84,16 +85,16 @@ function StatusPageContent() {
   return (
     <div className="max-w-md mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold mb-2">Acompanhar solicitação</h1>
+        <h1 className="text-2xl font-bold mb-2">{tUI("Acompanhar solicitação")}</h1>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Insira seu código de acompanhamento abaixo
+          {tUI("Insira seu código de acompanhamento abaixo")}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
         <input
           type="text"
-          placeholder="Código de acompanhamento"
+          placeholder={tUI("Código de acompanhamento")}
           value={token}
           onChange={(e) => setToken(e.target.value)}
           className="flex-1 px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -124,15 +125,15 @@ function StatusPageContent() {
           </div>
 
           <div className="text-sm mb-6 space-y-1">
-            <div><span className="text-zinc-500">Escola:</span> <span className="font-medium">{data.school.name}</span></div>
-            <div><span className="text-zinc-500">Perfil:</span> <span className="font-medium">{roleLabels[data.role] || data.role}</span></div>
-            <div><span className="text-zinc-500">Enviada em:</span> <span className="font-medium">{new Date(data.createdAt).toLocaleDateString("pt")}</span></div>
+            <div><span className="text-zinc-500">{tUI("Escola:")}</span> <span className="font-medium">{data.school.name}</span></div>
+            <div><span className="text-zinc-500">{tUI("Perfil:")}</span> <span className="font-medium">{roleLabels[data.role] || data.role}</span></div>
+            <div><span className="text-zinc-500">{tUI("Enviada em:")}</span> <span className="font-medium">{new Date(data.createdAt).toLocaleDateString(locale)}</span></div>
           </div>
 
           {isRejected ? (
             <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-sm">
               <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-medium mb-1">
-                <XCircle className="w-4 h-4" /> Solicitação não aprovada
+                <XCircle className="w-4 h-4" /> {tUI("Solicitação não aprovada")}
               </div>
               {data.rejectReason && <p className="text-red-600 dark:text-red-400">{data.rejectReason}</p>}
             </div>
@@ -174,10 +175,10 @@ function StatusPageContent() {
           {data.status === "matriculada" && (
             <div className="mt-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-sm">
               <p className="text-emerald-700 dark:text-emerald-400">
-                Sua matrícula foi confirmada! Acesse a plataforma com o e-mail <strong>{data.email}</strong>.
+                {tUI("Sua matrícula foi confirmada! Acesse a plataforma com o e-mail")} <strong>{data.email}</strong>.
               </p>
               <Link href="/signin" className="inline-block mt-2 text-primary dark:text-primary-400 font-medium hover:underline">
-                Acessar plataforma
+                {tUI("Acessar plataforma")}
               </Link>
             </div>
           )}
@@ -185,9 +186,9 @@ function StatusPageContent() {
       )}
 
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-8">
-        Ainda não enviou sua solicitação?{" "}
+        {tUI("Ainda não enviou sua solicitação?")}{" "}
         <Link href="/aplicacao" className="text-primary dark:text-primary-400 font-medium hover:underline">
-          Solicitar matrícula
+          {tUI("Solicitar matrícula")}
         </Link>
       </p>
     </div>

@@ -1,3 +1,7 @@
+"use client"
+
+import { useTranslation } from "@/lib/i18n"
+
 const statusColors: Record<string, string> = {
   pendente: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400",
   em_analise: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",
@@ -39,11 +43,14 @@ const statusLabels: Record<string, string> = {
 }
 
 export default function StatusBadge({ status }: { status: string }) {
+  const { tUI } = useTranslation()
+  const label = statusLabels[status] || status
   return (
     <span
       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[status] || "bg-zinc-100 text-zinc-600"}`}
     >
-      {statusLabels[status] || status}
+      {tUI(label)}
     </span>
   )
 }
+

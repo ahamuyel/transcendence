@@ -17,6 +17,8 @@ import ThemeToggle from "@/components/ui/ThemeToggle"
 import NotificationDropdown from "@/components/ui/NotificationDropdown"
 import { on } from "@/hooks/useWebSocket"
 
+import { useTranslation } from "@/lib/i18n"
+
 const roleLabels: Record<string, string> = {
   super_admin: "Super Admin",
   school_admin: "Administrador",
@@ -36,6 +38,7 @@ const groupConfig = [
 ]
 
 const NavBar = () => {
+  const { tUI } = useTranslation()
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<SearchResults | null>(null)
@@ -45,7 +48,7 @@ const NavBar = () => {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [unreadCount, setUnreadCount] = useState(0)
-  const userName = session?.user?.name || "Usuário"
+  const userName = session?.user?.name || tUI("Usuário")
   const userRole = session?.user?.role || ""
   const userImage = session?.user?.image || "/avatar.png"
 
@@ -113,7 +116,7 @@ const NavBar = () => {
     return (
       <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
         {!hasResults ? (
-          <div className="p-3 text-sm text-zinc-400 text-center">Nenhum resultado encontrado</div>
+          <div className="p-3 text-sm text-zinc-400 text-center">{tUI("Nenhum resultado encontrado")}</div>
         ) : (
           groupConfig.map((group) => {
             const items = results[group.key]
@@ -123,7 +126,7 @@ const NavBar = () => {
               <div key={group.key}>
                 <div className="flex items-center gap-2 px-3 pt-2.5 pb-1">
                   <Icon size={13} className="text-zinc-400" />
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">{group.label}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">{tUI(group.label)}</span>
                 </div>
                 {items.map((item) => (
                   <Link
@@ -153,7 +156,7 @@ const NavBar = () => {
             <Search size={16} className="text-zinc-400 shrink-0" />
             <input
               type="text"
-              placeholder="Pesquisar..."
+              placeholder={tUI("Pesquisar...")}
               autoFocus
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
@@ -169,7 +172,7 @@ const NavBar = () => {
           {showResults && results && (
             <div className="flex-1 overflow-y-auto border-t border-zinc-200 dark:border-zinc-800">
               {!hasResults ? (
-                <div className="p-4 text-sm text-zinc-400 text-center">Nenhum resultado encontrado</div>
+                <div className="p-4 text-sm text-zinc-400 text-center">{tUI("Nenhum resultado encontrado")}</div>
               ) : (
                 groupConfig.map((group) => {
                   const items = results[group.key]
@@ -179,7 +182,7 @@ const NavBar = () => {
                     <div key={group.key}>
                       <div className="flex items-center gap-2 px-4 pt-3 pb-1">
                         <Icon size={13} className="text-zinc-400" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">{group.label}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">{tUI(group.label)}</span>
                       </div>
                       {items.map((item) => (
                         <Link
@@ -206,7 +209,7 @@ const NavBar = () => {
           <Search size={14} />
           <input
             type="text"
-            placeholder="Pesquisar..."
+            placeholder={tUI("Pesquisar...")}
             value={query}
             onChange={(e) => handleQueryChange(e.target.value)}
             onFocus={() => { if (results) setShowResults(true) }}
@@ -263,7 +266,7 @@ const NavBar = () => {
               {userName}
             </span>
             <span className="text-[10px] text-zinc-500">
-              {roleLabels[userRole] || userRole}
+              {tUI(roleLabels[userRole] || userRole)}
             </span>
           </div>
 

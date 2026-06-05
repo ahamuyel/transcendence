@@ -13,6 +13,7 @@ import { useSidebar } from "@/hooks/useSidebar"
 import { usePlatformBranding } from "@/provider/platform-branding"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { useTranslateMenu } from "./app-sidebar"
 
 const GROUP_STATE_KEY = "sidebar_groups_mobile"
 
@@ -76,6 +77,7 @@ export default function SidebarMobile() {
   const { mobileOpen, setMobileOpen } = useSidebar()
   const { isVisible } = useNavFilter()
   const homePath = getDashboardPath(session?.user?.id)
+  const { getTranslatedLabel, getTranslatedGroup } = useTranslateMenu()
 
   const userName = session?.user?.name || "Utilizador"
   const userEmail = session?.user?.email || ""
@@ -153,7 +155,7 @@ export default function SidebarMobile() {
                     )}
                   />
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-                    {group.title}
+                    {getTranslatedGroup(group.title)}
                   </span>
                 </button>
 
@@ -182,7 +184,7 @@ export default function SidebarMobile() {
                           )}
                         >
                           <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
-                          <span className="flex-1 truncate">{item.label}</span>
+                          <span className="flex-1 truncate">{getTranslatedLabel(item.label)}</span>
                           {item.badge && item.badge() > 0 && (
                             <Badge variant="default" className="h-5 min-w-5 px-1 text-[10px]">
                               {item.badge()}

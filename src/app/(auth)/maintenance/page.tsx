@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Wrench } from "lucide-react"
+import { AuthCard } from "@/components/auth"
 
 export default function MaintenancePage() {
   const router = useRouter()
   const [checking, setChecking] = useState(false)
+  const [lastChecked, setLastChecked] = useState<Date | null>(null)
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -17,32 +19,44 @@ export default function MaintenancePage() {
         if (!data.maintenanceMode) {
           router.replace("/")
         }
-      } catch { /* ignore */ }
+        setLastChecked(new Date())
+      } catch {
+        /* ignore */
+      }
       setChecking(false)
-    }, 15000) // check every 15s
+    }, 15000)
 
     return () => clearInterval(interval)
   }, [router])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 px-4">
-      <div className="text-center max-w-md">
-        <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-amber-100 dark:bg-amber-950/50 flex items-center justify-center">
-          <Wrench className="w-8 h-8 text-amber-600 dark:text-amber-400" />
-        </div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
-          Em manutenção
-        </h1>
-        <p className="text-zinc-500 dark:text-zinc-400 mb-6">
-          A plataforma está em manutenção programada. Voltaremos em breve com melhorias.
-        </p>
-        <div className="flex items-center justify-center gap-2 text-sm text-zinc-400">
-          {checking ? (
-            <span>A verificar...</span>
-          ) : (
-            <span>Verificação automática a cada 15 segundos</span>
-          )}
-        </div>
+      <div className="w-full max-w-md">
+        <AuthCard>
+          <div className="p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-amber-100 dark:bg-amber-950/50 flex items-center justify-center">
+              <Wrench className="w-8 h-8 text-amber-600 dark:text-amber-400" />
+            </div>
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
+              Em manutenção
+            </h1>
+            <p className="text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed">
+              A plataforma está em manutenção programada. Voltaremos em breve com
+              melhorias.
+            </p>
+            <div className="flex items-center justify-center gap-2 text-xs text-zinc-400">
+              {checking ? (
+                <span>A verificar estado...</span>
+              ) : (
+                <span>
+                  {lastChecked
+                    ? `Última verificação: ${lastChecked.toLocaleTimeString("pt")}`
+                    : "A monitorizar estado do servidor..."}
+                </span>
+              )}
+            </div>
+          </div>
+        </AuthCard>
       </div>
     </div>
   )

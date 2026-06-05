@@ -1,10 +1,13 @@
 "use client"
+
 import { useState, useEffect } from "react"
 import { Shield, ShieldOff, Loader2, Copy, CheckCircle, Smartphone } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { csrfPost } from "@/lib/csrf-client"
+import { useTranslation } from "@/lib/i18n"
 
 export default function TwoFactorPage() {
+  const { tUI } = useTranslation()
   const { update } = useSession()
   const [enabled, setEnabled] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -36,7 +39,7 @@ export default function TwoFactorPage() {
       setOtpauthUrl(data.otpauth_url)
       setStep("setup")
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erro ao configurar")
+      setError(e instanceof Error ? tUI(e.message) : tUI("Erro ao configurar"))
     }
   }
 
@@ -50,28 +53,28 @@ export default function TwoFactorPage() {
       if (!res.ok) throw new Error(data.error)
       setEnabled(true)
       setStep("idle")
-      setSuccessMsg("2FA ativado com sucesso!")
+      setSuccessMsg(tUI("2FA ativado com sucesso!"))
       await update({ twoFactorVerifiedAt: new Date().toISOString() })
       setTimeout(() => setSuccessMsg(""), 5000)
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Token inválido")
+      setError(e instanceof Error ? tUI(e.message) : tUI("Token inválido"))
     } finally {
       setVerifying(false)
     }
   }
 
   const handleDisable = async () => {
-    if (!confirm("Tem certeza que deseja desativar a autenticação de dois fatores?")) return
+    if (!confirm(tUI("Tem certeza que deseja desativar a autenticação de dois fatores?"))) return
     setDisabling(true)
     setError("")
     try {
       const res = await csrfPost("/api/auth/2fa/disable", {})
       if (!res.ok) throw new Error("Erro ao desativar")
       setEnabled(false)
-      setSuccessMsg("2FA desativado com sucesso!")
+      setSuccessMsg(tUI("2FA desativado com sucesso!"))
       setTimeout(() => setSuccessMsg(""), 5000)
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erro ao desativar")
+      setError(e instanceof Error ? tUI(e.message) : tUI("Erro ao desativar"))
     } finally {
       setDisabling(false)
     }
@@ -100,10 +103,10 @@ export default function TwoFactorPage() {
           </div>
           <div>
             <h1 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
-              Autenticação de Dois Fatores
+              {tUI("Autenticação de Dois Fatores")}
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              {enabled ? "2FA está ativo" : "Proteja sua conta com 2FA"}
+              {enabled ? tUI("2FA está ativo") : tUI("Proteja sua conta com 2FA")}
             </p>
           </div>
         </div>
@@ -125,10 +128,10 @@ export default function TwoFactorPage() {
           <div>
             <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900 mb-4">
               <p className="text-sm text-emerald-700 dark:text-emerald-300 font-medium">
-                A autenticação de dois fatores está ativa na sua conta.
+                {tUI("A autenticação de dois fatores está activa na sua conta.") || tUI("A autenticação de dois fatores está ativa na sua conta.")}
               </p>
               <p className="text-xs text-emerald-600 dark:text-emerald-400/80 mt-1">
-                Ao fazer login, será solicitado um código do seu aplicativo autenticador.
+                {tUI("Ao fazer login, será solicitado um código do seu aplicativo autenticador.")}
               </p>
             </div>
             <button
@@ -137,32 +140,30 @@ export default function TwoFactorPage() {
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition disabled:opacity-50"
             >
               {disabling ? <Loader2 size={16} className="animate-spin" /> : <ShieldOff size={16} />}
-              {disabling ? "A desativar..." : "Desativar 2FA"}
+              {disabling ? tUI("A desativar...") : tUI("Desativar 2FA")}
             </button>
           </div>
         ) : step === "idle" ? (
           <div>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-              A autenticação de dois fatores adiciona uma camada extra de segurança à sua conta.
-              Após configurar, precisará de um código do seu aplicativo autenticador
-              (Google Authenticator, Authy, etc.) para fazer login.
+              {tUI("A autenticação de dois fatores adiciona uma camada extra de segurança à sua conta. Após configurar, precisará de um código do seu aplicativo autenticador (Google Authenticator, Authy, etc.) para fazer login.")}
             </p>
             <button
               onClick={handleSetup}
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition"
             >
               <Smartphone size={16} />
-              Configurar 2FA
+              {tUI("Configurar 2FA")}
             </button>
           </div>
         ) : (
           <div className="space-y-4">
             <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700">
               <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
-                1. Configure o seu aplicativo autenticador
+                {tUI("1. Configure o seu aplicativo autenticador")}
               </h3>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
-                Escaneie o QR code manualmente usando a chave secreta abaixo:
+                {tUI("Escaneie o QR code manualmente usando a chave secreta abaixo:")}
               </p>
 
               {/* QR Code */}
@@ -186,7 +187,7 @@ export default function TwoFactorPage() {
                 <button
                   onClick={copySecret}
                   className="p-1.5 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-400 hover:text-indigo-600 transition"
-                  title="Copiar chave"
+                  title={tUI("Copiar chave")}
                 >
                   {copied ? <CheckCircle size={16} className="text-emerald-500" /> : <Copy size={16} />}
                 </button>
@@ -195,10 +196,10 @@ export default function TwoFactorPage() {
 
             <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700">
               <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
-                2. Verifique o código
+                {tUI("2. Verifique o código")}
               </h3>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
-                Introduza o código de 6 dígitos gerado pelo seu aplicativo autenticador.
+                {tUI("Introduza o código de 6 dígitos gerado pelo seu aplicativo autenticador.")}
               </p>
               <div className="flex gap-2">
                 <input
@@ -216,7 +217,7 @@ export default function TwoFactorPage() {
                   className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
                 >
                   {verifying ? <Loader2 size={16} className="animate-spin" /> : null}
-                  {verifying ? "A verificar..." : "Verificar"}
+                  {verifying ? tUI("A verificar...") : tUI("Verificar")}
                 </button>
               </div>
             </div>

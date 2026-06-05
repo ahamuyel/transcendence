@@ -4,6 +4,7 @@ import { requirePermission, getSchoolId } from "@/lib/api-auth"
 import { createLessonSchema } from "@/lib/validations/academic"
 import { buildOrderBy } from "@/lib/query-helpers"
 import { getOrDefaultAcademicYearId } from "@/lib/academic-year"
+import { checkTeacherScheduleConflict } from "@/lib/lesson-conflicts"
 
 export async function GET(req: Request) {
   try {
@@ -94,6 +95,19 @@ export async function POST(req: Request) {
 
     const { materials, ...rest } = parsed.data
     const academicYearId = await getOrDefaultAcademicYearId(schoolId, body.academicYearId)
+
+    // Check for teacher schedule conflict
+    const conflict = await checkTeacherScheduleConflict({
+      teacherId: rest.teacherId,
+      day: rest.day,
+      startTime: rest.startTime,
+      endTime: rest.endTime,
+      schoolId,
+      academicYearId,
+    })
+    if (conflict) {
+      return NextResponse.json({ error: conflict }, { status: 409 })
+    }
 
     const created = await prisma.lesson.create({
       data: {

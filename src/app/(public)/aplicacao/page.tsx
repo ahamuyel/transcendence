@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Loader2, Send, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
+import { useTranslation } from "@/lib/i18n"
 
 interface PublicSchool {
   id: string
@@ -16,6 +17,7 @@ interface PublicCourse {
 }
 
 export default function ApplicationPage() {
+  const { tUI, locale } = useTranslation()
   const [schools, setSchools] = useState<PublicSchool[]>([])
   const [courses, setCourses] = useState<PublicCourse[]>([])
   const [loading, setLoading] = useState(false)
@@ -43,9 +45,9 @@ export default function ApplicationPage() {
     fetch("/api/schools/public")
       .then((r) => r.json())
       .then(setSchools)
-      .catch(() => setError("Erro ao carregar escolas"))
+      .catch(() => setError(tUI("Erro ao carregar escolas")))
       .finally(() => setLoadingSchools(false))
-  }, [])
+  }, [tUI])
 
   // Fetch courses when school changes and role is student
   useEffect(() => {
@@ -96,13 +98,13 @@ export default function ApplicationPage() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error || "Erro ao enviar solicitação")
+        setError(data.error ? tUI(data.error) : tUI("Erro ao enviar solicitação"))
         return
       }
 
       setSuccess(data.trackingToken)
     } catch {
-      setError("Erro de conexão. Tente novamente.")
+      setError(tUI("Erro de conexão. Tente novamente."))
     } finally {
       setLoading(false)
     }
@@ -114,19 +116,19 @@ export default function ApplicationPage() {
         <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center mx-auto mb-6">
           <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
         </div>
-        <h1 className="text-2xl font-bold mb-2">Solicitação enviada!</h1>
+        <h1 className="text-2xl font-bold mb-2">{tUI("Solicitação enviada!")}</h1>
         <p className="text-zinc-500 dark:text-zinc-400 mb-6">
-          Sua solicitação foi recebida. Você receberá um e-mail com os próximos passos.
+          {tUI("Sua solicitação foi recebida. Você receberá um e-mail com os próximos passos.")}
         </p>
         <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 mb-6">
-          <p className="text-sm text-zinc-500 mb-1">Seu código de acompanhamento:</p>
+          <p className="text-sm text-zinc-500 mb-1">{tUI("Seu código de acompanhamento:")}</p>
           <p className="font-mono text-sm font-medium text-zinc-900 dark:text-zinc-100 break-all">{success}</p>
         </div>
         <Link
           href={`/aplicacao/status?token=${success}`}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-medium hover:bg-primary-700 transition"
         >
-          Acompanhar status
+          {tUI("Acompanhar status")}
         </Link>
       </div>
     )
@@ -135,9 +137,9 @@ export default function ApplicationPage() {
   return (
     <div className="max-w-md mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold mb-2">Solicitar matrícula</h1>
+        <h1 className="text-2xl font-bold mb-2">{tUI("Solicitar matrícula")}</h1>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Preencha os dados abaixo para enviar sua solicitação à escola
+          {tUI("Preencha os dados abaixo para enviar sua solicitação à escola")}
         </p>
       </div>
 
@@ -150,11 +152,11 @@ export default function ApplicationPage() {
 
         <div>
           <label htmlFor="school" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-            Escola <span className="text-red-500">*</span>
+            {tUI("Escola")} <span className="text-red-500">*</span>
           </label>
           {loadingSchools ? (
             <div className="flex items-center gap-2 text-sm text-zinc-400 py-2">
-              <Loader2 className="w-4 h-4 animate-spin" /> Carregando escolas...
+              <Loader2 className="w-4 h-4 animate-spin" /> {tUI("Carregando escolas...")}
             </div>
           ) : (
             <select
@@ -165,7 +167,7 @@ export default function ApplicationPage() {
               disabled={loading}
               className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
             >
-              <option value="">Selecione a escola</option>
+              <option value="">{tUI("Selecione a escola")}</option>
               {schools.map((s) => (
                 <option key={s.id} value={s.id}>{s.name}</option>
               ))}
@@ -175,7 +177,7 @@ export default function ApplicationPage() {
 
         <div>
           <label htmlFor="name" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-            Nome completo <span className="text-red-500">*</span>
+            {tUI("Nome completo")} <span className="text-red-500">*</span>
           </label>
           <input
             id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} required disabled={loading}
@@ -185,7 +187,7 @@ export default function ApplicationPage() {
 
         <div>
           <label htmlFor="email" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-            E-mail <span className="text-red-500">*</span>
+            {tUI("E-mail")} <span className="text-red-500">*</span>
           </label>
           <input
             id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={loading}
@@ -195,7 +197,7 @@ export default function ApplicationPage() {
 
         <div>
           <label htmlFor="phone" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-            Telefone <span className="text-red-500">*</span>
+            {tUI("Telefone")} <span className="text-red-500">*</span>
           </label>
           <input
             id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required disabled={loading}
@@ -205,16 +207,16 @@ export default function ApplicationPage() {
 
         <div>
           <label htmlFor="role" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-            Perfil <span className="text-red-500">*</span>
+            {tUI("Perfil")} <span className="text-red-500">*</span>
           </label>
           <select
             id="role" value={role} onChange={(e) => setRole(e.target.value)} required disabled={loading}
             className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
           >
-            <option value="">Selecione</option>
-            <option value="teacher">Professor(a)</option>
-            <option value="student">Aluno(a)</option>
-            <option value="parent">Encarregado de educação</option>
+            <option value="">{tUI("Selecione")}</option>
+            <option value="teacher">{tUI("Professor(a)")}</option>
+            <option value="student">{tUI("Aluno(a)")}</option>
+            <option value="parent">{tUI("Encarregado de educação")}</option>
           </select>
         </div>
 
@@ -222,7 +224,7 @@ export default function ApplicationPage() {
           <>
             <div>
               <label htmlFor="gender" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-                Género
+                {tUI("Género")}
               </label>
               <select
                 id="gender"
@@ -231,16 +233,16 @@ export default function ApplicationPage() {
                 disabled={loading}
                 className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
               >
-                <option value="">Selecione</option>
-                <option value="masculino">Masculino</option>
-                <option value="feminino">Feminino</option>
+                <option value="">{tUI("Selecione")}</option>
+                <option value="masculino">{tUI("Masculino")}</option>
+                <option value="feminino">{tUI("Feminino")}</option>
               </select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="documentType" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-                  Tipo de documento
+                  {tUI("Tipo de documento")}
                 </label>
                 <select
                   id="documentType"
@@ -249,14 +251,14 @@ export default function ApplicationPage() {
                   disabled={loading}
                   className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
                 >
-                  <option value="">Selecione</option>
-                  <option value="BI">BI</option>
-                  <option value="Passaporte">Passaporte</option>
+                  <option value="">{tUI("Selecione")}</option>
+                  <option value="BI">{tUI("BI")}</option>
+                  <option value="Passaporte">{tUI("Passaporte")}</option>
                 </select>
               </div>
               <div>
                 <label htmlFor="documentNumber" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-                  N.o do documento
+                  {tUI("N.o do documento")}
                 </label>
                 <input
                   id="documentNumber"
@@ -271,7 +273,7 @@ export default function ApplicationPage() {
 
             <div>
               <label htmlFor="dateOfBirth" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-                Data de nascimento
+                {tUI("Data de nascimento")}
               </label>
               <input
                 id="dateOfBirth"
@@ -285,7 +287,7 @@ export default function ApplicationPage() {
 
             <div>
               <label htmlFor="desiredGrade" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-                Classe pretendida
+                {tUI("Classe pretendida")}
               </label>
               <select
                 id="desiredGrade"
@@ -294,21 +296,28 @@ export default function ApplicationPage() {
                 disabled={loading}
                 className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
               >
-                <option value="">Selecione a classe</option>
-                {Array.from({ length: 13 }, (_, i) => i + 1).map((g) => (
-                  <option key={g} value={g}>{g}.a classe</option>
-                ))}
+                <option value="">{tUI("Selecione a classe")}</option>
+                {Array.from({ length: 13 }, (_, i) => i + 1).map((g) => {
+                  const label = locale === "en"
+                    ? `${g}th Grade`
+                    : locale === "fr"
+                    ? `${g}e classe`
+                    : `${g}.ª classe`
+                  return (
+                    <option key={g} value={String(g)}>{label}</option>
+                  )
+                })}
               </select>
             </div>
 
             {schoolId && (
               <div>
                 <label htmlFor="desiredCourseId" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-                  Curso pretendido
+                  {tUI("Curso pretendido")}
                 </label>
                 {loadingCourses ? (
                   <div className="flex items-center gap-2 text-sm text-zinc-400 py-2">
-                    <Loader2 className="w-4 h-4 animate-spin" /> Carregando cursos...
+                    <Loader2 className="w-4 h-4 animate-spin" /> {tUI("Carregando cursos...")}
                   </div>
                 ) : courses.length > 0 ? (
                   <select
@@ -318,13 +327,13 @@ export default function ApplicationPage() {
                     disabled={loading}
                     className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition appearance-none"
                   >
-                    <option value="">Selecione o curso</option>
+                    <option value="">{tUI("Selecione o curso")}</option>
                     {courses.map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
                   </select>
                 ) : (
-                  <p className="text-sm text-zinc-400 py-2">Nenhum curso disponível nesta escola</p>
+                  <p className="text-sm text-zinc-400 py-2">{tUI("Nenhum curso disponível nesta escola")}</p>
                 )}
               </div>
             )}
@@ -333,11 +342,11 @@ export default function ApplicationPage() {
 
         <div>
           <label htmlFor="message" className="block text-sm font-medium mb-1.5 text-zinc-700 dark:text-zinc-300">
-            Mensagem (opcional)
+            {tUI("Mensagem (opcional)")}
           </label>
           <textarea
             id="message" value={message} onChange={(e) => setMessage(e.target.value)} disabled={loading}
-            placeholder="Informações adicionais..."
+            placeholder={tUI("Informações adicionais...")}
             rows={3}
             className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary transition resize-none"
           />
@@ -348,14 +357,14 @@ export default function ApplicationPage() {
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-medium text-sm hover:bg-primary-700 shadow-lg shadow-primary/25 transition disabled:opacity-50"
         >
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-          {loading ? "Enviando..." : "Enviar solicitação"}
+          {loading ? tUI("Enviando...") : tUI("Enviar solicitação")}
         </button>
       </form>
 
       <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-6">
-        Já tem um código?{" "}
+        {tUI("Já tem um código?")}{" "}
         <Link href="/aplicacao/status" className="text-primary dark:text-primary-400 font-medium hover:underline">
-          Acompanhar status
+          {tUI("Acompanhar status")}
         </Link>
       </p>
     </div>
