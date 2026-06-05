@@ -16,17 +16,22 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/server ./.next/server
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
-
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/scripts/entrypoint.sh ./
-COPY --from=builder /app/node_modules ./node_modules
+# Copy everything as node:node
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/server ./.next/server
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/public ./public
+COPY --from=builder --chown=node:node /app/prisma ./prisma
+COPY --from=builder --chown=node:node /app/scripts/entrypoint.sh ./
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 
 RUN chmod +x entrypoint.sh
 
+USER node
+
 EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD node -e "const http = require('http'); const req = http.request({ host: '127.0.0.1', port: 3000, path: '/api/health', method: 'GET', timeout: 5000 }, (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }); req.on('error', () => process.exit(1)); req.end();"
 
 ENTRYPOINT ["sh", "entrypoint.sh"]

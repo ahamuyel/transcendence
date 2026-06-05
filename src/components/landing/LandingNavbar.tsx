@@ -28,17 +28,6 @@ export default function LandingNavbar({
   }, [])
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-    }
-    return () => {
-      document.body.style.overflow = ""
-    }
-  }, [open])
-
-  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && open) setOpen(false)
     }
@@ -51,6 +40,18 @@ export default function LandingNavbar({
     if (!open || !menuRef.current) return
     const firstFocusable = menuRef.current.querySelector<HTMLElement>("a, button")
     firstFocusable?.focus()
+  }, [open])
+
+  // Bloqueia o scroll da página de fundo quando o menu mobile está aberto
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "unset"
+    }
+    return () => {
+      document.body.style.overflow = "unset"
+    }
   }, [open])
 
   const navLinks = [
@@ -66,7 +67,7 @@ export default function LandingNavbar({
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b ${
         scrolled
-          ? "bg-[var(--landing-bg)]/95 backdrop-blur-xl border-[var(--landing-border)] shadow-sm"
+          ? "bg-[var(--landing-bg)] border-[var(--landing-border)] shadow-sm"
           : "bg-[var(--landing-bg)] border-transparent"
       }`}
     >
@@ -83,7 +84,7 @@ export default function LandingNavbar({
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden xl:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -96,7 +97,7 @@ export default function LandingNavbar({
           </nav>
 
           {/* Desktop right section */}
-          <div className="hidden xl:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             <LocaleSwitcher currentLocale={locale} />
             <button
               onClick={toggleTheme}
@@ -127,7 +128,7 @@ export default function LandingNavbar({
           </div>
 
           {/* Mobile right section */}
-          <div className="flex xl:hidden items-center gap-1">
+          <div className="flex lg:hidden items-center gap-1">
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-[var(--landing-text-muted)] hover:text-[var(--landing-text-primary)] hover:bg-[var(--landing-bg-tertiary)] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -150,11 +151,13 @@ export default function LandingNavbar({
       {/* Mobile menu */}
       <div
         ref={menuRef}
-        className={`xl:hidden fixed inset-x-0 top-16 bottom-0 z-50 transform transition-transform duration-300 ease-in-out ${
-          open ? "translate-y-0" : "translate-y-full"
+        className={`lg:hidden fixed inset-x-0 top-16 z-40 transform transition-all duration-300 ease-in-out ${
+          open
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-2 pointer-events-none"
         }`}
       >
-        <div className="h-full bg-[var(--landing-bg)]/95 backdrop-blur-xl border-t border-[var(--landing-border)] overflow-y-auto">
+        <div className="bg-[var(--landing-bg)] border-b border-[var(--landing-border)] shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="px-4 py-4 space-y-1">
             {navLinks.map((link) => (
               <a
@@ -168,7 +171,7 @@ export default function LandingNavbar({
             ))}
           </div>
 
-          <div className="px-4 pt-4 border-t border-[var(--landing-border)] space-y-2">
+          <div className="px-4 pt-4 pb-4 border-t border-[var(--landing-border)] space-y-2">
             <p className="text-[10px] font-medium uppercase tracking-widest text-[var(--landing-text-dim)] px-4 pb-1">
               Conta
             </p>
@@ -195,7 +198,7 @@ export default function LandingNavbar({
             </Link>
           </div>
 
-          <div className="px-4 pt-6 pb-8 flex items-center justify-center">
+          <div className="px-4 pt-4 pb-6 flex items-center justify-center border-t border-[var(--landing-border)]">
             <LocaleSwitcher currentLocale={locale} />
           </div>
         </div>
