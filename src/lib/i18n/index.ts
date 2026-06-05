@@ -1,9 +1,15 @@
+import { useContext } from "react"
+import { LocaleContext } from "@/provider/locale"
 import pt from "./pt"
 import en from "./en"
 import es from "./es"
 import fr from "./fr"
 
-const translations: Record<string, Partial<typeof pt>> = { pt, en, es, fr }
+type DeepPartial<T> = T extends object ? {
+  [P in keyof T]?: DeepPartial<T[P]>;
+} : T;
+
+const translations: Record<string, DeepPartial<typeof pt>> = { pt, en, es, fr }
 
 type NestedKeyOf<T> = T extends object
   ? { [K in keyof T & string]: T[K] extends object ? `${K}.${NestedKeyOf<T[K]>}` : K }[keyof T & string]
@@ -41,12 +47,21 @@ export function tv(locale: string, key: TranslationKey): unknown {
   return value
 }
 
-export function useTranslation(locale: string = "pt") {
+export function useTranslation(locale?: string) {
+  let activeLocale = locale
+  if (!activeLocale) {
+    try {
+      activeLocale = useContext(LocaleContext) || "pt"
+    } catch {
+      activeLocale = "pt"
+    }
+  }
   return {
-    t: (key: TranslationKey) => t(locale, key),
-    tv: (key: TranslationKey) => tv(locale, key),
-    locale,
+    t: (key: TranslationKey) => t(activeLocale!, key),
+    tv: (key: TranslationKey) => tv(activeLocale!, key),
+    locale: activeLocale!,
   }
 }
+
 
 

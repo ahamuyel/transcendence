@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { getPlatformConfig } from "@/lib/platform-config"
 import { GraduationCap } from "lucide-react"
+import { getServerLocale } from "@/lib/i18n/server"
+import LocaleSwitcher from "@/components/landing/LocaleSwitcher"
 
 async function PlatformName() {
   let name = "Cur10usX"
@@ -28,10 +30,16 @@ export default async function AuthLayout({
 }: {
   children: React.ReactNode
 }) {
+  const locale = await getServerLocale()
   return (
     <div className="relative flex min-h-svh flex-col bg-zinc-50 dark:bg-zinc-950">
       {/* Subtle background pattern for depth */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+
+      {/* Locale Switcher top right */}
+      <div className="absolute top-4 right-4 z-50">
+        <LocaleSwitcher currentLocale={locale} />
+      </div>
 
       <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-8 sm:py-12">
         {/* Logo */}

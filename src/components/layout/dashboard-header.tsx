@@ -19,6 +19,8 @@ import {
 import { signOut } from "next-auth/react"
 import ThemeToggle from "@/components/ui/ThemeToggle"
 import NotificationDropdown from "@/components/ui/NotificationDropdown"
+import LocaleSwitcher from "@/components/landing/LocaleSwitcher"
+import { useTranslation } from "@/lib/i18n"
 import { useSidebar } from "@/hooks/useSidebar"
 import { on } from "@/hooks/useWebSocket"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
@@ -51,6 +53,7 @@ const groupConfig = [
 export default function DashboardHeader() {
   const pathname = usePathname()
   const { toggleMobile } = useSidebar()
+  const { locale } = useTranslation()
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<SearchResults | null>(null)
@@ -312,6 +315,11 @@ export default function DashboardHeader() {
           <ThemeToggle />
         </div>
 
+        {/* Locale Switcher */}
+        <div className="hidden sm:block">
+          <LocaleSwitcher currentLocale={locale} />
+        </div>
+
         {/* Desktop: Logout */}
         <button
           onClick={() => signOut({ callbackUrl: "/signin" })}
@@ -322,7 +330,8 @@ export default function DashboardHeader() {
         </button>
 
         {/* Mobile: Theme + Logout combo */}
-        <div className="flex sm:hidden items-center">
+        <div className="flex sm:hidden items-center gap-1.5">
+          <LocaleSwitcher currentLocale={locale} />
           <button
             onClick={() => signOut({ callbackUrl: "/signin" })}
             className="p-2 rounded-lg text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition"

@@ -1,6 +1,9 @@
 import Link from "next/link"
 import { getPlatformConfig } from "@/lib/platform-config"
 import { GraduationCap } from "lucide-react"
+import { getServerLocale } from "@/lib/i18n/server"
+import { t } from "@/lib/i18n"
+import LocaleSwitcher from "@/components/landing/LocaleSwitcher"
 
 async function PublicBrand() {
   let name = "Cur10usX"
@@ -25,6 +28,7 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode
 }) {
+  const locale = await getServerLocale()
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100">
       <header className="sticky top-0 z-50 backdrop-blur-md bg-zinc-50/80 dark:bg-black/80 border-b border-zinc-200 dark:border-zinc-800">
@@ -36,17 +40,18 @@ export default async function PublicLayout({
             <PublicBrand />
           </Link>
           <div className="flex items-center gap-3">
+            <LocaleSwitcher currentLocale={locale} />
             <Link
               href="/signin"
               className="hidden sm:inline-flex text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition"
             >
-              Entrar
+              {t(locale, "auth.login" as any)}
             </Link>
             <Link
               href="/signup"
               className="px-4 py-2 text-sm rounded-lg bg-primary text-white font-medium hover:bg-primary-700 transition shadow-sm"
             >
-              Criar conta
+              {t(locale, "auth.signup" as any)}
             </Link>
           </div>
         </div>
